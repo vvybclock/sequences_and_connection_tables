@@ -49,7 +49,7 @@ def define_connection_table():
 	AnalogOut(
 		name         	= 'blue_power',
 		parent_device	= ni_pci_6713_dev4,
-		connection   	= 'ao0'
+		connection   	= 'ao0',
 		limits       	= None
 	)
 
@@ -73,6 +73,22 @@ def define_connection_table():
 		connection   	= 'ao3',
 		limits       	= None
 	)
+
+	AnalogOut(
+		name         	= 'green_power',
+		parent_device	= ni_pci_6713_dev4,
+		connection   	= 'ao4',
+		limits       	= None
+	)
+
+	AnalogOut(
+		name         	= 'mot_coil_current',
+		parent_device	= ni_pci_6713_dev4,
+		connection   	= 'ao5',
+		limits       	= None
+	)
+
+
 	#====================
 	# Dev 5 Connections
 	#====================
