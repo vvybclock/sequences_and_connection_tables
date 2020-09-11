@@ -46,8 +46,33 @@ def define_connection_table():
 	# Dev 4 Connections
 	#====================
 	#	This card has a lot of Analog Output Ramps
-	
+	AnalogOut(
+		name         	= 'blue_power',
+		parent_device	= ni_pci_6713_dev4,
+		connection   	= 'ao0'
+		limits       	= None
+	)
 
+	AnalogOut(
+		name         	= 'x_bias_field',
+		parent_device	= ni_pci_6713_dev4,
+		connection   	= 'ao1',
+		limits       	= None
+	)
+
+	AnalogOut(
+		name         	= 'y_bias_field',
+		parent_device	= ni_pci_6713_dev4,
+		connection   	= 'ao2',
+		limits       	= None
+	)
+
+	AnalogOut(
+		name         	= 'z_bias_field',
+		parent_device	= ni_pci_6713_dev4,
+		connection   	= 'ao3',
+		limits       	= None
+	)
 	#====================
 	# Dev 5 Connections
 	#====================
