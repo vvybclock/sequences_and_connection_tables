@@ -1,6 +1,5 @@
 from labscript import start, stop, add_time_marker, AnalogOut, DigitalOut
 from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_6713, NI_PCI_6284
-from labscript_devices.DummyPseudoclock.labscript_devices import DummyPseudoclock
 
 def define_connection_table():
 	### Pseudo Clock
@@ -20,30 +19,30 @@ def define_connection_table():
 	
 
 	### NI Cards
-	NI_PCI_6723(
+	NI_PCI_6723( #analog out
 		name          	= 'ni_pci_6723_dev3',
-		parent_device 	= pseudoclock.clockline,
+		parent_device 	= analog_clock.clockline,
 		clock_terminal	= '',
 		MAX_name      	='Dev3'
 	)
 
-	NI_PCI_6713(
+	NI_PCI_6713( #analog out
 		name          	= 'ni_pci_6713_dev4',
-		parent_device 	= pseudoclock.clockline,
+		parent_device 	= analog_clock.clockline,
 		clock_terminal	= '',
 		MAX_name      	='Dev4'
 	)
 
-	NI_PCI_6713(
+	NI_PCI_6713( #analog out
 		name          	= 'ni_pci_6713_dev5',
-		parent_device 	= pseudoclock.clockline,
+		parent_device 	= analog_clock.clockline,
 		clock_terminal	= '',
 		MAX_name      	='Dev5'
 	)
 
-	NI_PCI_6284(
+	NI_PCI_6284( #digital card
 		name            	= 'ni_pci_6284_dev6',
-		parent_device   	= pseudoclock.clockline,
+		parent_device   	= digital_clock.clockline,
 		clock_terminal  	= '',
 		MAX_name        	= 'Dev6',
 		acquisition_rate	=1e3
