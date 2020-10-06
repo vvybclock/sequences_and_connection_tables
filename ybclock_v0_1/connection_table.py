@@ -4,8 +4,21 @@ from labscript_devices.DummyPseudoclock.labscript_devices import DummyPseudocloc
 
 def define_connection_table():
 	### Pseudo Clock
-	DummyPseudoclock(name='pseudoclock')
+	PineBlaster(
+		name              	= 'digital_clock',
+		trigger_device    	= None,
+		trigger_connection	= None,
+		usbport           	= 'COM5'
+	)
 	
+	PineBlaster(
+		name              	= 'analog_clock',
+		trigger_device    	= None,
+		trigger_connection	= None,
+		usbport           	= 'COM7'
+	)
+	
+
 	### NI Cards
 	NI_PCI_6723(
 		name          	= 'ni_pci_6723_dev3',
