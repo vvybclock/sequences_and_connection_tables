@@ -25,7 +25,7 @@ def define_connection_table():
 	PineBlaster(
 		name              	= 'analog_clock',
 		trigger_device    	= ni_pci_6284_dev6,
-		trigger_connection	= None,
+		trigger_connection	= 'flag 2',
 		usbport           	= 'COM7'
 	)
 	
