@@ -25,7 +25,7 @@ if __name__ == '__main__':
 	# start() elicits the commencement of the shot
 	start()
 
-	t = 0
+	t = 0.1
 
 	mot_duration = loading_sequence(t)
 

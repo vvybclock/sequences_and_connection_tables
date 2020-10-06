@@ -1,5 +1,6 @@
 from labscript import start, stop, add_time_marker, AnalogOut, DigitalOut
 from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_6713, NI_PCI_6284
+from labscript_devices.PineBlaster import PineBlaster
 
 def define_connection_table():
 	### Pseudo Clock
