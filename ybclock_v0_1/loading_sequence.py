@@ -1,19 +1,20 @@
 from labscript import start, stop, add_time_marker, AnalogOut, DigitalOut
 from labscriptlib.ybclock_v0_1.connection_table import define_connection_table
 
-def loading_sequence(time=t0):
+def loading_sequence(t0):
 	t = t0
 
 	#turn on the blue mot
+	add_time_marker(t, "Turn On Blue MOT", verbose=True)
 	mot_coil_current.constant(t, value=9.1)
 	blue_power.constant(t, value=0.24)
 	x_bias_field.constant(t, value=-0.608)
 	y_bias_field.constant(t, value=1.374)
 	z_bias_field.constant(t, value=2.2)
 	green_power.constant(t, value=0.3) #why?
-	
-	#do something else???
 
+	#do something else???
+	return 0
 	pass
 
 if __name__ == '__main__':
@@ -31,5 +32,4 @@ if __name__ == '__main__':
 	t += mot_duration
 
 	# Stop the experiment shot with stop()
-	stop(t)
-s
+	stop(t+5)

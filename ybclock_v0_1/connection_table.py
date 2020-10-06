@@ -41,11 +41,27 @@ def define_connection_table():
 	# Dev 3 Connections
 	#====================
 	#	This card has a lot of Analog Output Ramps
+	AnalogOut(
+		name         	= 'mot_voltage_setting_do_not_use',
+		parent_device	= ni_pci_6723_dev3,
+		connection   	= 'ao3',
+		limits       	= None
+	)
+
+	AnalogOut(
+		name         	= 'red_power',
+		parent_device	= ni_pci_6723_dev3,
+		connection   	= 'ao0',
+		limits       	= None
+	)
+
+
 
 	#====================
 	# Dev 4 Connections
 	#====================
 	#	This card has a lot of Analog Output Ramps
+
 	AnalogOut(
 		name         	= 'blue_power',
 		parent_device	= ni_pci_6713_dev4,
@@ -93,6 +109,19 @@ def define_connection_table():
 	# Dev 5 Connections
 	#====================
 	#	This card has a lot of Analog Outputs.
+	AnalogOut(
+		name         	= 'wide_range_camera_trigger',
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao2',
+		limits       	= (0, 8)
+	)
+
+	AnalogOut(
+		name         	= 'one_to_one_camera_trigger',
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao3',
+		limits       	= (0,8)
+	)
 	
 
 	#====================
