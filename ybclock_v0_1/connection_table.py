@@ -15,7 +15,7 @@ def define_connection_table():
 	NI_PCI_6284( #digital card
 		name            	= 'ni_pci_6284_dev6',
 		parent_device   	= digital_clock.clockline,
-		clock_terminal  	= '',
+		clock_terminal  	= 'PFI1',
 		MAX_name        	= 'Dev6',
 		acquisition_rate	= 1e3
 	)
@@ -34,21 +34,21 @@ def define_connection_table():
 	NI_PCI_6713( #analog out
 		name          	= 'ni_pci_6713_dev5',
 		parent_device 	= analog_clock.clockline,
-		clock_terminal	= '',
+		clock_terminal	= 'PFI2',
 		MAX_name      	='Dev5'
 	)
 
 	NI_PCI_6723( #analog out
 		name          	= 'ni_pci_6723_dev3',
 		parent_device 	= analog_clock.clockline,
-		clock_terminal	= '',
+		clock_terminal	= 'PFI2',
 		MAX_name      	='Dev3'
 	)
 
 	NI_PCI_6713( #analog out
 		name          	= 'ni_pci_6713_dev4',
 		parent_device 	= analog_clock.clockline,
-		clock_terminal	= '',
+		clock_terminal	= 'PFI2',
 		MAX_name      	='Dev4'
 	)
 
