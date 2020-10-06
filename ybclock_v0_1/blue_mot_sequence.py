@@ -1,7 +1,7 @@
 from labscript import start, stop, add_time_marker, AnalogOut, DigitalOut
 from labscriptlib.ybclock_v0_1.connection_table import define_connection_table
 
-blue_mot_duration 
+blue_mot_duration = 30	
 
 def blue_mot(t0):
 	t = t0
@@ -98,11 +98,5 @@ if __name__ == '__main__':
 
 	t += blue_mot_duration
 
-	t += load_green_mot(t, ramp_time = 40e-3)
-	
-	green_mot_duration = 5
-	trigger_the_cameras(t, duration=green_mot_duration,frame_period_ms=148)
-
-	t += green_mot_duration
 	# Stop the experiment shot with stop()
 	stop(t)

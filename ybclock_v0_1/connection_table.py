@@ -179,13 +179,17 @@ def define_connection_table():
 	)
 
 	#cooling light controls
-	# DigitalOut(
-	#	name         	= 'cooling_shutter',
-	#	parent_device	= ni_pci_6284_dev6,
-	#	connection   	= 'port0/line25'
-	# )
+	DigitalOut(
+		name         	= 'cooling_shutter',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line25'
+	)
 
-
+	DigitalOut(
+		name         	= 'green_frequency_fpga_trigger',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line3'
+	)
 
 
 
