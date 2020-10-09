@@ -1,4 +1,4 @@
-from ctypes import c_int, c_double, c_ulong, c_long, c_ubyte, c_uint
+from ctypes import c_int, c_double, c_ulong, c_long, c_ubyte, c_uint, c_char
 from ctypes import Structure, POINTER
 from ctypes.wintypes import HANDLE
 
@@ -106,7 +106,7 @@ class ACQDEF(Structure):
 	]
 
 
-# StoreStatusData 
+# 
 # GetStatusData 
 # Start 
 # Halt 
