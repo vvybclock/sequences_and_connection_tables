@@ -103,6 +103,39 @@ class ACQDEF(Structure):
 		             	       	# bit0=1, bit1=1: MCD#0 in system 4
 		             	       	# bit2=0, bit3=0: MCD#1 in system 1 ...
 		             	       	# bit6=1, bit7=1: MCD#3 in system 4
-
 	]
 
+
+# StoreStatusData 
+# GetStatusData 
+# Start 
+# Halt 
+# Continue 
+# NewSetting 
+# ServExec 
+# StoreData 
+# GetData 
+# GetSpec 
+# SaveSetting 
+# GetStatus 
+# Erase 
+# SaveData 
+# GetBlock 
+# StoreDefData 
+# GetDefData 
+# LoadData 
+# NewData 
+# HardwareDlg 
+# UnregisterClient 
+# DestroyClient 
+# ClientExec 
+# LVGetDat 
+# RunCmd 
+# AddData 
+# LVGetRoi 
+# LVGetCnt 
+# LVGetStr 
+# SubData 
+# Smooth 
+# StoreExtSettingData 
+# GetExtSettingData 
