@@ -1,4 +1,4 @@
-from ctypes import c_int, c_double, c_ulong, c_long, c_ubyte
+from ctypes import c_int, c_double, c_ulong, c_long, c_ubyte, c_uint
 from ctypes import Structure, POINTER
 from ctypes.wintypes import HANDLE
 
@@ -89,3 +89,20 @@ class ACQDATA(Structure):
 		("hcm",     	HANDLE),
 		("hct",     	HANDLE),
 	]
+
+class ACQDEF(Structure):
+	_fields_ = [
+		("nDevices", 	c_int), 	# Number of spectra = number of modules
+		("nDisplays",	c_int), 	# Number of active displays 0...nDevices
+		("nSystems", 	c_int), 	# Number of systems 0...4
+		("bRemote",  	c_int), 	# 1 if server controlled by MCDWIN
+		("sys",      	c_uint),	# System definition word:
+		             	        	# bit0=0, bit1=0: MCD#0 in system 1
+		             	        	# bit0=1, bit1=0: MCD#0 in system 2
+		             	        	# bit0=0, bit1=1: MCD#0 in system 3
+		             	        	# bit0=1, bit1=1: MCD#0 in system 4
+		             	        	# bit2=0, bit3=0: MCD#1 in system 1 ...
+		             	        	# bit6=1, bit7=1: MCD#3 in system 4
+
+	]
+
