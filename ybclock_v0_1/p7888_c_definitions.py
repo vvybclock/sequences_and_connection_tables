@@ -12,7 +12,7 @@ class ACQSTATUS(Structure):
 		("nettosum",	c_double),	# ROI sum with background substracted
 		("sweeps",  	c_double),	# Number of sweeps
 		("stevents",	c_double),	# Start Events
-		("maxval",  	c_ulong), 	# Maximum value in spectrum
+		("maxval",  	c_ulong)  	# Maximum value in spectrum
 	]
 
 class ACQSETTING(Structure):
@@ -87,22 +87,22 @@ class ACQDATA(Structure):
 		("hs0",     	HANDLE),
 		("hrg",     	HANDLE),
 		("hcm",     	HANDLE),
-		("hct",     	HANDLE),
+		("hct",     	HANDLE)
 	]
 
 class ACQDEF(Structure):
 	_fields_ = [
-		("nDevices", 	c_int), 	# Number of spectra = number of modules
-		("nDisplays",	c_int), 	# Number of active displays 0...nDevices
-		("nSystems", 	c_int), 	# Number of systems 0...4
-		("bRemote",  	c_int), 	# 1 if server controlled by MCDWIN
-		("sys",      	c_uint),	# System definition word:
-		             	        	# bit0=0, bit1=0: MCD#0 in system 1
-		             	        	# bit0=1, bit1=0: MCD#0 in system 2
-		             	        	# bit0=0, bit1=1: MCD#0 in system 3
-		             	        	# bit0=1, bit1=1: MCD#0 in system 4
-		             	        	# bit2=0, bit3=0: MCD#1 in system 1 ...
-		             	        	# bit6=1, bit7=1: MCD#3 in system 4
+		("nDevices", 	c_int),	# Number of spectra = number of modules
+		("nDisplays",	c_int),	# Number of active displays 0...nDevices
+		("nSystems", 	c_int),	# Number of systems 0...4
+		("bRemote",  	c_int),	# 1 if server controlled by MCDWIN
+		("sys",      	c_uint)	# System definition word:
+		             	       	# bit0=0, bit1=0: MCD#0 in system 1
+		             	       	# bit0=1, bit1=0: MCD#0 in system 2
+		             	       	# bit0=0, bit1=1: MCD#0 in system 3
+		             	       	# bit0=1, bit1=1: MCD#0 in system 4
+		             	       	# bit2=0, bit3=0: MCD#1 in system 1 ...
+		             	       	# bit6=1, bit7=1: MCD#3 in system 4
 
 	]
 
