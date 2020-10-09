@@ -1,5 +1,6 @@
-from ctypes import c_int, c_double, c_ulong, c_long
-from ctypes import Structure
+from ctypes import c_int, c_double, c_ulong, c_long, c_ubyte
+from ctypes import Structure, POINTER
+from ctypes.wintypes import HANDLE
 
 class ACQSTATUS(Structure):
 	_fields_ = [
@@ -77,3 +78,14 @@ class ACQSETTING(Structure):
 
 	]
 
+class ACQDATA(Structure):
+	_fields_ = [
+		("s0",      	POINTER(c_ulong)), 	# pointer to spectrum
+		("region",  	POINTER(c_ulong)), 	# pointer to regions
+		("comment0",	POINTER(c_ubyte)), 	# pointer to strings (c_ubyte == unsigned char)
+		("cnt",     	POINTER(c_double)),	# pointer to counters
+		("hs0",     	HANDLE),
+		("hrg",     	HANDLE),
+		("hcm",     	HANDLE),
+		("hct",     	HANDLE),
+	]
