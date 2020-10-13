@@ -15,7 +15,7 @@ def get_and_print_number_of_cards():
 	print("Number of Systems : {}".format(struct.nSystems))
 	print("Controlled by MCDWIN? : {}".format(bool(struct.bRemote == 1)))
 
-def get_and_print_settings(nDisplay = 0):
+def get_and_print_settings(nDisplay=0):
 
 	print("###### Device Settings for nDisplay = {}".format(nDisplay))
 	print()
@@ -86,10 +86,46 @@ def get_and_print_settings(nDisplay = 0):
 	print("Cycles for Sequential Mode : {}".format(settings.cycles))
 
 	#print sweepmode
+	print("Sweepmode Bits : {}".format(hex(settings.sweepmode)))
 
 	#print syncout
+	print("Sync Out? : {}".format(bool(settings.syncout)))
 
-def set_to_sweep_mode():
+	#print bitshift
+	print("Bitshift : {}".format(settings.bitshift))
+
+	#print digval
+	print("Digval : {}".format(settings.digval))
+
+	#print digio
+	print("Digio : {}".format(settings.digio))
+
+	#print dac01
+	print("Dac01 : {}".format(hex(settings.dac01)))
+
+	#print dac23
+	print("Dac23 : {}".format(hex(settings.dac23)))
+
+	#print swpreset
+	print("Sweep Preset Value : {}".format(settings.swpreset))
+
+	#print nregions
+	print("Number of regions : {}".format(settings.nregions))
+
+	#print caluse
+	print("Calibration Used? : {}".format(bool(settings.caluse & 1)))
+	print("Calibration 'formula' : {}".format(hex(settings.caluse >> 1)))
+
+	#print fstchan
+	print("First Time Channel in 16 ns units : {}".format(settings.fstchan))
+
+	#print active
+	print("Is module enabled in system 1? : {}".format(bool(settings.active == 1)))
+
+	#print calpoints
+	print("Number of Calibration Points : {}".format(settings.calpoints))
+
+def set_to_sweep_mode(nDisplay=0):
 	''' Sets the P7888 settings to sweep mode. 
 	See the p7888_c_definitions for details. Or 
 	the p7888 manual
@@ -131,14 +167,39 @@ def set_to_sweep_mode():
 	#autoincrement file name?
 	settings.autoinc = 0
 
+	#dont send out synchronization pulses
+	settings.syncout = 0
+
+	#write to listfile continuously?
+	settings.savedata = 0b010
+
+	#use calibration
+	settings.caluse = 1
+
+
+
+
+	#write to list
 	#i dont understand this. 
 	#transfered from old settings
+	settings.dac01 = 0x06660948
+	settings.dac23 = 0x075c0666
 	settings.digio = 0
 	settings.digval = 0
 	settings.fstchan = 0
+	settings.bitshift = 0
+	settings.range = 496000
+	settings.roimax = 4096
+	settings.timepreset = 1000.0
+	settings.cycles = 1
+	settings.active = 1
+	settings.calpoints = 0
 
+	#write_settings
+	p7888_dll.StoreSettingData(settings, nDisplay)
 
 if __name__ == '__main__':
 	get_and_print_number_of_cards()
 	get_and_print_settings()
+	#set_to_sweep_mode()
 	print("Started? : {}".format(is_started(nDisplay=0)))
