@@ -1,265 +1,144 @@
+import p7888_dll
 
-from p7888_c_definitions import *
-import ctypes
+def is_started(nDisplay=0):
+	status = p7888_dll.ACQSTATUS()
+	p7888_dll.GetStatusData(status,nDisplay)
+	is_started = status.started
+	return bool(is_started)
 
+def get_and_print_number_of_cards():
+	print("###### Card Quantity Information")
+	print()
+	struct = p7888_dll.ACQDEF()
+	print("Number of Modules : {}".format(struct.nDevices))
+	print("Number of Active Displays : {}".format(struct.nDisplays))
+	print("Number of Systems : {}".format(struct.nSystems))
+	print("Controlled by MCDWIN? : {}".format(bool(struct.bRemote == 1)))
 
-# Test 1: Load the COMCTL.DLL, this is the DLL specified in figure 5.9 of the
-# P7888 manual. It appears that its actually "comctl32.dll" as a window search
-# revealed.
+def get_and_print_settings(nDisplay = 0):
 
-# Here we load the Dynamic Linked Library that allows sending commands to the
-# P7888 card provided we have enabled remote mode in the P7888 server. See
-# section 5.2 (p. 5-9) in the p7888 docs.
-comtec_dll = ctypes.windll.LoadLibrary("comctl32.dll")
+	print("###### Device Settings for nDisplay = {}".format(nDisplay))
+	print()
 
-# In section 5.4, they instead reference "dp7888.dll"! This is what is used
-# for controlling the server.
-dp7888_dll = ctypes.windll.LoadLibrary("dp7888.dll")
+	settings = p7888_dll.ACQSETTING()
 
+	p7888_dll.GetSettingData(settings, nDisplay)
 
-HWND = HANDLE
+	#print range
+	print("Spectrum Length - 'range' : {}".format(settings.range))
+	print()
+	
+	#print prena
+	print("Enabled Presets:")
+	prena_val = settings.prena
+	setting = [
+		"Realtime Preset Enabled", 
+		"Single Sweeps Enabled",
+		"Sweep Preset Enabled",
+		"ROI Preset Enabled",
+		"Starts Preset Enabled",
+		"ROI2 Preset Enabled",
+		"ROI3 Preset Enabled",
+		"ROI4 Preset Enabled"
+		]
+	for bit in range(0,8):
+		value = (prena_val & (1 << bit))
+		print("\t{} : {}".format(setting[bit], bool(value)))
+	print()
 
-#Specify the functions in CTYPES
+	#print ssweeps
+	print("Number of Sweeps for Single Sweep Mode : {}".format(settings.ssweeps))
 
-#StoreSettingData
-#	Stores Settings into the DLL
-#		VOID APIENTRY StoreSettingData(ACQSETTING FAR *Setting, int nDisplay);
-StoreSettingData = dp7888_dll.StoreSettingData
-StoreSettingData.restype = None
-StoreSettingData.argtypes = [POINTER(ACQSETTING), c_int]
+	#print roimin
+	print("Lower ROI Limit : {}".format(settings.roimin))
 
-#GetSettingData
-#	Get Settings stored in the DLL
-#	Store System Definition into DLL
-#		int APIENTRY GetSettingData(ACQSETTING FAR *Setting, int nDisplay);
-GetSettingData = dp7888_dll.GetSettingData
-GetSettingData.restype = c_int
-GetSettingData.argtypes = [POINTER(ACQSETTING), c_int]
+	#print roimax
+	print("Upper ROI Limit : {}".format(settings.roimax))
 
-#StoreStatusData
-#	Store the Status into the DLL
-#		VOID APIENTRY StoreStatusData(ACQSTATUS FAR *Status, int nDisplay);
-StoreStatusData = dp7888_dll.StoreStatusData 
-StoreStatusData.restype = None
-StoreStatusData.argtypes = [POINTER(ACQSTATUS), c_int]
+	#print eventpreset
+	print("ROI Preset Value : {}".format(settings.eventpreset))
 
-#GetStatusData
-#	Get the Status
-#		int APIENTRY GetStatusData(ACQSTATUS FAR *Status, int nDisplay);
-GetStatusData = dp7888_dll.GetStatusData
-GetStatusData.restype = c_int
-GetStatusData.argtypes = [POINTER(ACQSTATUS), c_int]
+	#print timepreset
+	print("Time Preset Value : {}".format(settings.timepreset))
 
-#Start
-#	Start
-#		VOID APIENTRY Start(int nSystem); // Start
-Start = dp7888_dll.Start
-Start.restype = None
-Start.argtypes = [c_int]
+	#print savedata
+	print()
+	print("Save Data Mode:")
+	savedata_val = settings.savedata
+	setting = [
+		"Auto Save After Stop",
+		"Write List File",
+		"Listfile Only, No Histogram"
+		]
+	for bit in range(0,3):
+		value = (savedata_val & (1 << bit))
+		print("\t{} : {}".format(setting[bit], bool(value)))
+	print()
 
-#Halt
-#	Halt
-#		VOID APIENTRY Halt(int nSystem);
-Halt = dp7888_dll.Halt
-Halt.restype = None
-Halt.argtypes = [c_int]
+	#print fmt
+	setting = ["ASCII", "Binary"]
+	print("Data Format : {}".format(setting[settings.fmt]))
 
-#Continue
-#	Continue
-#		VOID APIENTRY Continue(int nSystem);
-Continue = dp7888_dll.Continue
-Continue.restype = None
-Continue.argtypes = [c_int]
+	#print autoinc
+	print("Auto Increment Filename? : {}".format(bool(settings.autoinc == 1)))
 
-#NewSetting
-#	Indicate new Settings to Server
-#		VOID APIENTRY NewSetting(int nDevice);
-NewSetting = dp7888_dll.NewSetting
-NewSetting.restype = None
-NewSetting.argtypes = [c_int]
+	#print cycles
+	print("Cycles for Sequential Mode : {}".format(settings.cycles))
 
-#ServExec
-#	Execute the Server P7888.exe
-#		UINT APIENTRY ServExec(HWND ClientWnd);
-ServExec = dp7888_dll.ServExec
-ServExec.restype = c_uint
-ServExec.argtypes = [HWND]
+	#print sweepmode
 
-#StoreData
-#	 Stores Data pointers into the DLL
-#		VOID APIENTRY StoreData(ACQDATA FAR *Data, int nDisplay);
-StoreData = dp7888_dll.StoreData
-StoreData.restype = None
-StoreData.argtypes = [POINTER(ACQDATA), c_int]
+	#print syncout
 
-#GetData
-#	Get Data pointers
-#		int APIENTRY GetData(ACQDATA FAR *Data, int nDisplay);
-GetData = dp7888_dll.GetData
-GetData.restype = c_int
-GetData.argtypes = [POINTER(ACQDATA), c_int]
+def set_to_sweep_mode():
+	''' Sets the P7888 settings to sweep mode. 
+	See the p7888_c_definitions for details. Or 
+	the p7888 manual
 
-#GetSpec
-#	// Get a spectrum value
-#		long APIENTRY GetSpec(long i, int nDisplay);
-GetSpec = dp7888_dll.GetSpec
-GetSpec.restype = c_long
-GetSpec.argtypes = [c_long, c_int]
+	We want to collect as many sweeps as come in 
+	without halting. This prevents a slow down in 
+	data acquisition rate. Supposedly there's a 2
+	second slow down when halting. Thus lowest four bits
+	of sweepmode[0:3] are 0.
 
-#SaveSetting
-#	// Save Settings
-#		VOID APIENTRY SaveSetting(void); 
-SaveSetting = dp7888_dll.SaveSetting
-SaveSetting.restype = None
-SaveSetting.argtypes = []
+	The DMA bit in sweepmode[5] sets the card for high 
+	counting rates if 1. See the manual 5.1.4 for more
+	info on DMA mode.
 
-#GetStatus
-#	// Request actual Status from Server
-#		 int APIENTRY GetStatus(int nDevice);
-GetStatus = dp7888_dll.GetStatus
-GetStatus.restype = c_int
-GetStatus.argtypes = [c_int]
+	We assume no wraparound is needed. This is the case 
+	when photons come in no later than 2s after the 
+	start pulse. So sweepmode[6] = 0.
 
-#Erase
-#	Erase Spectra
-#		VOID APIENTRY Erase(int nSystem); 
-Erase = dp7888_dll.Erase
-Erase.restype = None
-Erase.argtypes = [c_int]
+	I believe start event generation logs the start 
+	events in the data file. This is useful for us
+	as our start events will be periodically created
+	by us.
 
-#SaveData
-#	Saves data
-#		VOID APIENTRY SaveData(int nDevice); 
-SaveData = dp7888_dll.SaveData
-SaveData.restype = None
-SaveData.argtypes = [c_int]
+	sweepmode[12] enables the 4 channel mode if the first bit is 
+	zero.
+	'''
 
-#GetBlock
-#	Get a block of spectrum data
-#		VOID APIENTRY GetBlock(long FAR *hist, int start, int end, int step, int nDisplay); 
-GetBlock = dp7888_dll.GetBlock
-GetBlock.restype = None
-GetBlock.argtypes = [POINTER(c_long), c_int, c_int, c_int, c_int]
+	settings = p7888_dll.ACQSETTING()
 
-#StoreDefData
-#	
-#		VOID APIENTRY StoreDefData(ACQDEF FAR *Def);
-StoreDefData = dp7888_dll.StoreDefData
-StoreDefData.restype = None
-StoreDefData.argtypes = [POINTER(ACQDEF)]
+	#set the data format to binary mode
+	settings.fmt = 1 
 
-#GetDefData
-#	Get System Definition
-#		int APIENTRY GetDefData(ACQDEF FAR *Def);
-GetDefData = dp7888_dll.GetDefData
-GetDefData.restype = c_int
-GetDefData.argtypes = [POINTER(ACQDEF)]
+	#disable all presets
+	settings.prena = 0
 
-#LoadData
-#	 Loads data
-#		VOID APIENTRY LoadData(int nDisplay); 
-LoadData = dp7888_dll.LoadData
-LoadData.restype = None
-LoadData.argtypes = [c_int]
+	#enable sweep mode as described above.
+	settings.sweepmode = 0x10A0
 
-#AddData
-#	 Adds data
-#		VOID APIENTRY AddData(int nDisplay); 
-AddData = dp7888_dll.AddData
-AddData.restype = None
-AddData.argtypes = [c_int]
+	#autoincrement file name?
+	settings.autoinc = 0
 
-#SubData
-#	Subtracts data
-#		VOID APIENTRY SubData(int nDisplay); 
-SubData = dp7888_dll.SubData
-SubData.restype = None
-SubData.argtypes = [c_int]
+	#i dont understand this. 
+	#transfered from old settings
+	settings.digio = 0
+	settings.digval = 0
+	settings.fstchan = 0
 
-#Smooth
-#	Smooth data
-#		VOID APIENTRY Smooth(int nDisplay); 
-Smooth = dp7888_dll.Smooth
-Smooth.restype = None
-Smooth.argtypes = [c_int]
-
-#NewData
-#	Indicate new ROI or string Data
-#		VOID APIENTRY NewData(void); 
-NewData = dp7888_dll.NewData
-NewData.restype = None
-NewData.argtypes = []
-
-#HardwareDlg
-#	 Calls the Settings dialog box
-#		VOID APIENTRY HardwareDlg(int item);
-HardwareDlg = dp7888_dll.HardwareDlg
-HardwareDlg.restype = None
-HardwareDlg.argtypes = [c_int]
-
-
-#UnregisterClient
-#	Clears remote mode from MCDWIN
-#		VOID APIENTRY UnregisterClient(void);
-UnregisterClient = dp7888_dll.UnregisterClient
-UnregisterClient.restype = None
-UnregisterClient.argtypes = []
-
-#DestroyClient
-#	Close MCDWIN
-#		VOID APIENTRY DestroyClient(void); 
-DestroyClient = dp7888_dll.DestroyClient
-DestroyClient.restype = None
-DestroyClient.argtypes = []
-
-
-#ClientExec
-#	Execute the Client MCDWIN.EXE
-#		UINT APIENTRY ClientExec(HWND ServerWnd);
-ClientExec = dp7888_dll.ClientExec
-ClientExec.restype = c_uint
-ClientExec.argtypes = [HWND]
-
-#LVGetDat
-#	Copies the spectrum to an array
-#		int APIENTRY LVGetDat(unsigned long HUGE *datp, int nDisplay);
-LVGetDat = dp7888_dll.LVGetDat
-LVGetDat.restype = c_int
-LVGetDat.argtypes = [POINTER(c_ulong), c_int]
-
-#RunCmd
-#	Executes command
-#		VOID APIENTRY RunCmd(int nDisplay, LPSTR Cmd);
-LPSTR = POINTER(c_char)
-RunCmd = dp7888_dll.RunCmd
-RunCmd.restype = None
-RunCmd.argtypes = [c_int, LPSTR]
-
-#LVGetRoi
-#	Copies the ROI boundaries to an array
-#		int APIENTRY LVGetRoi(unsigned long FAR *roip, int nDisplay);
-LVGetRoi = dp7888_dll.LVGetRoi
-LVGetRoi.restype = c_int
-LVGetRoi.argtypes = [POINTER(c_ulong), c_int]
-
-#LVGetCnt
-#	Copies Cnt numbers to an array
-#		int APIENTRY LVGetCnt(double far *cntp, int nDisplay);
-LVGetCnt = dp7888_dll.LVGetCnt
-LVGetCnt.restype = c_int
-LVGetCnt.argtypes = [POINTER(c_double), c_int]
-
-#LVGetStr
-#	Copies strings to an array
-#		int APIENTRY LVGetStr(char far *strp, int nDisplay);
-LVGetStr = dp7888_dll.LVGetStr
-LVGetStr.restype = c_int
-LVGetStr.argtypes = [POINTER(c_char), c_int]
 
 if __name__ == '__main__':
-	settings = ACQSETTING()
-	nDisplay = 1
-
-	print(settings.range)
-	print(GetSettingData(settings,nDisplay))
-	print(settings.range)
+	get_and_print_number_of_cards()
+	get_and_print_settings()
+	print("Started? : {}".format(is_started(nDisplay=0)))
