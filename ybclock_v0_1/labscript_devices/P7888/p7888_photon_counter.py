@@ -198,6 +198,8 @@ def set_to_sweep_mode(nDisplay=0):
 	#write_settings
 	p7888_dll.StoreSettingData(settings, nDisplay)
 
+
+
 if __name__ == '__main__':
 	get_and_print_number_of_cards()
 	get_and_print_settings()
