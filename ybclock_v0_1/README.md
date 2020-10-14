@@ -10,3 +10,4 @@ call to include it in the main sequence, or if you just want to run it in consta
 # Programming Environment
 
 Use Sublime Text, and Sublime Merge for a fantastic text editor and repository manager respectively. 
+Use the elasticTabstops package in Sublime Text! Very useful for maintaining readable code.
