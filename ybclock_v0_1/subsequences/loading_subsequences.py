@@ -27,5 +27,37 @@ def blue_mot(t0):
 	#do something else???
 	return blue_mot_duration
 
+def load_green_mot(t0,ramp_time):
 
-print("Imported 'loading_subsequences'...")
+	t = t0
+
+	blue_power.ramp(t, 
+		duration  	= ramp_time, 
+		initial   	= 0.24, 
+		final     	= 50e-3, 
+		samplerate	= 1e3
+	)
+
+	x_bias_field.ramp(t, 
+		duration  	= ramp_time,
+		initial   	= -0.608,
+		final     	= 1.3,
+		samplerate	= 1e3
+	)
+
+	z_bias_field.ramp(t, 
+		duration  	= ramp_time,
+		initial   	= 2.110,
+		final     	= 0,
+		samplerate	= 1e3
+	)
+
+
+	t += ramp_time
+
+	blue_mot_aom_and_shutter.disable(t + 74e-3)
+	green_frequency_fpga_trigger.enable(t)
+
+	return ramp_time
+
+print("Imported 'loading_subsequences'")
