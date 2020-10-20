@@ -1,6 +1,7 @@
 from labscript import start, stop, add_time_marker, AnalogOut, DigitalOut
 from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_6713, NI_PCI_6284
 from labscript_devices.PineBlaster import PineBlaster
+from user_devices.P7888.labscript_devices import P7888
 
 def define_connection_table():
 	### Pseudo Clock
@@ -11,7 +12,12 @@ def define_connection_table():
 		usbport           	= 'COM5'
 	)
 	
-
+	### Acquisition
+	P7888( #photon counting card
+		name    	= 'photon_counter',
+		nDisplay	= 0
+	)
+	
 	### NI Cards
 	NI_PCI_6284( #digital card
 		name            	= 'ni_pci_6284_dev6',
