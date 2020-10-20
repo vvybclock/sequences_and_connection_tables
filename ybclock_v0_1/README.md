@@ -1,3 +1,7 @@
+# File Structure
+
+This folder contains full-fledged experimental sequences and the connection_table. If you have an experiment that uses a different connection table, it should go in the next version of ybclock_vX_X, i.e. ybclock_v0_2. This helps seperate code that was written for different wiring setups.  Things that return full data sets upon completion. Subsequences which are components of each full sequence are held in the subfolder labeled 'subsequences'.
+
 # How to Define Sequence Sections
 
 The sequence must be defined in compartmentalized sections. That means a file for a the Loading Sequence, maybe a file for the green mot, maybe for the blue. A file for pumping sequence, and so on.
