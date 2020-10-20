@@ -17,7 +17,7 @@ def define_connection_table():
 		name    	= 'photon_counter',
 		nDisplay	= 0
 	)
-	
+
 	### NI Cards
 	NI_PCI_6284( #digital card
 		name            	= 'ni_pci_6284_dev6',
@@ -64,7 +64,7 @@ def define_connection_table():
 	#====================
 	#	This card has a lot of Analog Output Ramps
 	AnalogOut(
-		name         	= 'mot_voltage_setting_do_not_use',
+		name         	= 'mot_voltage_setting',
 		parent_device	= ni_pci_6723_dev3,
 		connection   	= 'ao3',
 		limits       	= None
@@ -153,13 +153,13 @@ def define_connection_table():
 
 	#the DO NOT USE digital outs
 	DigitalOut(
-		name         	= 'trigger_for_p7888_start_DONOTUSE',
+		name         	= 'p7888_start_trigger',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line11'
 	)
 
 	DigitalOut(
-		name         	= 'p7888_flushing_channel_DONOTUSE',
+		name         	= 'p7888_flushing_channel',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line15'
 	)
