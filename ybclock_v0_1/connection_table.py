@@ -192,7 +192,7 @@ def define_connection_table():
 	)
 
 
-
+	print("Time Markers:")
 
 if __name__ == '__main__':
 
