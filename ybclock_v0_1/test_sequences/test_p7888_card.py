@@ -25,16 +25,16 @@ if __name__ == '__main__':
 	start()
 
 	repeat_p7888_start_triggers(
-		ti = 0.1,
-		tf = 3,
-		dt = 0.01
+		ti = 5.1,
+		tf = 10,
+		dt = 1
 	)
 
 	send_fake_photons(
-		ti = 0.1,
-		tf = 3,
-		dt = 0.001
-	)
+		ti = 5.1,
+		tf = 10,
+		dt = 0.0001
+	 )
 
 	
-	stop(4)
+	stop(11)

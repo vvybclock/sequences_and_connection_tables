@@ -14,9 +14,7 @@ def define_connection_table():
 	
 	### Acquisition
 	P7888( #photon counting card
-		name    	= 'photon_counter',
-		nDisplay	= 0,
-		nSystem 	= 0
+		name	= 'photon_counter'
 	)
 
 	### NI Cards
