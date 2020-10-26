@@ -10,6 +10,29 @@ and allows pdoc to find it.
 See [the pdocs documentation](https://pdoc3.github.io/pdoc/doc/pdoc/#gsc.tab=0) 
 for more.
 
+# Virtual Environments
+
+I am not familiar with the use of virtual environments. I know only that they 
+are used to maintain independent versions of different programs. 
+
+Code writing unfortunately involves a lot of debugging and determining the 
+idiosyncracies of every function defined in the libraries you're using for 
+development. These are at the whims of the developer and may change at any time.
+No library is perfect in what ever respect you define at the outset, and so the 
+developer might decide to change the syntax needed to do something. Rather than
+have to rewrite *perfectly working* code, one can use a virtual environment to 
+keep the libraries young for eternity. And if one needs to move or try updates,
+transfer to a new virtual environment without breaking existing code.
+
+That's all I know. If you want to learn more about how to actually implement 
+these ideas in practice. Use google.
+
+I'm using conda to manage virtual environments I believe. They are used via 
+`conda activate ybclock_v0_1`. Use that as a starting point for understanding
+how this virtual environment management is implemented. See [the labscript docs]
+(https://docs.labscriptsuite.org/en/stable/installation/regular-anaconda/) for
+more. Hopefully, that link won't break in the future.
+
 # Using Sequences
 
 Open up runmanager (ybclock_vX_X) and select the sequence you want. (De)select
