@@ -74,3 +74,9 @@ for allowing compilation by run manager.
 Use Sublime Text, and Sublime Merge for a fantastic text editor and repository
 manager respectively.  Use the elasticTabstops package in Sublime Text! Very
 useful for maintaining readable code.
+
+# To Do
+
+* Install pdocs
+* Define script for globally renaming variable names across all files. Useful
+for channels.
