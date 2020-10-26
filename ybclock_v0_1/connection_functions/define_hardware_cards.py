@@ -3,6 +3,13 @@ from labscript_devices.PineBlaster import PineBlaster
 
 
 def define_hardware_cards():
+	'''
+		define_hardware_cards -- We define cards in order of connection.
+		The PseudoClock drives the digital card which in turn triggers the
+		secondary pseudoclock 'analog_clock', which in turn drives the analog
+		or secondary NI cards.
+		
+	'''
 	### Pseudo Clock
 	PineBlaster(
 		name              	= 'digital_clock',
