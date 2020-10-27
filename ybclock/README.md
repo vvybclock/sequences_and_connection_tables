@@ -8,6 +8,8 @@ for channels.
 
 # Documentation
 
+Documentation is stored in '/html'.
+
 Documentation shall be performed using 'pdoc', as it is simple. Perfect for grad
 students. 
 
