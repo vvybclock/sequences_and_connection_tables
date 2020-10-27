@@ -17,8 +17,4 @@
 	, then the hardware version shall remain the same, and the git shall account
 	for improvements and new connections.
 
-	#To Do
-
-	* Write a program for moving code from hardware version to hardware 
-	version.
 """
