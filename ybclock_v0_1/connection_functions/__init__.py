@@ -1,9 +1,13 @@
 """
 
-	connection_functions --- Holds the functions for defining the hardware cards
+	#connection_functions
+
+	Holds the functions for defining the hardware cards
 	and channels of the experiment.
 
-	Implementation -- This folder appears as a module via the use of the 
+	## Implementation
+
+	This folder appears as a module via the use of the 
 	__init__.py file held inside of it. Through the use of explicit import calls
 	, we can import functions held inside each of the subfiles without worrying
 	about how they are named. This allows us to spread, what would otherwise be
