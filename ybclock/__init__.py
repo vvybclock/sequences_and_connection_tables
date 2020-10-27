@@ -4,7 +4,7 @@
 	Where we store our connection tables and sequences for our
 	current version of hardware. 
 
-	## Versioning
+	## Hardware Versioning
 
 	The idea for the version number is to separate mutually exclusive hardware
 	wirings. For example when we use something that was driving the mot now drives

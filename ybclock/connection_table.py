@@ -1,6 +1,4 @@
 '''
-	#connection_table.py
-
 	Labscript requires this file with this name so that it can compile what it
 	needs for BLACS.
 
