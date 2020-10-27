@@ -1,6 +1,6 @@
 from labscript import start, stop, AnalogOut, DigitalOut
-from labscriptlib.ybclock_v0_1.connection_table import define_connection_table
-from labscriptlib.ybclock_v0_1.subsequences import *
+from labscriptlib.ybclock.connection_table import define_connection_table
+from labscriptlib.ybclock.subsequences import *
 
 
 if __name__ == '__main__':

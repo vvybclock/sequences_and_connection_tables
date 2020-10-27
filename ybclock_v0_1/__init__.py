@@ -1,5 +1,5 @@
 """
-	#ybclock_v0_1
+	#ybclock
 	
 	Where we store our connection tables and sequences for our
 	current version of hardware. 

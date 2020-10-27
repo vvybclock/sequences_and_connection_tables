@@ -36,7 +36,7 @@ That's all I know. If you want to learn more about how to actually implement
 these ideas in practice. Use google.
 
 I'm using conda to manage virtual environments I believe. They are used via 
-`conda activate ybclock_v0_1`. Use that as a starting point for understanding
+`conda activate ybclock`. Use that as a starting point for understanding
 how this virtual environment management is implemented. See [the labscript docs]
 (https://docs.labscriptsuite.org/en/stable/installation/regular-anaconda/) for
 more. Hopefully, that link won't break in the future.

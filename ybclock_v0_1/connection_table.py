@@ -13,8 +13,8 @@
 
 from labscript import start, stop
 
-from labscriptlib.ybclock_v0_1.connection_functions import define_hardware_cards
-from labscriptlib.ybclock_v0_1.connection_functions import define_channels
+from labscriptlib.ybclock.connection_functions import define_hardware_cards
+from labscriptlib.ybclock.connection_functions import define_channels
 
 def define_connection_table():
 	''' Here we break out the connection table into smaller function calls,

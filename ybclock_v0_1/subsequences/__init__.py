@@ -10,15 +10,15 @@
 
 	Simply store your custom subsequences in a file like `dummy_filename.py`. 
 
-	If you want your functions to be accessible from `ybclock_v0_1.subsequences`
+	If you want your functions to be accessible from `ybclock.subsequences`
 	then add a `from .dummy_filename import *` line to the `__init__.py`. If 
 	however, you want to group a large number of functions then don't add this 
 	line.
 
 	In the first case, the imports will look like 
-	`import labscriptlib.ybclock_v0_1.subsequences.dummy_subsequence as ds`
+	`import labscriptlib.ybclock.subsequences.dummy_subsequence as ds`
 	and in the second like
-	`import labscriptlib.ybclock_v0_1.subsequences.dummy_filename.dummy_subsequence as ds`
+	`import labscriptlib.ybclock.subsequences.dummy_filename.dummy_subsequence as ds`
 
 '''
 
