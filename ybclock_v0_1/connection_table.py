@@ -3,6 +3,12 @@
 
 	Labscript requires this file with this name so that it can compile what it
 	needs for BLACS.
+
+	Since it's name suggests this is also where we get our connection table, I 
+	also took the liberty to define the `define_connection_table()` function here
+	for easy import into other sequences.
+
+	The bulk of the actual connections is in the `connection_functions` module.
 '''
 
 from labscript import start, stop
@@ -28,7 +34,7 @@ def define_connection_table():
 	With the function call format, it allows you to run the device/channel
 	declaration everytime you compile, as desired.
 	'''
-	
+
 	define_hardware_cards()
 	
 	define_channels()

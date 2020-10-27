@@ -1,3 +1,7 @@
+'''
+	Holds sequences regarding loading atoms into our traps.
+'''
+
 from labscript import add_time_marker
 
 def blue_mot(t0):
