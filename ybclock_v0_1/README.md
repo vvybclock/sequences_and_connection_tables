@@ -1,6 +1,8 @@
 # To Do
 
-* Install pdocs
+* Write a program for moving code from hardware version to hardware 
+	version.
+
 * Define script for globally renaming variable names across all files. Useful
 for channels.
 
