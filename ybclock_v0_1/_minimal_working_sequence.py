@@ -1,3 +1,9 @@
+'''
+	#minimal working sequence
+
+	This is a simple file that shows you the minimal elements you need 
+	to write your own experimental sequence.
+'''
 from labscript import start, stop
 from labscriptlib.ybclock_v0_1.connection_table import define_connection_table
 
