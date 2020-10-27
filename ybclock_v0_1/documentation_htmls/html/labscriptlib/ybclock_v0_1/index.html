@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
 <title>labscriptlib.ybclock_v0_1 API documentation</title>
-<meta name="description" content="ybclock_v0_1 -- Where we store our connection tables and sequences for our
-current version of hardware …" />
+<meta name="description" content="ybclock_v0_1 …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,30 +22,34 @@ current version of hardware …" />
 <h1 class="title">Package <code>labscriptlib.ybclock_v0_1</code></h1>
 </header>
 <section id="section-intro">
-<p>ybclock_v0_1 &ndash; Where we store our connection tables and sequences for our
+<h1 id="ybclock_v0_1">ybclock_v0_1</h1>
+<p>Where we store our connection tables and sequences for our
 current version of hardware. </p>
-<p>Versioning &ndash; The idea for the version number is to separate
-mutually exclusive hardware wirings. For example when we use something that
-was driving the mot now drives an AOM, we should change version number so as
-not to run (old AOM) code that could break our MOT by over-driving it.</p>
+<h2 id="versioning">Versioning</h2>
+<p>The idea for the version number is to separate mutually exclusive hardware
+wirings. For example when we use something that was driving the mot now drives
+an AOM, we should change version number so as not to run (old AOM) code that
+could break our MOT by over-driving it.</p>
 <p>Documentation as to what changed shall go into HW_VERSIONING.md</p>
 <p>If however we are installing new channels without disconnecting old channels
 , then the hardware version shall remain the same, and the git shall account
 for improvements and new connections.</p>
-<p>TODO &ndash; Write a program for moving code from hardware version to hardware
-version.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-        ybclock_v0_1 -- Where we store our connection tables and sequences for our
+        #ybclock_v0_1
+        
+        Where we store our connection tables and sequences for our
         current version of hardware. 
 
-        Versioning -- The idea for the version number is to separate
-        mutually exclusive hardware wirings. For example when we use something that
-        was driving the mot now drives an AOM, we should change version number so as
-        not to run (old AOM) code that could break our MOT by over-driving it.
+        ## Versioning
+
+        The idea for the version number is to separate mutually exclusive hardware
+        wirings. For example when we use something that was driving the mot now drives
+        an AOM, we should change version number so as not to run (old AOM) code that
+        could break our MOT by over-driving it.
 
         Documentation as to what changed shall go into HW_VERSIONING.md
 
@@ -54,8 +57,6 @@ version.</p>
         , then the hardware version shall remain the same, and the git shall account
         for improvements and new connections.
 
-        TODO -- Write a program for moving code from hardware version to hardware 
-        version.
 &#34;&#34;&#34;</code></pre>
 </details>
 </section>
@@ -64,20 +65,19 @@ version.</p>
 <dl>
 <dt><code class="name"><a title="labscriptlib.ybclock_v0_1.connection_functions" href="connection_functions/index.html">labscriptlib.ybclock_v0_1.connection_functions</a></code></dt>
 <dd>
-<div class="desc"><p>connection_functions &mdash; Holds the functions for defining the hardware cards
-and channels of the experiment …</p></div>
+<div class="desc"><p>connection_functions …</p></div>
 </dd>
 <dt><code class="name"><a title="labscriptlib.ybclock_v0_1.connection_table" href="connection_table.html">labscriptlib.ybclock_v0_1.connection_table</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>connection_table.py …</p></div>
 </dd>
-<dt><code class="name"><a title="labscriptlib.ybclock_v0_1.loading_sequence" href="loading_sequence.html">labscriptlib.ybclock_v0_1.loading_sequence</a></code></dt>
+<dt><code class="name"><a title="labscriptlib.ybclock_v0_1.sequences" href="sequences/index.html">labscriptlib.ybclock_v0_1.sequences</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="labscriptlib.ybclock_v0_1.subsequences" href="subsequences/index.html">labscriptlib.ybclock_v0_1.subsequences</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>subsequences …</p></div>
 </dd>
 <dt><code class="name"><a title="labscriptlib.ybclock_v0_1.test_sequences" href="test_sequences/index.html">labscriptlib.ybclock_v0_1.test_sequences</a></code></dt>
 <dd>
@@ -95,14 +95,19 @@ and channels of the experiment …</p></div>
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#ybclock_v0_1">ybclock_v0_1</a><ul>
+<li><a href="#versioning">Versioning</a></li>
+</ul>
+</li>
+</ul>
 </div>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
 <li><code><a title="labscriptlib.ybclock_v0_1.connection_functions" href="connection_functions/index.html">labscriptlib.ybclock_v0_1.connection_functions</a></code></li>
 <li><code><a title="labscriptlib.ybclock_v0_1.connection_table" href="connection_table.html">labscriptlib.ybclock_v0_1.connection_table</a></code></li>
-<li><code><a title="labscriptlib.ybclock_v0_1.loading_sequence" href="loading_sequence.html">labscriptlib.ybclock_v0_1.loading_sequence</a></code></li>
+<li><code><a title="labscriptlib.ybclock_v0_1.sequences" href="sequences/index.html">labscriptlib.ybclock_v0_1.sequences</a></code></li>
 <li><code><a title="labscriptlib.ybclock_v0_1.subsequences" href="subsequences/index.html">labscriptlib.ybclock_v0_1.subsequences</a></code></li>
 <li><code><a title="labscriptlib.ybclock_v0_1.test_sequences" href="test_sequences/index.html">labscriptlib.ybclock_v0_1.test_sequences</a></code></li>
 </ul>

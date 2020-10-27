@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
 <title>labscriptlib.ybclock_v0_1.connection_table API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="connection_table.py …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,16 +22,53 @@
 <h1 class="title">Module <code>labscriptlib.ybclock_v0_1.connection_table</code></h1>
 </header>
 <section id="section-intro">
+<h1 id="connection_tablepy">connection_table.py</h1>
+<p>Labscript requires this file with this name so that it can compile what it
+needs for BLACS.</p>
+<p>Since it's name suggests this is also where we get our connection table, I
+also took the liberty to define the <code><a title="labscriptlib.ybclock_v0_1.connection_table.define_connection_table" href="#labscriptlib.ybclock_v0_1.connection_table.define_connection_table">define_connection_table()</a></code> function here
+for easy import into other sequences.</p>
+<p>The bulk of the actual connections is in the <code>connection_functions</code> module.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from labscript import start, stop
+<pre><code class="python">&#39;&#39;&#39;
+        #connection_table.py
+
+        Labscript requires this file with this name so that it can compile what it
+        needs for BLACS.
+
+        Since it&#39;s name suggests this is also where we get our connection table, I 
+        also took the liberty to define the `define_connection_table()` function here
+        for easy import into other sequences.
+
+        The bulk of the actual connections is in the `connection_functions` module.
+&#39;&#39;&#39;
+
+from labscript import start, stop
 
 from labscriptlib.ybclock_v0_1.connection_functions import define_hardware_cards
 from labscriptlib.ybclock_v0_1.connection_functions import define_channels
 
 def define_connection_table():
+        &#39;&#39;&#39; Here we break out the connection table into smaller function calls,
+        which are in turn broken up and held in connection_functions module.
+        This allows for conceptual partitioning and easier navigation of the code.
+
+        More crucially, it&#39;s necessary for allowing importation into other sequences.
+
+        I faced problems without defining this function. `define_connection_table`
+        needs to be called in the `example_sequence.py` runmanager is compiling.
+
+        The problem is when compiling multiple shots, each time you do  &#39;from
+        connection_table import *` it won&#39;t run each of the device/channel declaration
+        functions again, and so you would need to reset each compiler instance if you
+        wanted to run another shot.
+
+        With the function call format, it allows you to run the device/channel
+        declaration everytime you compile, as desired.
+        &#39;&#39;&#39;
 
         define_hardware_cards()
         
@@ -67,12 +104,41 @@ if __name__ == &#39;__main__&#39;:
 <span>def <span class="ident">define_connection_table</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Here we break out the connection table into smaller function calls,
+which are in turn broken up and held in connection_functions module.
+This allows for conceptual partitioning and easier navigation of the code.</p>
+<p>More crucially, it's necessary for allowing importation into other sequences.</p>
+<p>I faced problems without defining this function. <code><a title="labscriptlib.ybclock_v0_1.connection_table.define_connection_table" href="#labscriptlib.ybclock_v0_1.connection_table.define_connection_table">define_connection_table()</a></code>
+needs to be called in the <code>example_sequence.py</code> runmanager is compiling.</p>
+<p>The problem is when compiling multiple shots, each time you do
+'from
+connection_table import *` it won't run each of the device/channel declaration
+functions again, and so you would need to reset each compiler instance if you
+wanted to run another shot.</p>
+<p>With the function call format, it allows you to run the device/channel
+declaration everytime you compile, as desired.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def define_connection_table():
+        &#39;&#39;&#39; Here we break out the connection table into smaller function calls,
+        which are in turn broken up and held in connection_functions module.
+        This allows for conceptual partitioning and easier navigation of the code.
+
+        More crucially, it&#39;s necessary for allowing importation into other sequences.
+
+        I faced problems without defining this function. `define_connection_table`
+        needs to be called in the `example_sequence.py` runmanager is compiling.
+
+        The problem is when compiling multiple shots, each time you do  &#39;from
+        connection_table import *` it won&#39;t run each of the device/channel declaration
+        functions again, and so you would need to reset each compiler instance if you
+        wanted to run another shot.
+
+        With the function call format, it allows you to run the device/channel
+        declaration everytime you compile, as desired.
+        &#39;&#39;&#39;
 
         define_hardware_cards()
         
@@ -92,7 +158,9 @@ if __name__ == &#39;__main__&#39;:
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#connection_tablepy">connection_table.py</a></li>
+</ul>
 </div>
 <ul id="index">
 <li><h3>Super-module</h3>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
 <title>labscriptlib.ybclock_v0_1.subsequences.loading_subsequences API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Holds sequences regarding loading atoms into our traps." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,13 +22,24 @@
 <h1 class="title">Module <code>labscriptlib.ybclock_v0_1.subsequences.loading_subsequences</code></h1>
 </header>
 <section id="section-intro">
+<p>Holds sequences regarding loading atoms into our traps.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from labscript import add_time_marker
+<pre><code class="python">&#39;&#39;&#39;
+        Holds sequences regarding loading atoms into our traps.
+&#39;&#39;&#39;
+
+from labscript import add_time_marker
 
 def blue_mot(t0):
+        &#39;&#39;&#39;
+        # Blue MOT Loading Sequence
+
+        It&#39;s very simple simple turn on all the lights and magnetic fields, and let 
+        the atoms trap.
+        &#39;&#39;&#39;
         t = t0
 
         #turn on the blue mot
@@ -56,6 +67,11 @@ def blue_mot(t0):
         return blue_mot_duration
 
 def load_green_mot(t0,ramp_time):
+        &#39;&#39;&#39;
+        # Blue MOT to Green MOT Transfer Sequence
+
+        Currently not working.
+        &#39;&#39;&#39;
 
         t = t0
 
@@ -102,12 +118,20 @@ print(&#34;Imported &#39;loading_subsequences&#39;&#34;)</code></pre>
 <span>def <span class="ident">blue_mot</span></span>(<span>t0)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><h1 id="blue-mot-loading-sequence">Blue MOT Loading Sequence</h1>
+<p>It's very simple simple turn on all the lights and magnetic fields, and let
+the atoms trap.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def blue_mot(t0):
+        &#39;&#39;&#39;
+        # Blue MOT Loading Sequence
+
+        It&#39;s very simple simple turn on all the lights and magnetic fields, and let 
+        the atoms trap.
+        &#39;&#39;&#39;
         t = t0
 
         #turn on the blue mot
@@ -139,12 +163,18 @@ print(&#34;Imported &#39;loading_subsequences&#39;&#34;)</code></pre>
 <span>def <span class="ident">load_green_mot</span></span>(<span>t0, ramp_time)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><h1 id="blue-mot-to-green-mot-transfer-sequence">Blue MOT to Green MOT Transfer Sequence</h1>
+<p>Currently not working.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def load_green_mot(t0,ramp_time):
+        &#39;&#39;&#39;
+        # Blue MOT to Green MOT Transfer Sequence
+
+        Currently not working.
+        &#39;&#39;&#39;
 
         t = t0
 

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>labscriptlib.ybclock_v0_1.subsequences API documentation</title>
-<meta name="description" content="subsequences …" />
+<title>labscriptlib.ybclock_v0_1.sequences.loading_sequence API documentation</title>
+<meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,75 +19,47 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>labscriptlib.ybclock_v0_1.subsequences</code></h1>
+<h1 class="title">Module <code>labscriptlib.ybclock_v0_1.sequences.loading_sequence</code></h1>
 </header>
 <section id="section-intro">
-<h1 id="subsequences">subsequences</h1>
-<p>Running an experiment consists mostly using smaller subsequences in chain.</p>
-<p>Since this is incredibly natural to remove complexity, as well as is obvious
-in coding, this module is used for containing subsequences. </p>
-<h1 id="adding-your-own-subsequences">Adding your own subsequences.</h1>
-<p>Simply store your custom subsequences in a file like <code>dummy_filename.py</code>. </p>
-<p>If you want your functions to be accessible from <code>ybclock_v0_1.subsequences</code>
-then add a <code>from .dummy_filename import *</code> line to the <code>__init__.py</code>. If
-however, you want to group a large number of functions then don't add this
-line.</p>
-<p>In the first case, the imports will look like
-<code>import labscriptlib.ybclock_v0_1.subsequences.dummy_subsequence as ds</code>
-and in the second like
-<code>import <a title="labscriptlib.ybclock_v0_1.subsequences.dummy_filename.dummy_subsequence" href="dummy_filename.html#labscriptlib.ybclock_v0_1.subsequences.dummy_filename.dummy_subsequence">dummy_subsequence()</a> as ds</code></p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#39;&#39;&#39;
-        #subsequences
+<pre><code class="python">from labscript import start, stop, AnalogOut, DigitalOut
+from labscriptlib.ybclock_v0_1.connection_table import define_connection_table
+from labscriptlib.ybclock_v0_1.subsequences import *
 
-        Running an experiment consists mostly using smaller subsequences in chain.
 
-        Since this is incredibly natural to remove complexity, as well as is obvious
-        in coding, this module is used for containing subsequences. 
+if __name__ == &#39;__main__&#39;:
 
-        #Adding your own subsequences.
+        define_connection_table()
+        
+        # Begin issuing labscript primitives
+        # start() elicits the commencement of the shot
+        start()
 
-        Simply store your custom subsequences in a file like `dummy_filename.py`. 
+        t = 0.1
 
-        If you want your functions to be accessible from `ybclock_v0_1.subsequences`
-        then add a `from .dummy_filename import *` line to the `__init__.py`. If 
-        however, you want to group a large number of functions then don&#39;t add this 
-        line.
+        blue_mot_duration = blue_mot(t)
 
-        In the first case, the imports will look like 
-        `import labscriptlib.ybclock_v0_1.subsequences.dummy_subsequence as ds`
-        and in the second like
-        `import labscriptlib.ybclock_v0_1.subsequences.dummy_filename.dummy_subsequence as ds`
+        trigger_the_cameras(t, duration=blue_mot_duration,frame_period_ms=148)
 
-&#39;&#39;&#39;
+        t += blue_mot_duration
 
-print(&#34;Importing Subsequences...&#34;)
-from .dummy_filename import *
-from .loading_subsequences import *
-from .camera_helper import *
-print(&#34;Finished importing Subsequences!&#34;)
-print()</code></pre>
+        t += load_green_mot(t, ramp_time = 40e-3)
+        
+        green_mot_duration = 5
+        trigger_the_cameras(t, duration=green_mot_duration,frame_period_ms=148)
+
+        t += green_mot_duration
+        # Stop the experiment shot with stop()
+        stop(t)
+
+print(&#34;Compiled loading_sequence!&#34;)</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
-<dl>
-<dt><code class="name"><a title="labscriptlib.ybclock_v0_1.subsequences.camera_helper" href="camera_helper.html">labscriptlib.ybclock_v0_1.subsequences.camera_helper</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="labscriptlib.ybclock_v0_1.subsequences.dummy_filename" href="dummy_filename.html">labscriptlib.ybclock_v0_1.subsequences.dummy_filename</a></code></dt>
-<dd>
-<div class="desc"><p>dummy_filename …</p></div>
-</dd>
-<dt><code class="name"><a title="labscriptlib.ybclock_v0_1.subsequences.loading_subsequences" href="loading_subsequences.html">labscriptlib.ybclock_v0_1.subsequences.loading_subsequences</a></code></dt>
-<dd>
-<div class="desc"><p>Holds sequences regarding loading atoms into our traps.</p></div>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -99,22 +71,12 @@ print()</code></pre>
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul>
-<li><a href="#subsequences">subsequences</a></li>
-<li><a href="#adding-your-own-subsequences">Adding your own subsequences.</a></li>
-</ul>
+<ul></ul>
 </div>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="labscriptlib.ybclock_v0_1" href="../index.html">labscriptlib.ybclock_v0_1</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="labscriptlib.ybclock_v0_1.subsequences.camera_helper" href="camera_helper.html">labscriptlib.ybclock_v0_1.subsequences.camera_helper</a></code></li>
-<li><code><a title="labscriptlib.ybclock_v0_1.subsequences.dummy_filename" href="dummy_filename.html">labscriptlib.ybclock_v0_1.subsequences.dummy_filename</a></code></li>
-<li><code><a title="labscriptlib.ybclock_v0_1.subsequences.loading_subsequences" href="loading_subsequences.html">labscriptlib.ybclock_v0_1.subsequences.loading_subsequences</a></code></li>
+<li><code><a title="labscriptlib.ybclock_v0_1.sequences" href="index.html">labscriptlib.ybclock_v0_1.sequences</a></code></li>
 </ul>
 </li>
 </ul>
