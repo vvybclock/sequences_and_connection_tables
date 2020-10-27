@@ -1,6 +1,4 @@
 '''
-	#subsequences
-
 	Running an experiment consists mostly using smaller subsequences in chain.
 
 	Since this is incredibly natural to remove complexity, as well as is obvious

@@ -1,7 +1,4 @@
 """
-
-	#connection_functions
-
 	Holds the functions for defining the hardware cards
 	and channels of the experiment.
 
