@@ -5,6 +5,12 @@
 from labscript import add_time_marker
 
 def blue_mot(t0):
+	'''
+	# Blue MOT Loading Sequence
+
+	It's very simple simple turn on all the lights and magnetic fields, and let 
+	the atoms trap.
+	'''
 	t = t0
 
 	#turn on the blue mot
@@ -32,6 +38,11 @@ def blue_mot(t0):
 	return blue_mot_duration
 
 def load_green_mot(t0,ramp_time):
+	'''
+	# Blue MOT to Green MOT Transfer Sequence
+
+	Currently not working.
+	'''
 
 	t = t0
 
