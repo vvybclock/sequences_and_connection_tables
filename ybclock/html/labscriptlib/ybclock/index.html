@@ -25,7 +25,7 @@
 <h1 id="ybclock">ybclock</h1>
 <p>Where we store our connection tables and sequences for our
 current version of hardware. </p>
-<h2 id="versioning">Versioning</h2>
+<h2 id="hardware-versioning">Hardware Versioning</h2>
 <p>The idea for the version number is to separate mutually exclusive hardware
 wirings. For example when we use something that was driving the mot now drives
 an AOM, we should change version number so as not to run (old AOM) code that
@@ -47,7 +47,7 @@ to <code>v3.x</code>. This way there's a clear cut divide between massive hardwa
         Where we store our connection tables and sequences for our
         current version of hardware. 
 
-        ## Versioning
+        ## Hardware Versioning
 
         The idea for the version number is to separate mutually exclusive hardware
         wirings. For example when we use something that was driving the mot now drives
@@ -79,7 +79,8 @@ and channels of the experiment …</p></div>
 </dd>
 <dt><code class="name"><a title="labscriptlib.ybclock.connection_table" href="connection_table.html">labscriptlib.ybclock.connection_table</a></code></dt>
 <dd>
-<div class="desc"><p>connection_table.py …</p></div>
+<div class="desc"><p>Labscript requires this file with this name so that it can compile what it
+needs for BLACS …</p></div>
 </dd>
 <dt><code class="name"><a title="labscriptlib.ybclock.sequences" href="sequences/index.html">labscriptlib.ybclock.sequences</a></code></dt>
 <dd>
@@ -91,7 +92,8 @@ and channels of the experiment …</p></div>
 </dd>
 <dt><code class="name"><a title="labscriptlib.ybclock.test_sequences" href="test_sequences/index.html">labscriptlib.ybclock.test_sequences</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Holds sequences for testing devices. Will hopefully be useful in the future,
+and not just for implementing devices in labscript.</p></div>
 </dd>
 </dl>
 </section>
@@ -107,7 +109,7 @@ and channels of the experiment …</p></div>
 <div class="toc">
 <ul>
 <li><a href="#ybclock">ybclock</a><ul>
-<li><a href="#versioning">Versioning</a><ul>
+<li><a href="#hardware-versioning">Hardware Versioning</a><ul>
 <li><a href="#what-do-i-do-when-i-do-a-major-change">What do I do when I do a major change?</a></li>
 </ul>
 </li>
