@@ -14,7 +14,7 @@ echo '#uses the venv pip to ensure it installs in the venv'
 
 ```
 ls ./documentation_htmls
-pdoc3 --html ..
+pdoc3 --html labscriptlib.ybclock_v0_1
 ```
 
 The last line generates documentation for the parent folder.
