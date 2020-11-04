@@ -143,7 +143,19 @@ def define_connection_table():
 		connection   	= 'ao3',
 		limits       	= (0,8)
 	)
-	
+
+	AnalogOut(
+		name         	= 'pump_aom_power',
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao7',
+	)
+
+	AnalogOut(
+		name         	= 'cooling_aom_power',
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao6',
+	)
+
 
 	#====================
 	# Dev 6 Connections
@@ -194,6 +206,18 @@ def define_connection_table():
 		name         	= 'green_frequency_fpga_trigger',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line3'
+	)
+
+	DigitalOut(
+		name         	= 'green_pumping_light',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line8'
+	)
+
+	DigitalOut(
+		name         	= 'green_probe_shutter',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line12'
 	)
 
 
