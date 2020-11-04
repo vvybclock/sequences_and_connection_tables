@@ -18,6 +18,17 @@ def send_fake_photons(ti,tf,dt):
 		t += dt/2
 
 
+def trigger_p7888():
+	#send pulse to trigger
+	pass
+
+def scan_green():
+	#set green power
+	#scan green frequency
+	pass
+
+
+
 if __name__ == '__main__':
 	define_connection_table()
 	# Begin issuing labscript primitives
