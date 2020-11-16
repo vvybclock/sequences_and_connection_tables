@@ -112,13 +112,13 @@ def camera():
 
 def photon_counter():
 	DigitalOut(
-		name         	= 'trigger_for_p7888_start_DONOTUSE',
+		name         	= 'p7888_start_trigger',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line11'
 	)
 
 	DigitalOut(
-		name         	= 'p7888_flushing_channel_DONOTUSE',
+		name         	= 'p7888_flushing_trigger',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line15'
 	)
