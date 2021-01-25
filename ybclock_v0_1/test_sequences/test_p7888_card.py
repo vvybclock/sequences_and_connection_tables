@@ -37,6 +37,8 @@ def send_photons():
 	#scan green frequency
 	pass
 
+def diagnostics():
+	pass
 
 
 if __name__ == '__main__':
@@ -57,7 +59,7 @@ if __name__ == '__main__':
 		ti = 5.1,
 		tf = 10,
 		dt = 0.0001
-	 )
+	)
 
 	
 	stop(11)
