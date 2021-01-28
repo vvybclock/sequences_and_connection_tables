@@ -2,7 +2,12 @@ from labscript import AnalogOut, DigitalOut
 
 
 def define_channels():
-	pass
+	blue_laser()
+	red_laser()
+	green_laser()
+	magnetic_field()
+	camera()
+	photon_counter()
 
 def blue_laser():
 	AnalogOut(
