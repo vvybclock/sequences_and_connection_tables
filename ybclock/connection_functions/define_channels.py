@@ -1,3 +1,7 @@
+'''
+Define the channels of all the NI DAC cards. They are seperated by device.
+Hopefully, this will make learning the lab mechanism easier in the future.
+'''
 from labscript import AnalogOut, DigitalOut
 
 

@@ -1,10 +1,12 @@
 from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_6713, NI_PCI_6284
 from labscript_devices.PineBlaster import PineBlaster
 
-
+'''
+Here we define the hardware cards.
+'''
 def define_hardware_cards():
 	'''
-		define_hardware_cards -- We define cards in order of connection.
+		We define cards in order of connection.
 		The PseudoClock drives the digital card which in turn triggers the
 		secondary pseudoclock 'analog_clock', which in turn drives the analog
 		or secondary NI cards.
