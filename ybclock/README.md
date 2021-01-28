@@ -20,6 +20,9 @@ and allows pdoc to find it.
 See [the pdocs documentation](https://pdoc3.github.io/pdoc/doc/pdoc/#gsc.tab=0) 
 for more.
 
+Run `compile_documentation.bat` to compile the docs. It will work if the labscript
+is on an anaconda install.
+
 # Virtual Environments
 
 I am not familiar with the use of virtual environments. I know only that they 
@@ -38,7 +41,7 @@ That's all I know. If you want to learn more about how to actually implement
 these ideas in practice. Use google.
 
 I'm using conda to manage virtual environments I believe. They are used via 
-`conda activate ybclock`. Use that as a starting point for understanding
+`conda activate ybclock` commands in the Anaconda Powershell. Use that as a starting point for understanding
 how this virtual environment management is implemented. See [the labscript docs]
 (https://docs.labscriptsuite.org/en/stable/installation/regular-anaconda/) for
 more. Hopefully, that link won't break in the future.
