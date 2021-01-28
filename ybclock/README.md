@@ -59,12 +59,9 @@ Sequence files can be stored anywhere. The way they import modules makes them
 free to be wherever. So you can use whatever folder structure you desire to
 organize the large number of sequences that will arise in the future.
 
+I have them in `ybclock.sequences`
+
 # Subsequence File Structure
-
-This folder contains full-fledged experimental sequences and the
-connection_table. 
-
-# How to Define Sequence Sections
 
 The sequence must be defined in compartmentalized sections. That means a file
 for a the Loading Sequence, maybe a file for the green mot, maybe for the blue.
