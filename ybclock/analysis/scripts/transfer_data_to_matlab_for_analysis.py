@@ -65,7 +65,7 @@ def return_months_last_data_folder(year, month, makedirectory=False):
 most_recent_folder = return_months_last_data_folder(now.year,now.month)
 if todays_folder_prefix not in most_recent_folder:
 	print("Today's Data doesn't have a folder! Not transferring data!")
-	1/0
+	raise Exception("No folder for Today's Data!")
 	quit()
 
 
