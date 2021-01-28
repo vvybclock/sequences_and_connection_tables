@@ -18,7 +18,7 @@ def blue_mot(t0):
 
 
 	#set voltage limit on mot
-	mot_voltage_setting_do_not_use.constant(t,value=8.5)
+	mot_voltage_setting.constant(t,value=8.5)
 
 	#set magnetic fields
 	mot_coil_current.constant(t, value=9.1)
