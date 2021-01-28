@@ -18,3 +18,17 @@ pdoc3 --html labscriptlib.ybclock --force
 ```
 
 The last line generates documentation for the parent folder.
+
+If things aren't working, try 
+```
+pdoc3 --html pdoc --force
+```
+to see an example of working behaviour.
+
+# pdoc Failed! Why?
+
+pdoc documents by importing every single module then pulling docstrings. If any of your code has an error or requires unspecified arguments, the documentation build will fail.
+
+If you have quit() sequences that get called, that'll break the build process.
+Place your scripts inside `if __name__ == "__main__":` blocks if you don't want your code
+to run when being imported by pdoc.
