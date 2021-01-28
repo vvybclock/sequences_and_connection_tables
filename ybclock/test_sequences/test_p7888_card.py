@@ -1,5 +1,5 @@
 from labscript import start, stop
-from labscriptlib.ybclock_v0_1.connection_table import define_connection_table
+from labscriptlib.ybclock.connection_table import define_connection_table
 
 def repeat_p7888_start_triggers(ti, tf, dt):
 	'''

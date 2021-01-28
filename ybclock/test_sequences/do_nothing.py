@@ -1,5 +1,5 @@
 from labscript import start, stop
-from labscriptlib.ybclock_v0_1.connection_table import define_connection_table
+from labscriptlib.ybclock.connection_table import define_connection_table
 if __name__ == '__main__':
 	define_connection_table()
 	# Begin issuing labscript primitives
