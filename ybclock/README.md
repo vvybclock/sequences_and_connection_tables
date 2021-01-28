@@ -48,7 +48,7 @@ more. Hopefully, that link won't break in the future.
 
 # Using Sequences
 
-Open up runmanager (ybclock_vX_X) and select the sequence you want. (De)select
+Open up `runmanager (ybclock)` and select the sequence you want. (De)select
 run/view shots as you please. 
 
 For testing compilation, turn off run/view shot then engage.
@@ -62,11 +62,7 @@ organize the large number of sequences that will arise in the future.
 # Subsequence File Structure
 
 This folder contains full-fledged experimental sequences and the
-connection_table. If you have an experiment that uses a different connection
-table, it should go in the next version of ybclock_vX_X, i.e. ybclock_v0_2. This
-helps seperate code that was written for different wiring setups.  Things that
-return full data sets upon completion. Subsequences which are components of each
-full sequence are held in the subfolder labeled 'subsequences'.
+connection_table. 
 
 # How to Define Sequence Sections
 
@@ -82,7 +78,7 @@ See 'loading_sequence.py' for a good example. It has a function in there you can
 constant mode to optimize the mot by hand you can, as there is a second block
 for allowing compilation by run manager.
 
-# Programming Environment
+# Recommended Programming Environment
 
 Use Sublime Text, and Sublime Merge for a fantastic text editor and repository
 manager respectively.  Use the elasticTabstops package in Sublime Text! Very

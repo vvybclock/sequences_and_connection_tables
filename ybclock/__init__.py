@@ -3,7 +3,9 @@
 	
 	Where we store our connection tables and sequences for our
 	current version of hardware. 
-
+		
+	.. include:: ./README.md
+	
 	## Hardware Versioning
 
 	The idea for the version number is to separate mutually exclusive hardware
