@@ -2,5 +2,5 @@ __pycache__
 .DS_Store
 common
 example_apparatus
-ybclock/html/labscriptlib/
-ybclock/html/pdoc/
+ybclock/html/
+!ybclock/html/README.md
