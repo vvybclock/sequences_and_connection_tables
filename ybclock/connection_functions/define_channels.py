@@ -52,6 +52,12 @@ def red_laser():
 
 def green_laser():
 	AnalogOut(
+		name         	= 'probe_power',
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao0'
+	)
+	
+	AnalogOut(
 		name         	= 'pump_aom_power',
 		parent_device	= ni_pci_6713_dev5,
 		connection   	= 'ao7',
