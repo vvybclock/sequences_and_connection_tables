@@ -1,6 +1,4 @@
 '''
-	#minimal working sequence
-
 	This is a simple file that shows you the minimal elements you need 
 	to write your own experimental sequence.
 '''

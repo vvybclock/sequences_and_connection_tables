@@ -20,7 +20,7 @@ for more.
 Run `compile_documentation.bat` to compile the docs. It will work if the labscript
 is on an anaconda install.
 
-If you wish to contribute documentation see `labscriptlib.html` for more.
+If you wish to build documentation see `labscriptlib.html` for more.
 
 # Virtual Environments
 
@@ -41,8 +41,7 @@ these ideas in practice. Use google.
 
 I'm using conda to manage virtual environments I believe. They are used via 
 `conda activate ybclock` commands in the Anaconda Powershell. Use that as a starting point for understanding
-how this virtual environment management is implemented. See [the labscript docs]
-(https://docs.labscriptsuite.org/en/stable/installation/regular-anaconda/) for
+how this virtual environment management is implemented. See [the labscript docs](https://docs.labscriptsuite.org/en/stable/installation/regular-anaconda/) for
 more. Hopefully, that link won't break in the future.
 
 # Using Sequences

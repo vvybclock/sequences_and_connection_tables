@@ -32,3 +32,7 @@ pdoc documents by importing every single module then pulling docstrings. If any 
 If you have quit() sequences that get called, that'll break the build process.
 Place your scripts inside `if __name__ == "__main__":` blocks if you don't want your code
 to run when being imported by pdoc.
+
+# Can pdoc just ignore errors?
+
+Yes, I just learned about this. Add `--skip-errors` at the end of the CLI call.
