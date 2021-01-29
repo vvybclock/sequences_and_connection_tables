@@ -1,0 +1,65 @@
+AO	
+0	ProbeEOM DC Input for Mixer
+1	Chirped Probe Power
+2	Wide Range Camera Trigger
+3	1:1 Camera Trigger
+4 Extra Rabi coil offset
+5 KeepLockGreen
+6 CoolingAOMPower
+7 PumpAOMPower
+AO Ramp	
+0	Blue power
+1	bias field x
+2	bias field y
+3	bias field z
+4	green power
+5	Coil Current
+6 556 probe EOM frequency
+7 Extra Rabi coil
+8 RedPower
+9 
+10 SRS FM input
+11 MOT Voltage Setting - DO NOT USE
+12 ProbeCoolingEOMPower
+13 TransverseLattice AOMPower
+14
+15
+DO	
+0 Only for Global Clock for AO
+1	Blue MOT AOM & shutter
+2	Green MOT AOM
+3	Green Frequency (Trigger for FPGA)
+4	Green MOT shutter
+5	Trigger for Probe Frequency Chirp
+6	TOF AOM
+7 TOF Shutter
+8 Green Pumping light
+9 Red AOM Crosstalk8
+10 Green Probe AOM (0=on, 1=off)
+11 Trigger for Comtec P7888 start - DO NOT USE
+12 Green Probe Shutter 
+13 Shutter for MPPC protection (0 = open, 1 = closed)
+14 Switch for Phase Reference
+15 Flushing channel for P7888 - DO NOT USE
+16 Probe Path (1 = High Power) crosstalk
+17 Probe Power Lock (1=off)
+18 AI Trigger - DO NOT CHANGE CHANNEL
+19 ANDOR CAMERA TRIGGER
+20 Science Cavity LockBox Hold
+21 PhotonCountingFPGA - DO NOT USE
+22 TransverseLattice AOM
+23 Green Probe EOM Switch
+24 Cooling AOM
+25 Cooling Shutter
+26 Yellow Probe1 AOM
+27 Yellow Probe1 Shutter (0 = open, 1 = closed)
+28 ClockPolarization (0=Pi, 1=Sigma)
+29 ProbeEOMPowerSelect (0=VCO 1=SRS)
+30 RamanCoolingBeamEOMSwitch
+31 1389AOM
+ValueControl
+0 YellowFreqOffset
+1 FPGADDS9Ch
+2 FPGADDS9Func (0=Freq, 1= Phase, 2= Amp)
+3 FPGADDS9Data
+4 FPGADDS9RampRate
