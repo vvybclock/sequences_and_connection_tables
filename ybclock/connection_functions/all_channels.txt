@@ -1,22 +1,20 @@
 AO	
-0	ProbeEOM DC Input for Mixer
-1	Chirped Probe Power
-2	Wide Range Camera Trigger
-3	1:1 Camera Trigger
+1 	Chirped Probe Power
+2 	Wide Range Camera Trigger
+3 	1:1 Camera Trigger
 4 Extra Rabi coil offset
 5 KeepLockGreen
 6 CoolingAOMPower
 7 PumpAOMPower
 AO Ramp	
-0	Blue power
-1	bias field x
-2	bias field y
-3	bias field z
-4	green power
-5	Coil Current
+1      	bias field x
+2      	bias field y
+3      	bias field z
+4      	green power
+5      	Coil Current
 6 556 probe EOM frequency
 7 Extra Rabi coil
-8 RedPower
+
 9 
 10 SRS FM input
 11 MOT Voltage Setting - DO NOT USE

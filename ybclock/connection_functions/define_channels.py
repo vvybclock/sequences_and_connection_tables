@@ -51,14 +51,29 @@ def red_laser():
 	)
 
 def green_laser():
+	'''
+	Control the power and shutters of the various green beams.
+
+	#Intensity Controls
+	##`probe_power`
+	Controls light going into the cavity **for measurement**.
+	It's \\(\\sigma+\\) polarized.
+	This controls the power via Mixer + Amplifier into an **EOM**.
+
+	##`pump_power`
+	This controls the power via Mixer + Amplifier into an **AOM**.
+	##
+
+	#Shutter Controls
+	'''
 	AnalogOut(
 		name         	= 'probe_power',
 		parent_device	= ni_pci_6713_dev5,
 		connection   	= 'ao0'
 	)
-	
+
 	AnalogOut(
-		name         	= 'pump_aom_power',
+		name         	= 'pump_power',
 		parent_device	= ni_pci_6713_dev5,
 		connection   	= 'ao7',
 	)
