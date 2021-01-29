@@ -14,8 +14,8 @@ Whenever possible, divide code into functions, modules, etc. and document those
 functions via  'docstrings'. These keeps the documentation close to the source
 and allows pdoc to find it. The docstrings use markdown, as well as reST?, and latex**!**.
 
-To use inline equations, type `\\(...\\)`. For a block, use `$$...$$` or `\\[...\\]`
-W
+To use inline equations, type `\\(...\\)`. For a block, use `$$...$$` or `\\[...\\]`.
+
 See [the pdocs documentation](https://pdoc3.github.io/pdoc/doc/pdoc/#gsc.tab=0) 
 for more.
 
