@@ -1,8 +1,5 @@
 # To Do
 
-* Write a program for moving code from hardware version to hardware 
-	version.
-
 * Define script for globally renaming variable names across all files. Useful
 for channels.
 
@@ -22,6 +19,8 @@ for more.
 
 Run `compile_documentation.bat` to compile the docs. It will work if the labscript
 is on an anaconda install.
+
+If you wish to contribute documentation see `labscriptlib.html` for more.
 
 # Virtual Environments
 

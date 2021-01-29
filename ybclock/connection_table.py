@@ -1,4 +1,6 @@
 '''
+	A connection table is what labscript calls the settings that define how our hardware is wired up.
+
 	Labscript requires this file with this name so that it can compile what it
 	needs for BLACS.
 

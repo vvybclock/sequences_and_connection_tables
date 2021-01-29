@@ -5,8 +5,8 @@
 	current version of hardware. 
 		
 	.. include:: ./README.md
-	
-	## Hardware Versioning
+
+	# Hardware Versioning
 
 	The idea for the version number is to separate mutually exclusive hardware
 	wirings. For example when we use something that was driving the mot now drives
@@ -19,7 +19,7 @@
 	, then the hardware version shall remain the same, and the git shall account
 	for improvements and new connections.
 
-	### What do I do when I do a major change?
+	## What do I do when I do a major change?
 
 	Change the git branch number. Change it from `master` to `v2.x`, and `v2.x`
 	to `v3.x`. This way there's a clear cut divide between massive hardware versions.

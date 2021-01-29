@@ -1,3 +1,6 @@
+'''
+Functions for triggering the cameras.
+'''
 def trigger_the_cameras(t0, duration, frame_period_ms):
 
 	trigger_voltage = 8;
