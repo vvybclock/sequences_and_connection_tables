@@ -6,6 +6,9 @@ from labscript import AnalogOut, DigitalOut
 
 
 def define_channels():
+	''' Contains all the function calls for declaring all the channels used by
+	each device.	
+	'''
 	blue_laser()
 	red_laser()
 	green_laser()
@@ -15,12 +18,12 @@ def define_channels():
 
 def blue_laser():
 	'''
-	##`blue_power`
+	###`blue_power`
 
 	This controls the power to our 399nm laser. It currently needs no
 	distinction, as we only have one blue laser beam path.
 
-	##`blue_mot_aom_and_shutter`
+	###`blue_mot_aom_and_shutter`
 
 	
 	'''
@@ -49,18 +52,31 @@ def green_laser():
 	'''
 	Control the power and shutters of the various green beams.
 
-	#Intensity Controls
-	##`probe_power`
+	##Intensity Controls
+	###`probe_power`
 	Controls light going into the cavity **for measurement**.
 	It's \\(\\sigma+\\) polarized.
 	This controls the power via Mixer + Amplifier into an **EOM**.
 
-	##`pump_power`
+	###`pump_power`
 	This controls the power via Mixer + Amplifier into an **AOM**.
-	##
 
-	#Shutter Controls
+	##Shutter Controls
+
+	Aren't these just intensity controls? Yes, but they block the light better
+	than turning off the EOM/AOM can. So a shutter helps ensure the light is
+	really off. Ofcourse, they are slower so they are used in conjunction with an
+	AOM/EOM RF control.
+
+	###`green_mot_shutter`
+	###`cooling_shutter`
+
+	## FPGA Trigger
 	'''
+
+	#
+	# Intensity Controls 
+	#
 	AnalogOut(
 		name         	= 'probe_power',
 		parent_device	= ni_pci_6713_dev5,
@@ -86,17 +102,16 @@ def green_laser():
 		limits       	= None
 	)
 
-	DigitalOut(
-		name         	= 'green_mot_shutter',
-		parent_device	= ni_pci_6284_dev6,
-		connection   	= 'port0/line4'
-	)
 
 	DigitalOut(
-		name         	= 'green_mot_aom',
+		name         	= 'green_mot_power',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line2'
 	)
+
+	# 
+	# Shutters
+	#
 
 	DigitalOut(
 		name         	= 'cooling_shutter',
@@ -104,6 +119,11 @@ def green_laser():
 		connection   	= 'port0/line25'
 	)
 
+	DigitalOut(
+		name         	= 'green_mot_shutter',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line4'
+	)
 	DigitalOut(
 		name         	= 'green_frequency_fpga_trigger',
 		parent_device	= ni_pci_6284_dev6,
