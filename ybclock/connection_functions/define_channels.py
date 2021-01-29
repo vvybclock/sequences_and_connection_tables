@@ -14,6 +14,12 @@ def define_channels():
 	photon_counter()
 
 def blue_laser():
+	'''
+	##blue_power
+	Currently needs no distinction, as we only have 1 blue laser beam.
+
+	
+	'''
 	AnalogOut(
 		name         	= 'blue_power',
 		parent_device	= ni_pci_6713_dev4,
@@ -28,10 +34,19 @@ def blue_laser():
 	)
 
 def red_laser():
+
+	'''
+	##red_power
+
+	Controls mixer voltage (IF port) for RF power controlled driving and
+	stabilization of the cavity axis trap light. 
+
+
+	'''
 	AnalogOut(
 		name         	= 'red_power',
 		parent_device	= ni_pci_6723_dev3,
-		connection   	= 'ao0',
+		connection   	= 'ao8',
 		limits       	= None
 	)
 
