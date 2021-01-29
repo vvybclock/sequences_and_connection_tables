@@ -37,6 +37,18 @@ def red_laser():
 
 def green_laser():
 	AnalogOut(
+		name         	= 'pump_aom_power',
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao7',
+	)
+
+	AnalogOut(
+		name         	= 'cooling_aom_power',
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao6',
+	)
+
+	AnalogOut(
 		name         	= 'green_power',
 		parent_device	= ni_pci_6713_dev4,
 		connection   	= 'ao4',
@@ -90,21 +102,26 @@ def magnetic_field():
 		limits       	= None
 	)
 
+	#sets the voltage on the mot coil current controller.
+	#for constant current mode, voltage needs to be larger than actual,
+	#for constant voltage mode, current needs to be larger than actual.
 	AnalogOut(
 		name         	= 'mot_coil_current',
 		parent_device	= ni_pci_6713_dev4,
 		connection   	= 'ao5',
 		limits       	= None
 	)
-
 	AnalogOut(
-		name         	= 'mot_voltage_setting_do_not_use',
+		name         	= 'mot_coil_voltage',
 		parent_device	= ni_pci_6723_dev3,
 		connection   	= 'ao3',
 		limits       	= None
 	)
 
 def camera():
+	'''
+	The camera triggers are analog out's as they require 8V pulses to trigger.
+	'''
 	AnalogOut(
 		name         	= 'wide_range_camera_trigger',
 		parent_device	= ni_pci_6713_dev5,

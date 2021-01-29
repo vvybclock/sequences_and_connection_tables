@@ -1,5 +1,6 @@
 from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_6713, NI_PCI_6284
 from labscript_devices.PineBlaster import PineBlaster
+from user_devices.P7888.labscript_devices import P7888
 
 '''
 Here we define the hardware cards.
@@ -19,7 +20,11 @@ def define_hardware_cards():
 		trigger_connection	= None,
 		usbport           	= 'COM5'
 	)
-	
+
+	### Acquisition
+	P7888( #photon counting card
+		name	= 'photon_counter'
+	)
 
 	### NI Cards
 	NI_PCI_6284( #digital card
