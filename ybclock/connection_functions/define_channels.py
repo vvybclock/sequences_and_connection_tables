@@ -121,20 +121,21 @@ def magnetic_field():
 def camera():
 	'''
 	The camera triggers are analog out's as they require 8V pulses to trigger.
+	The channels will actually be defined in `define_hardware_cards.py`
 	'''
-	AnalogOut(
-		name         	= 'wide_range_camera_trigger',
-		parent_device	= ni_pci_6713_dev5,
-		connection   	= 'ao2',
-		limits       	= (0, 8)
-	)
+	# AnalogOut(
+	#	name         	= 'wide_range_camera_trigger',
+	#	parent_device	= ni_pci_6713_dev5,
+	#	connection   	= 'ao2',
+	#	limits       	= (0, 8)
+	# )
 
-	AnalogOut(
-		name         	= 'one_to_one_camera_trigger',
-		parent_device	= ni_pci_6713_dev5,
-		connection   	= 'ao3',
-		limits       	= (0,8)
-	)
+	# AnalogOut(
+	#	name         	= 'one_to_one_camera_trigger',
+	#	parent_device	= ni_pci_6713_dev5,
+	#	connection   	= 'ao3',
+	#	limits       	= (0,8)
+	# )
 
 def photon_counter():
 	DigitalOut(
