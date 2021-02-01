@@ -27,21 +27,6 @@ def define_hardware_cards():
 		name	= 'photon_counter'
 	)
 
-	### Cameras
-	AnalogIMAQdxCamera(
-		name         	= 'cam0',
-		parent_device	= '',
-		connection   	= '',
-		serial_number	= '6BE00895F'
-	)
-
-	AnalogIMAQdxCamera(
-		name         	= 'cam1',
-		parent_device	= '',
-		connection   	= '',
-		serial_number	= '6BE008960'
-	)
-
 	### NI Cards
 	NI_PCI_6284( #digital card
 		name            	= 'ni_pci_6284_dev6',
@@ -81,4 +66,19 @@ def define_hardware_cards():
 		parent_device 	= analog_clock.clockline,
 		clock_terminal	= 'PFI2',
 		MAX_name      	='Dev4'
+	)
+
+	### Cameras
+	AnalogIMAQdxCamera(
+		name         	= 'wide_angle_cam',
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao2',
+		serial_number	= '6BE00895F'
+	)
+
+	AnalogIMAQdxCamera(
+		name         	= 'isometric_cam',	#See `isometric video game graphics`
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'ao3',
+		serial_number	= '6BE008960'
 	)
