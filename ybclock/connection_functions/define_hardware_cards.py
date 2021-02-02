@@ -37,7 +37,6 @@ def define_hardware_cards():
 		MAX_name        	= 'Dev6',
 		acquisition_rate	= 1e3
 	)
-	
 
 	### Secondary Pseudoclock
 	PineBlaster(
