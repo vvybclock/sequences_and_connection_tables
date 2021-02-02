@@ -84,7 +84,8 @@ useful for maintaining readable code.
 If you add a new device, it can be defined in either the virtual environment
 directory of `labscript_devices` or the local directory `user_devices`.
 
-Either way! Every change you make beyond the worker class needs to be
-accompanied by a full reset of the labscript program. I think this is because
-the importing of labscript classes occurs at run time. This is unfortunate but
-don't waste time on this like I did.
+Every change you make beyond might need to be accompanied by a reset of the
+appropriate portion labscript program.  You can get away sometimes with
+smaller resets in each of the programs. Try it, but if it fails you know why.
+
+If you edit `labscript_devices`, you definitely need to reset the whole program.
