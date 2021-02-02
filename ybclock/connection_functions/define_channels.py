@@ -13,8 +13,8 @@ def define_channels():
 	red_laser_channels()
 	green_laser_channels()
 	magnetic_field_channels()
-	camera()
-	photon_counter()
+	camera_channels()
+	photon_counter_channels()
 
 def blue_laser_channels():
 	'''
@@ -91,7 +91,7 @@ def red_laser_channels():
 
 def green_laser_channels():
 	'''
-	Control the power and shutters of the various green beams.
+	Control the power and shutters of the various green beams as well as the frequency.
 	
 	##Beampaths
 	
@@ -122,7 +122,7 @@ def green_laser_channels():
 	two colors of light into the two modes of the atom + cavity system. Since
 	these two beams share the same spatial mode, they interfere at the
 	photodetector giving us a signal that, at least somewhat, looks like
-	\\(\\cos(f_m t + \\phi\\) where \\(\\phi\\) is the phase shift imparted by
+	\\(\\cos(f_m t + \\phi) \\) where \\(\\phi\\) is the phase shift imparted by
 	one of the atom + cavity transmission peaks.
 
 
@@ -356,9 +356,17 @@ def magnetic_field_channels():
 	
 	These are the magnetic fields that are intended to be uniform across the atoms.
 
+	`x_bias_field`
+	`y_bias_field`
+	`z_bias_field`
+
 	## MOT Coil
 
 	This creates the large quadrupole field for trapping and cooling the atoms.
+
+	`mot_coil_current` & `mot_coil_voltage` control the voltage and current
+	setpoint to a power supply. Just like small benchtop supplies, setting one
+	too large places it in either constant voltage mode or constant current mode.
 
 	## Rabi Coil
 
@@ -372,12 +380,9 @@ def magnetic_field_channels():
 	magnetic field. We then modulate each current in opposite amounts causing a
 	net AC field.
 
-	###`rabi_coil_dc_offset`
-	controls that DC offset.
+	`rabi_coil_dc_offset` controls that DC offset.
 
-	###`rabi_coil_field'
-	
-	controls that differential offset, and thus magnetic field that the atoms do
+	`rabi_coil_field` controls that differential offset, and thus magnetic field that the atoms do
 	see.
 
 	'''
@@ -438,7 +443,7 @@ def magnetic_field_channels():
 def camera():
 	'''
 	The camera triggers are analog out's as they require 8V pulses to trigger.
-	The channels will actually be defined in `define_hardware_cards.py`
+	The channels will actually be defined in `define_hardware_cards.py` in a Camera object.
 	'''
 	# AnalogOut(
 	#	name         	= 'wide_range_camera_trigger',
@@ -454,7 +459,12 @@ def camera():
 	#	limits       	= (0,8)
 	# )
 
-def photon_counter():
+def photon_counter_channels():
+	'''
+	`p7888_start_trigger` tells the photon counting card to start listening for photon counts.
+	`p7888_flushing_trigger` feeds into one of the listening ports on the photon counting card.
+	It's so we can send fake photons and fill up the memory of the card so it updates on the PC.
+	'''
 	DigitalOut(
 		name         	= 'p7888_start_trigger',
 		parent_device	= ni_pci_6284_dev6,
