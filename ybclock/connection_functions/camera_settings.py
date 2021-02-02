@@ -5,7 +5,7 @@
 '''
 
 #camera attributes ran during an experiment!
-shot_cam_camera_attributes = {
+shot_camera_attributes = {
     'AcquisitionAttributes::AdvancedEthernet::BandwidthControl::DesiredPeakBandwidth': 1000.0,
     'AcquisitionAttributes::AdvancedEthernet::Controller::DestinationMode': 'Unicast',
     'AcquisitionAttributes::AdvancedEthernet::Controller::DestinationMulticastAddress': '239.192.0.1',
@@ -108,7 +108,7 @@ shot_cam_camera_attributes = {
 }
 
 #camera attributes when not running an experiment!
-manual_cam_camera_attributes = {
+manual_camera_attributes = {
     'AcquisitionAttributes::AdvancedEthernet::BandwidthControl::DesiredPeakBandwidth': 1000.0,
     'AcquisitionAttributes::AdvancedEthernet::Controller::DestinationMode': 'Unicast',
     'AcquisitionAttributes::AdvancedEthernet::Controller::DestinationMulticastAddress': '239.192.0.1',
@@ -153,7 +153,7 @@ manual_cam_camera_attributes = {
     'CameraAttributes::AcquisitionControl::ExposureTime': 10000.0,
     'CameraAttributes::AcquisitionControl::TriggerActivation': 'Rising Edge',
     'CameraAttributes::AcquisitionControl::TriggerDelay': 0.0,
-    'CameraAttributes::AcquisitionControl::TriggerMode': 'On',
+    'CameraAttributes::AcquisitionControl::TriggerMode': 'Off',
     'CameraAttributes::AcquisitionControl::TriggerOverlap': 'Read Out',
     'CameraAttributes::AcquisitionControl::TriggerSelector': 'Frame Start',
     'CameraAttributes::AcquisitionControl::TriggerSource': 'All',
