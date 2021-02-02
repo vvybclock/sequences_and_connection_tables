@@ -77,11 +77,11 @@ def green_laser():
 	#
 	# Intensity Controls 
 	#
-	AnalogOut(
-		name         	= 'probe_power',
-		parent_device	= ni_pci_6713_dev5,
-		connection   	= 'ao0'
-	)
+	# AnalogOut(
+	#	name         	= 'probe_power',
+	#	parent_device	= ni_pci_6713_dev5,
+	#	connection   	= 'ao0'
+	# )
 
 	AnalogOut(
 		name         	= 'pump_power',
