@@ -80,3 +80,14 @@ for allowing compilation by run manager.
 Use Sublime Text, and Sublime Merge for a fantastic text editor and repository
 manager respectively.  Use the elasticTabstops package in Sublime Text! Very
 useful for maintaining readable code.
+
+# Adding Devices
+
+If you add a new device, it can be defined in either the virtual environment
+directory of `labscript_devices` or the local directory `user_devices`.
+
+Every change you make beyond might need to be accompanied by a reset of the
+appropriate portion labscript program.  You can get away sometimes with
+smaller resets in each of the programs. Try it, but if it fails you know why.
+
+If you edit `labscript_devices`, you definitely need to reset the whole program.

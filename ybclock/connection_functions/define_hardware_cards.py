@@ -1,10 +1,13 @@
 from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_6713, NI_PCI_6284
 from labscript_devices.PineBlaster import PineBlaster
 from user_devices.P7888.labscript_devices import P7888
+from user_devices.AnalogIMAQdxCamera.labscript_devices import AnalogIMAQdxCamera
+from labscriptlib.ybclock.connection_functions  import camera_settings
 
 '''
 Here we define the hardware cards.
 '''
+
 def define_hardware_cards():
 	'''
 		We define cards in order of connection.
@@ -66,3 +69,27 @@ def define_hardware_cards():
 		clock_terminal	= 'PFI2',
 		MAX_name      	='Dev4'
 	)
+
+	### Cameras
+	AnalogIMAQdxCamera(
+		name                         	= 'wide_angle_cam',
+		parent_device                	= ni_pci_6713_dev5,
+		connection                   	= 'ao2',
+		serial_number                	= '6BE00895F',
+		voltage                      	= 8,
+		trigger_edge_type            	= 'falling',
+		camera_attributes            	= camera_settings.seq_camera_attributes,
+		manual_mode_camera_attributes	= camera_settings.manual_camera_attributes
+	)
+
+	AnalogIMAQdxCamera(
+		name                         	= 'isometric_cam',	#See `isometric video game graphics`
+		parent_device                	= ni_pci_6713_dev5,
+		connection                   	= 'ao3',
+		serial_number                	= '6BE008960',
+		voltage                      	= 8,
+		trigger_edge_type            	= 'falling',
+		camera_attributes            	= camera_settings.seq_camera_attributes,
+		manual_mode_camera_attributes	= camera_settings.manual_camera_attributes
+	)
+
