@@ -1,7 +1,7 @@
 from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_6713, NI_PCI_6284
 from labscript_devices.PineBlaster import PineBlaster
 from user_devices.P7888.labscript_devices import P7888
-from labscript_devices.AnalogIMAQdxCamera.labscript_devices import AnalogIMAQdxCamera
+from user_devices.AnalogIMAQdxCamera.labscript_devices import AnalogIMAQdxCamera
 from labscriptlib.ybclock.connection_functions  import camera_settings
 
 '''
