@@ -78,3 +78,13 @@ for allowing compilation by run manager.
 Use Sublime Text, and Sublime Merge for a fantastic text editor and repository
 manager respectively.  Use the elasticTabstops package in Sublime Text! Very
 useful for maintaining readable code.
+
+# Adding Devices
+
+If you add a new device, it can be defined in either the virtual environment
+directory of `labscript_devices` or the local directory `user_devices`.
+
+Either way! Every change you make beyond the worker class needs to be
+accompanied by a full reset of the labscript program. I think this is because
+the importing of labscript classes occurs at run time. This is unfortunate but
+don't waste time on this like I did.
