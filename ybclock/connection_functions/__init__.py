@@ -14,7 +14,7 @@
 
 """
 
-print("Importing connection functions...")
+print("Importing connection functions...", end ='')
 from .define_hardware_cards import *
 from .define_channels import *
 print("Done!")
