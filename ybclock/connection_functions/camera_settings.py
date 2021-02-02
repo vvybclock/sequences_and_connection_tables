@@ -5,7 +5,7 @@
 '''
 
 #camera attributes ran during an experiment!
-shot_camera_attributes = {
+seq_camera_attributes = {
     'AcquisitionAttributes::AdvancedEthernet::BandwidthControl::DesiredPeakBandwidth': 1000.0,
     'AcquisitionAttributes::AdvancedEthernet::Controller::DestinationMode': 'Unicast',
     'AcquisitionAttributes::AdvancedEthernet::Controller::DestinationMulticastAddress': '239.192.0.1',

@@ -78,7 +78,7 @@ def define_hardware_cards():
 		serial_number                	= '6BE00895F',
 		voltage                      	= 8,
 		trigger_edge_type            	= 'falling',
-		camera_attributes            	= camera_settings.shot_camera_attributes,
+		camera_attributes            	= camera_settings.seq_camera_attributes,
 		manual_mode_camera_attributes	= camera_settings.manual_camera_attributes
 	)
 
@@ -89,7 +89,7 @@ def define_hardware_cards():
 		serial_number                	= '6BE008960',
 		voltage                      	= 8,
 		trigger_edge_type            	= 'falling',
-		camera_attributes            	= camera_settings.shot_camera_attributes,
+		camera_attributes            	= camera_settings.seq_camera_attributes,
 		manual_mode_camera_attributes	= camera_settings.manual_camera_attributes
 	)
 
