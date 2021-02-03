@@ -140,8 +140,7 @@ def green_laser_channels():
 	### Green MOT Beampath
 	
 	It has a complicated beam path. Green comes in from all directions.
-	
-	.. image:: mot_path.png
+	.. figure:: ./imgs/mot_path.png
 
 	##Analog Intensity Controls
 	###`probe_sideband_power`
