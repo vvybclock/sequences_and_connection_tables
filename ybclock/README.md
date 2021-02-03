@@ -16,6 +16,11 @@ and allows pdoc to find it. The docstrings use markdown, as well as reST?, and l
 
 To use inline equations, type `\\(...\\)`. For a block, use `$$...$$` or `\\[...\\]`.
 
+If you wish to add images, use a `.. image:: .imgs/imagefile.png` type
+command. Note, currently, as far as I know, you have to manually move over the
+images to the appropiate location in the `/html` build location. With the
+batch file provided, pdoc won't move them.
+
 See [the pdocs documentation](https://pdoc3.github.io/pdoc/doc/pdoc/#gsc.tab=0) 
 for more.
 
