@@ -456,7 +456,7 @@ def magnetic_field_channels():
 		connection   	= 'ao7'
 	)
 
-def camera():
+def camera_channels():
 	'''
 	The camera triggers are analog out's as they require 8V pulses to trigger.
 	The channels will actually be defined in `define_hardware_cards.py` in a Camera object.
