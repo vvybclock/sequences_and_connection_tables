@@ -5,7 +5,7 @@ from user_devices.AnalogIMAQdxCamera.labscript_devices import AnalogIMAQdxCamera
 from labscriptlib.ybclock.connection_functions  import camera_settings
 
 '''
-Here we define the hardware cards.
+Here we define the hardware cards and cameras.
 '''
 
 def define_hardware_cards():
