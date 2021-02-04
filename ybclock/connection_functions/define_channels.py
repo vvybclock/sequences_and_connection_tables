@@ -70,12 +70,15 @@ def red_laser_channels():
 	`red_cavity_power`
 
 	Controls the trap light power going into the cavity axis via error offset
-	into a (PI) power lockbox.
+	into a (PI) power lockbox. This RF signal is switched via
+	`red_cavity_power_switch`.
+	`red_cavity_power_switch` has some crosstalk with Channel 8 on Dev 6.
 
 	`red_transverse_power`
 	
 	Controls the light power for the transverse trapping beam, which is oriented
 	along the y-axis (lab frame).
+
 
 	'''
 	AnalogOut(
@@ -88,6 +91,12 @@ def red_laser_channels():
 		name         	= 'red_transverse_power',
 		parent_device	= ni_pci_6723_dev3,
 		connection   	= 'ao5'
+	)
+
+	DigitalOut(
+		name         	= 'red_cavity_power_switch',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line9'
 	)
 
 def green_laser_channels():
@@ -184,9 +193,10 @@ def green_laser_channels():
 	Controlled via AOM. 
 	###`probe_sideband_power_switch`
 	Controlled via EOM.
-	###`pump_switch`
+	###`pump_power_switch`
 	Controlled via AOM.
-
+	###`cooling_pi_power_switch`
+	Controlled via AOM.
 	##Shutter Controls
 
 	Aren't these just intensity controls? Yes, but they block the light better
@@ -275,7 +285,7 @@ def green_laser_channels():
 		connection   	= 'ao7',
 	)
 	DigitalOut(
-		name         	= 'pump_switch',
+		name         	= 'pump_power_switch',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line8'
 	)
@@ -284,6 +294,12 @@ def green_laser_channels():
 		name         	= 'cooling_pi_power',
 		parent_device	= ni_pci_6713_dev5,
 		connection   	= 'ao6',
+	)
+
+	DigitalOut(
+		name         	= 'cooling_pi_power_switch',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line24'
 	)
 
 	AnalogOut(
@@ -299,12 +315,12 @@ def green_laser_channels():
 		limits       	= None
 	)
 
-
 	DigitalOut(
 		name         	= 'green_mot_power_switch',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line2'
 	)
+
 
 	# 
 	# Shutters
