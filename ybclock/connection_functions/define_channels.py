@@ -40,7 +40,8 @@ def blue_laser_channels():
 		name         	= 'blue_mot_power',
 		parent_device	= ni_pci_6713_dev4,
 		connection   	= 'ao0',
-		limits       	= None
+		limits       	= None,
+		default_value	= 0.24
 	)
 
 	DigitalOut(
