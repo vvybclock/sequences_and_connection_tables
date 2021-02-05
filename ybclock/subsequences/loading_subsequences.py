@@ -30,7 +30,7 @@
 
 from labscript import add_time_marker
 
-def blue_mot(t,duration):
+def blue_mot(t,duration,add_marker=True):
 	'''
 	# Blue MOT Loading Sequence
 
@@ -40,7 +40,7 @@ def blue_mot(t,duration):
 	The Blue MOT is assisted by Green Molasses (Doppler Cooling).
 	'''
 	#turn on the blue mot
-	add_time_marker(t, "Turn On Blue MOT", verbose=True)
+	if add_marker: add_time_marker(t, "Turn On Blue MOT", verbose=True)
 
 	#set voltage limit on mot
 	mot_coil_voltage.constant(t,value=8.5)
@@ -52,7 +52,7 @@ def blue_mot(t,duration):
 	z_bias_field.constant(t, value=2.2)
 
 	#set light power
-	blue_mot_aom_and_shutter.enable(t)
+	blue_mot_shutter.enable(t)
 	blue_mot_power.constant(t, value=0.28)
 	
 	green_mot_power_switch.enable(t)
@@ -62,14 +62,14 @@ def blue_mot(t,duration):
 
 	return duration
 
-def transfer_blue_mot_to_green_mot(t,duration, samplerate):
+def transfer_blue_mot_to_green_mot(t,duration, samplerate,add_marker=True):
 
 	'''Ramp down blue light while moving atoms to green MOT position.'''
-	add_time_marker(t, "Transfer Blue MOT", verbose=True)
+	if add_marker: add_time_marker(t, "Transfer Blue MOT", verbose=True)
 	#ramp down blue
 	blue_mot_power.ramp(t, duration, initial=0.28, final=0.05, samplerate=samplerate)
 	#turn off the blue light at end of ramp
-	blue_mot_aom_and_shutter.disable(t+duration)
+	blue_mot_shutter.disable(t+duration)
 	
 	#move magnetic field zero
 	x_bias_field.ramp(t, duration, initial=-0.608,	final=1.3,  	samplerate=samplerate)
@@ -78,9 +78,9 @@ def transfer_blue_mot_to_green_mot(t,duration, samplerate):
 
 	return duration
 
-def cool_atoms_in_green_mot(t,duration,samplerate):
+def cool_atoms_in_green_mot(t,duration,samplerate, add_marker=True):
 	ms=1e-3
-	add_time_marker(t, "Hold Green MOT", verbose=True)
+	if add_marker: add_time_marker(t, "Hold Green MOT", verbose=True)
 	#start ramping up green frequency to set up green mot.
 	green_frequency_fpga_trigger.enable(t)
 
@@ -89,16 +89,16 @@ def cool_atoms_in_green_mot(t,duration,samplerate):
 
 	return duration
 
-def position_atoms_to_optical_lattice(t, duration,samplerate):
+def position_atoms_to_optical_lattice(t, duration,samplerate, add_marker=True):
 	#move the MOT center again
-	add_time_marker(t, "Move to Opt. Latt.", verbose=True)
+	if add_marker: add_time_marker(t, "Move to Opt. Latt.", verbose=True)
 	x_bias_field.ramp(t, duration, initial=1.3,  	final=5.29,  	samplerate=samplerate)
 	y_bias_field.ramp(t, duration, initial=-0.15,	final=0.32,  	samplerate=samplerate)
 	z_bias_field.ramp(t, duration, initial=0,    	final=-0.795,	samplerate=samplerate)
 
 	return duration
-def hold_atoms(t, duration):
-	add_time_marker(t, "Hold Green MOT", verbose=True)
+def hold_atoms(t, duration,add_marker=True):
+	if add_marker: add_time_marker(t, "Hold Green MOT", verbose=True)
 	return duration
 
 

@@ -23,9 +23,9 @@ def blue_laser_channels():
 	This controls the power to our 399nm laser. It currently needs no
 	distinction, as we only have one blue laser beam path: the MOT beampath.
 
-	###`blue_mot_aom_and_shutter`
+	###`blue_mot_shutter`
 
-	This controls both the RF switch driving the AOM as well as the shutter for
+	This controls the shutter for
 	the MOT beampath.
 	
 	###`imaging_power_switch`
@@ -45,7 +45,7 @@ def blue_laser_channels():
 	)
 
 	DigitalOut(
-		name         	= 'blue_mot_aom_and_shutter',
+		name         	= 'blue_mot_shutter',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line1'
 	)

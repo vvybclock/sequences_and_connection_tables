@@ -15,7 +15,7 @@ def set_default_values(t):
 	red_cavity_power_switch.enable(t)
 	
 	#set up blue laser
-	blue_mot_aom_and_shutter.enable(t)
+	blue_mot_shutter.enable(t)
 	blue_mot_power.constant(t, value=0.28)
 
 	#set up green laser
