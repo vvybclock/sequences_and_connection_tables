@@ -65,63 +65,41 @@ def blue_mot(t,duration):
 def transfer_blue_mot_to_green_mot(t,duration, samplerate):
 
 	'''Ramp down blue light while moving atoms to green MOT position.'''
-
+	add_time_marker(t, "Transfer Blue MOT", verbose=True)
 	#ramp down blue
 	blue_mot_power.ramp(t, duration, initial=0.28, final=0.05, samplerate=samplerate)
-
+	#turn off the blue light at end of ramp
+	blue_mot_aom_and_shutter.disable(t+duration)
+	
 	#move magnetic field zero
-	x_bias_field.ramp(t, duration, initial=-0.608,	final=5.29,  	samplerate=samplerate)
-	y_bias_field.ramp(t, duration, initial=1.374, 	final=0.32,  	samplerate=samplerate)
-	z_bias_field.ramp(t, duration, initial=2.2,   	final=-0.795,	samplerate=samplerate)
+	x_bias_field.ramp(t, duration, initial=-0.608,	final=1.3,  	samplerate=samplerate)
+	y_bias_field.ramp(t, duration, initial=1.374, 	final=-0.15,	samplerate=samplerate)
+	z_bias_field.ramp(t, duration, initial=2.2,   	final=0,    	samplerate=samplerate)
 
+	return duration
+
+def cool_atoms_in_green_mot(t,duration,samplerate):
+	ms=1e-3
+	add_time_marker(t, "Hold Green MOT", verbose=True)
 	#start ramping up green frequency to set up green mot.
 	green_frequency_fpga_trigger.enable(t)
 
-def cool_atoms_in_green_mot(t,duration):
+	#ramp down green power so we don't blind the camera.
+	green_mot_power.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.135, samplerate=samplerate)
 
-	#turn off the blue light.
-	blue_mot_aom_and_shutter.disable(t)
-	
-	pass
+	return duration
 
-def position_atoms_to_optical_lattice(t, duration):
+def position_atoms_to_optical_lattice(t, duration,samplerate):
+	#move the MOT center again
+	add_time_marker(t, "Move to Opt. Latt.", verbose=True)
+	x_bias_field.ramp(t, duration, initial=1.3,  	final=5.29,  	samplerate=samplerate)
+	y_bias_field.ramp(t, duration, initial=-0.15,	final=0.32,  	samplerate=samplerate)
+	z_bias_field.ramp(t, duration, initial=0,    	final=-0.795,	samplerate=samplerate)
 
-	pass
+	return duration
+def hold_atoms(t, duration):
+	add_time_marker(t, "Hold Green MOT", verbose=True)
+	return duration
 
-def load_green_mot(t,ramp_time):
-	'''
-	# Blue MOT to Green MOT Transfer Sequence
-
-	Currently not working.
-	'''
-
-	blue_mot_power.ramp(t, 
-		duration  	= ramp_time, 
-		initial   	= 0.24, 
-		final     	= 50e-3, 
-		samplerate	= 1e3
-	)
-
-	x_bias_field.ramp(t, 
-		duration  	= ramp_time,
-		initial   	= -0.608,
-		final     	= 1.3,
-		samplerate	= 1e3
-	)
-
-	z_bias_field.ramp(t, 
-		duration  	= ramp_time,
-		initial   	= 2.110,
-		final     	= 0,
-		samplerate	= 1e3
-	)
-
-
-	t += ramp_time
-
-	blue_mot_aom_and_shutter.disable(t + 74e-3)
-	green_frequency_fpga_trigger.enable(t)
-
-	return ramp_time
 
 print("Imported 'loading_subsequences'")
