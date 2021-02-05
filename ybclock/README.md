@@ -1,7 +1,4 @@
-# To Do
-
-* Define script for globally renaming variable names across all files. Useful
-for channels.
+Welcome to Ybclock Labscript Edition!
 
 # Documentation
 
@@ -28,6 +25,27 @@ Run `compile_documentation.bat` to compile the docs. It will work if the labscri
 is on an anaconda install.
 
 If you wish to build documentation see `labscriptlib.html` for more.
+
+# Renaming a Variable
+
+Occasionally, you need to rename a channel, either to improve clarity or to
+reflect an update. A multi-file search and replace is ideal for this, and
+luckily, sublime text does this easily. 
+
+While there is risk of unforseen replacements, an advantage of using long
+variable names like we do, is there is reduced chance of errors when
+performing a global search and replace. Although it is true, that the search
+and replace might be so easy that you forget to update the documentation. 
+
+To prevent this, document first, then perform a global search and replace.
+
+To do this in sublime text, `Find > Find in Files (Ctrl+Shift+F)`, then select
+your folder as `labscriptlib/ybclock/` and attempt to find the variable name
+in question. Check to see that find is accurate, then write down the variable
+name replacement. Double check the replacement spelling. Commit after the
+change. This way it's easy to revert any unforseen incidents.
+
+
 
 # Virtual Environments
 
