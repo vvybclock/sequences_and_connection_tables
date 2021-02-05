@@ -10,33 +10,25 @@ if __name__ == '__main__':
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
 	start()
-	set_default_values(t=1e-6)
+	# set_default_values(t=1e-6)
 
 	ms = 1e-3
-	t = 0.1
+	kHz = 1e3
+	t = 0.0001
 
 
 	#load the atoms
 	t += blue_mot(t,                         	duration= 100*ms)
-	t += transfer_blue_mot_to_green_mot(t,   	duration= 40*ms,	samplerate=)
-	t += position_atoms_to_optical_lattice(t,	duration= ,     	samplerate=)
+	t += transfer_blue_mot_to_green_mot(t,   	duration= 40*ms, 	samplerate=1*kHz)
+	t += cool_atoms_in_green_mot(t,          	duration= 180*ms,	samplerate=1*kHz)
+	t += position_atoms_to_optical_lattice(t,	duration= 40*ms, 	samplerate=1*kHz)
 
-	t += load_green_mot(t, ramp_time = 40e-3)	
-	green_mot_duration = 0
-	t += green_mot_duration
+	#take a picture of the atoms
+	add_time_marker(t+20*ms, "Take Pictures", verbose=True)
+	wide_angle_cam.expose(t + 20*ms,	name='pic', trigger_duration=20*ms)
+	isometric_cam.expose(t + 20*ms, 	name='pic', trigger_duration=20*ms)
 
-
-	#take pictures while we load the MOTs.
-	frame_period_s = 148*1e-3
-	t0 = 0.1
-	tloop = t0
-	i =0
-	while tloop < t0 + blue_mot_duration + green_mot_duration:
-		i+=1
-		wide_angle_cam.expose(t=tloop,	name='wide_angle_frame',	frametype=f'{i}',	trigger_duration=frame_period_s/2)
-		isometric_cam.expose(t=tloop, 	name='isometric_frame', 	frametype=f'{i}',	trigger_duration=frame_period_s/2)
-		tloop += frame_period_s
-
+	t += hold_atoms(t,	duration= 40*ms)
 
 	# Stop the experiment shot with stop()
 	stop(t+1)
