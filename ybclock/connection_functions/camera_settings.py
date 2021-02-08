@@ -112,7 +112,7 @@ manual_camera_attributes = {
     'CameraAttributes::AcquisitionControl::AcquisitionFrameRateEnable': 0,
     'CameraAttributes::AcquisitionControl::AcquisitionMode': 'Continuous',
     'CameraAttributes::AcquisitionControl::ExposureMode': 'Timed',
-    'CameraAttributes::AcquisitionControl::ExposureTime': 10000.0,
+    'CameraAttributes::AcquisitionControl::ExposureTime': 1000.0,
     'CameraAttributes::AcquisitionControl::TriggerActivation': 'Falling Edge',
     'CameraAttributes::AcquisitionControl::TriggerDelay': 0.0,
     'CameraAttributes::AcquisitionControl::TriggerMode': 'Off',
