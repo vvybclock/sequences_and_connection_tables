@@ -1,14 +1,18 @@
 #Bugs.md
 
-Here we place the list of known bugs in our labscript control system.
-For reproducibility, we specify at least one commit that has the bug. Each commit is specified by a number called a *hash*. Since these numbers are very unique, you do not need to specify all the digits, only the first few are needed. For example for commit `
-943ba098ecf980737e23cd4bf9122c39dc1fd89a`, you could just write `943ba098` - the first few digits of the hash.
+Here we place the list of known bugs in our labscript control system. For
+reproducibility, we specify at least one commit that has the bug. Each commit
+is specified by a number called a *hash*. Since these numbers are very unique,
+you do not need to specify all the digits, only the first few are needed. For
+example for commit `943ba098ecf980737e23cd4bf9122c39dc1fd89a`, you could just
+write `943ba098` - the first few digits of the hash.
 
 ##photon_counter bug
 
 Author: Enrique Mendez (2021/02/08)
 
 Bug Type: Non-deterministic.
+
 How to Reproduce: run `test_blue_mot.py` on repeat.
 
 In labscriptlib commit hash `943ba098`, **AND** user_devices hash `a3daf9bd`
