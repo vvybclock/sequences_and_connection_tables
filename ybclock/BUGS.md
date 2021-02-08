@@ -21,3 +21,16 @@ counter does not wait enough time for the photon counting card to dump it's data
 So occasionally it will complain that the file is in use by the time you
 request the next run. We need to update the logic in this class to prevent
 unnecessary breaks in sequence runs. 
+
+##Analog Camera Triggers are inverted. (Resolved)
+
+Author: Enrique Mendez (2021/02/08)
+
+Bug Type: Deterministic.
+
+How to Reproduce: Take a picture with only one camera instead of two.
+
+The channels in the analog camera triggers were switched before commit
+`8a6c2b22`. This actually might have been a bug in labview code that persisted
+because pictures were always taken simultaneously or, a bug that occured from
+how I copied the labview definitions.

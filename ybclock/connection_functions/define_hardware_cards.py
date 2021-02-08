@@ -73,7 +73,7 @@ def define_hardware_cards():
 	AnalogIMAQdxCamera(
 		name                         	= 'wide_angle_cam',
 		parent_device                	= ni_pci_6713_dev5,
-		connection                   	= 'ao2',
+		connection                   	= 'ao3',
 		serial_number                	= '6BE00895F',
 		voltage                      	= 8,
 		trigger_edge_type            	= 'falling',
@@ -84,7 +84,7 @@ def define_hardware_cards():
 	AnalogIMAQdxCamera(
 		name                         	= 'isometric_cam',	#See `isometric video game graphics`
 		parent_device                	= ni_pci_6713_dev5,
-		connection                   	= 'ao3',
+		connection                   	= 'ao2',
 		serial_number                	= '6BE008960',
 		voltage                      	= 8,
 		trigger_edge_type            	= 'falling',

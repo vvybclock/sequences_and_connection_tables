@@ -14,20 +14,13 @@ if __name__ == '__main__':
 
 	ms = 1e-3
 	kHz = 1e3
-	t = 0.0001
+	t = 0.1
 
 
+	#take a background image just after turning on beams.
 	#load the atoms
-	t += blue_mot(t,	duration= 100*ms)	
+	t += blue_mot(t, duration=1000*ms, take_picture=True)
 	
-	#take a picture of the atoms but first...
-	#turn off the green light
-	green_mot_shutter.disable(t)
-	add_time_marker(t+20*ms, "Take Pictures", verbose=True)
-	wide_angle_cam.expose(t + 20*ms,	name='pic', trigger_duration=20*ms)
-	isometric_cam.expose(t + 20*ms, 	name='pic', trigger_duration=20*ms)
-
-
 	# Stop the experiment shot with stop()
 	stop(t+1)
 

@@ -30,7 +30,7 @@
 
 from labscript import add_time_marker
 
-def blue_mot(t,duration,add_marker=True):
+def blue_mot(t,duration,add_marker=True,take_picture=False):
 	'''
 	# Blue MOT Loading Sequence
 
@@ -59,6 +59,25 @@ def blue_mot(t,duration,add_marker=True):
 	green_mot_shutter.enable(t)
 	green_mot_power.constant(t, value=0.3) #why?
 	#the green light serves as extra doppler cooling.
+
+
+	if take_picture:
+		ms = 1e-3
+		trigger_duration = 20*ms
+		
+		#take background picture
+		isometric_cam.expose(t,
+			name            	='blue_mot', 
+			frametype       	='bg',
+			trigger_duration	=trigger_duration
+		)
+
+		# take picture with atoms
+		isometric_cam.expose(t+duration-trigger_duration,
+			name            	='blue_mot',
+			frametype       	='atoms',
+			trigger_duration	=trigger_duration
+		)
 
 	return duration
 

@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
 	ms = 1e-3
 	kHz = 1e3
-	t = 0.0001
+	t = 0.1
 
 
 	#load the atoms
