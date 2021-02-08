@@ -26,6 +26,8 @@ is on an anaconda install.
 
 If you wish to build documentation see `labscriptlib.html` for more.
 
+.. include:: ./BUGS.md
+
 # Renaming a Variable
 
 Occasionally, you need to rename a channel, either to improve clarity or to
