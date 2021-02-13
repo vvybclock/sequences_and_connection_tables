@@ -66,14 +66,14 @@ def blue_mot(t,duration,add_marker=True,take_picture=False):
 		trigger_duration = 20*ms
 		
 		#take background picture
-		isometric_cam.expose(t,
+		wide_angle_cam.expose(t,
 			name            	='blue_mot', 
 			frametype       	='bg',
 			trigger_duration	=trigger_duration
 		)
 
 		# take picture with atoms
-		isometric_cam.expose(t+duration-trigger_duration,
+		wide_angle_cam.expose(t+duration-trigger_duration,
 			name            	='blue_mot',
 			frametype       	='atoms',
 			trigger_duration	=trigger_duration
