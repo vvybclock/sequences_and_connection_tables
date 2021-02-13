@@ -16,18 +16,7 @@ if __name__ == '__main__':
 	kHz = 1e3
 	t = 0.1*ms
 
-
-	#load the atoms
-	t += blue_mot(t,                         	duration= 100*ms, take_picture=True)
-	t += transfer_blue_mot_to_green_mot(t,   	duration= 40*ms, 	samplerate=1*kHz)
-	t += cool_atoms_in_green_mot(t,          	duration= 180*ms,	samplerate=1*kHz)
-	t += position_atoms_to_optical_lattice(t,	duration= 40*ms, 	samplerate=1*kHz)
-
-	#take a picture of the atoms
-	add_time_marker(t+20*ms, "Take Picture of Green MOT", verbose=True)
-	isometric_cam.expose(t + 20*ms,	name='green_mot', frametype='cooled', trigger_duration=20*ms)
-
-	t += hold_atoms(t,	duration= 40*ms)
+	t += load_from_oven_to_optical_lattice(t)
 
 	# Stop the experiment shot with stop()
 	stop(t+1)

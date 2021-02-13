@@ -1,6 +1,8 @@
 '''
 	Holds sequences regarding loading atoms into our traps.
 
+	All functions return their duration.
+
 	#An Outline of How MOT Trapping Works
 
 	Let's start from what we know a MOT should do. It should cool and it should
@@ -120,5 +122,23 @@ def hold_atoms(t, duration,add_marker=True):
 	if add_marker: add_time_marker(t, "Hold Green MOT", verbose=True)
 	return duration
 
+def load_from_oven_to_optical_lattice(t, add_marker=True, take_picture=True):
+	'''  This is meta-subsequence. It holds all the calls for loading from the
+	oven up until loading into the optical lattice.'''
+	t0 = t
+	#load the atoms
+	t += blue_mot(t,                         	duration= 100*ms, take_picture=take_picture)
+	t += transfer_blue_mot_to_green_mot(t,   	duration= 40*ms, 	samplerate=1*kHz)
+	t += cool_atoms_in_green_mot(t,          	duration= 180*ms,	samplerate=1*kHz)
+	t += position_atoms_to_optical_lattice(t,	duration= 40*ms, 	samplerate=1*kHz)
+
+	#take a picture of the atoms
+	add_time_marker(t+20*ms, "Take Picture of Green MOT", verbose=True)
+	if take_picture:
+		isometric_cam.expose(t + 20*ms,	name='green_mot', frametype='almost_loaded', trigger_duration=20*ms)
+
+	t += hold_atoms(t,	duration= 40*ms)
+
+	return t-t0
 
 print("Imported 'loading_subsequences'")
