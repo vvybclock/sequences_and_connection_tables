@@ -24,9 +24,8 @@ if __name__ == '__main__':
 	# t += position_atoms_to_optical_lattice(t,	duration= 40*ms, 	samplerate=1*kHz)
 
 	#take a picture of the atoms
-	add_time_marker(t+20*ms, "Take Pictures", verbose=True)
-	wide_angle_cam.expose(t + 20*ms,	name='green_mot', frametype='signal', trigger_duration=20*ms)
-	isometric_cam.expose(t + 20*ms, 	name='green_mot', frametype='signal', trigger_duration=20*ms)
+	add_time_marker(t+20*ms, "Take Picture of Green MOT", verbose=True)
+	isometric_cam.expose(t + 20*ms,	name='green_mot', frametype='signal', trigger_duration=20*ms)
 
 	t += hold_atoms(t,	duration= 40*ms)
 
