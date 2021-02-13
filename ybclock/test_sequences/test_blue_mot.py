@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
 	#take a background image just after turning on beams.
 	#load the atoms
-	t += blue_mot(t, duration=1000*ms, take_picture=True)
+	t += blue_mot(t, duration=5000*ms, take_picture=True)
 	
 	# Stop the experiment shot with stop()
 	stop(t+1)
