@@ -18,10 +18,10 @@ if __name__ == '__main__':
 
 
 	#load the atoms
-	t += blue_mot(t,                         	duration= 3000*ms, take_picture=True)
-	t += transfer_blue_mot_to_green_mot(t,   	duration= 40*ms, 	samplerate=1*kHz)
-	t += cool_atoms_in_green_mot(t,          	duration= 180*ms,	samplerate=1*kHz)
-	t += position_atoms_to_optical_lattice(t,	duration= 40*ms, 	samplerate=1*kHz)
+	t += blue_mot(t,                           	duration= 3000*ms, take_picture=True)
+	t += transfer_blue_mot_to_green_mot(t,     	duration= 40*ms, 	samplerate=1*kHz)
+	t += cool_atoms_in_green_mot(t,            	duration= 180*ms,	samplerate=1*kHz)
+	# t += position_atoms_to_optical_lattice(t,	duration= 40*ms, 	samplerate=1*kHz)
 
 	#take a picture of the atoms
 	add_time_marker(t+20*ms, "Take Pictures", verbose=True)
