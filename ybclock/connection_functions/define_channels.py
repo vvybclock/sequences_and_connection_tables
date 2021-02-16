@@ -15,6 +15,14 @@ def define_channels():
 	magnetic_field_channels()
 	camera_channels()
 	photon_counter_channels()
+	undocumented_channels()
+
+def undocumented_channels():
+	DigitalOut(
+		name         	= 'blah_blah_switch_for_phase_reference',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line14'
+	)
 
 def blue_laser_channels():
 	'''
@@ -40,8 +48,7 @@ def blue_laser_channels():
 		name         	= 'blue_mot_power',
 		parent_device	= ni_pci_6713_dev4,
 		connection   	= 'ao0',
-		limits       	= None,
-		default_value	= 0.24
+		limits       	= None
 	)
 
 	DigitalOut(
@@ -348,7 +355,7 @@ def green_laser_channels():
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line16'
 	)
-	
+
 
 	#
 	#	Frequency Controls
@@ -477,9 +484,12 @@ def camera_channels():
 
 def photon_counter_channels():
 	'''
-	`p7888_start_trigger` tells the photon counting card to start listening for photon counts.
+	`p7888_start_trigger` tells the photon counting card to start listening for
+	photon counts. I believe listens for data for less than 1 ms.
 	`p7888_flushing_trigger` feeds into one of the listening ports on the photon counting card.
 	It's so we can send fake photons and fill up the memory of the card so it updates on the PC.
+	`photon_counter_shutter` controls the shutter before the photon_counter
+	photodiode. It's to for prevent damage to the photodiode.	
 	'''
 	DigitalOut(
 		name         	= 'p7888_start_trigger',
@@ -493,3 +503,9 @@ def photon_counter_channels():
 		connection   	= 'port0/line15'
 	)
 
+	DigitalOut(
+		name         	= 'photon_counter_shutter',
+		parent_device	= ni_pci_6284_dev6,
+		connection   	= 'port0/line13',
+		inverted     	= True
+	)
