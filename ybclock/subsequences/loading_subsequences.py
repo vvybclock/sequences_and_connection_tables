@@ -41,8 +41,11 @@ def blue_mot(t,duration,add_marker=True,take_picture=False):
 
 	The Blue MOT is assisted by Green Molasses (Doppler Cooling).
 	'''
+
 	#turn on the blue mot
 	if add_marker: add_time_marker(t, "Turn On Blue MOT", verbose=True)
+	#turn off extra light sources that can interrupt loading
+	cooling_pi_power_switch.disable(t)
 
 	#set voltage limit on mot
 	mot_coil_voltage.constant(t,value=8.5)
@@ -125,6 +128,9 @@ def hold_atoms(t, duration,add_marker=True):
 def load_from_oven_to_optical_lattice(t, add_marker=True, take_picture=True):
 	'''  This is meta-subsequence. It holds all the calls for loading from the
 	oven up until loading into the optical lattice.'''
+	ms = 1e-3
+	kHz = 1e3
+
 	t0 = t
 	#load the atoms
 	t += blue_mot(t,                         	duration= 100*ms, take_picture=take_picture)
