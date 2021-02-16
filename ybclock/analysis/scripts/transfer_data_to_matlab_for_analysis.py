@@ -62,18 +62,23 @@ def return_months_last_data_folder(year, month, makedirectory=False):
 	else:
 		return None
 
-if __name__ == '__main__':	
+if __name__ == '__main__':
 	most_recent_folder = return_months_last_data_folder(now.year,now.month)
 	if todays_folder_prefix not in most_recent_folder:
+		print(f"Most recent folder is {most_recent_folder}")
 		print("Today's Data doesn't have a folder! Not transferring data!")
 		# raise Exception("No folder for Today's Data!")
-		quit()
 
 
 	#path is defined in 'from lyse import *'
 	all_lyse_data = data(path)
 
 	with h5py.File(path,'a') as hdf:
+
+		#
+		#	Record photon arrivals
+		#
+
 		#pull data from hdf
 		file_array = np.array(hdf['/data/photon_arrivals/all_arrivals'])
 		
@@ -88,5 +93,14 @@ if __name__ == '__main__':
 		data_folder = join(exp_data_folder,this_months_folder,most_recent_folder,"Counter")
 		(_,_,all_files) = next(os.walk(data_folder))
 		run_number = len(all_files)
-		file_array.tofile(join(data_folder,f"{sequence_name}_{run_number:04}.lst"))
+		matlab_exp_file_location = join(data_folder,f"{sequence_name}_{run_number:04}.lst")
+		file_array.tofile(matlab_exp_file_location)
 		
+		#
+		#	Write Files for MATLAB to analyse.
+		#
+
+		ComtecFilesToReadLocation = "\\\\YBMINUTES\\Users\\YbMinutes\\Documents\\Experimental Data\\FolderForFileCommunicationWithYBCLOCK\\ComtecFilesToRead.txt"
+
+		with open(ComtecFilesToReadLocation, 'a') as f:
+			f.write(f"{matlab_exp_file_location}\n")
