@@ -10,7 +10,7 @@ if __name__ == '__main__':
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
 	start()
-	# set_default_values(t=1e-6)
+	set_default_values()
 
 	ms = 1e-3
 	kHz = 1e3
@@ -30,6 +30,7 @@ if __name__ == '__main__':
 	t += hold_atoms(t,	duration= 40*ms)
 
 	# Stop the experiment shot with stop()
-	stop(t+1)
+	set_default_values(t+75*ms)
+	stop(t+150*ms)
 
 print("Compiled loading_sequence!")

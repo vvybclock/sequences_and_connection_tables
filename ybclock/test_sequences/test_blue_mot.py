@@ -10,7 +10,7 @@ if __name__ == '__main__':
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
 	start()
-	# set_default_values(t=1e-6)
+	set_default_values()
 
 	ms = 1e-3
 	kHz = 1e3
@@ -22,6 +22,7 @@ if __name__ == '__main__':
 	t += blue_mot(t, duration=5000*ms, take_picture=True)
 	
 	# Stop the experiment shot with stop()
+	set_default_values(t)
 	stop(t+1)
 
 print("Compiled test_blue_mot!")

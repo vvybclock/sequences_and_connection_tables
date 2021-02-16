@@ -1,5 +1,7 @@
+from labscript import add_time_marker
 
-def set_default_values(t):
+def set_default_values(t=1e-5):
+	add_time_marker(t, "Set Default Values")
 
 	#set up mot fields
 	mot_coil_voltage.constant(t,value=8.5)
