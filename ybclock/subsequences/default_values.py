@@ -25,6 +25,9 @@ def set_default_values(t=1e-5):
 	green_mot_shutter.enable(t)
 	green_mot_power_switch.enable(t)
 	green_mot_power.constant(t, value=0.3)
+	#probe
+	probe_power_switch.enable(t)
+	probe_shutter.disable(t)
 
 	#frequency
 	green_frequency_fpga_trigger.disable(t)
@@ -32,3 +35,6 @@ def set_default_values(t=1e-5):
 	#cooling
 	cooling_pi_power_switch.enable(t)
 	cooling_pi_shutter.disable(t)
+
+	#photon counter
+	photon_counter_shutter.disable(t)
