@@ -134,3 +134,34 @@ def decode_header(header, verbose=False):
 		print(dictionary)
 	
 	return dictionary
+
+def convert_to_absolute_time(t0, channels, quantized_times, start_trigger_period, quantized_time_unit):
+	'''
+	Returns a 2D list, for each channel, returns the absolute arrival times of every photon.
+
+	'''
+
+	#initialize list that holds quantities
+	number_of_channels = 4
+	arrival_times = [None]*number_of_channels
+	for i in range(number_of_channels):
+		arrival_times[i] = []
+
+	#check to see if lengths match.
+	if len(channels) != len(quantized_times):
+		print("Error: len(channels) != len(quantized_times)")
+		return
+
+	#scan through photon counts
+	t = t0
+	start_triggers = 0 
+	for i in range(len(quantized_times)):
+		if (channels[i] == 3) and (quantized_times[i] == 0):
+			start_triggers += 1
+			t += (start_triggers-1)*start_trigger_period #make sure dt = 0 after the first start trigger.
+			continue
+		arrival_times[channels[i]].append(
+				t + quantized_time_unit*quantized_times[i]
+			)
+
+	return arrival_times
