@@ -20,7 +20,8 @@ if __name__ == '__main__':
 	#load data from the last run
 	path #path is defined in `from lyse ...`
 	with h5py.File(path,'a') as hdf:
-		print(hdf['/data/photon_arrivals'])
+		arrival_lst_binary = hdf['/data/photon_arrivals/all_arrivals']
+		print(arrival_lst_binary)
 
 		#create folder for photon counts
 		# grp = hdf.create_group("/data/photon_arrivals")
