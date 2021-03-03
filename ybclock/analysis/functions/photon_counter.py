@@ -6,7 +6,7 @@
 	in the P7888 device in user_devices.
 '''
 
-def determine_newline_type(self, entire_file):
+def determine_newline_type(entire_file):
 	'''newline_type, newline = determine_newline_type(entire_file)
 
 	Reads a whole file in as a string and returns newline type as string 'CRLF',
@@ -27,7 +27,7 @@ def determine_newline_type(self, entire_file):
 
 	return (newline_type, newline)
 
-def split_file_into_header_and_data(self, entire_file, newline):
+def split_file_into_header_and_data(entire_file, newline):
 	''' header, data = split_file_into_header_and_data(entire_file, newline) 
 
 	entire_file is a binary string.
@@ -44,7 +44,7 @@ def split_file_into_header_and_data(self, entire_file, newline):
 
 	return header, data
 
-def decode_data(self, data,verbose=False):
+def decode_data(data,verbose=False):
 	''' channels, quantized_times = decode_data(data)
 	
 	data is a binary string.
@@ -85,7 +85,7 @@ def decode_data(self, data,verbose=False):
 
 	return channels, quantized_times
 
-def decode_header(self, header, verbose=False):
+def decode_header(header, verbose=False):
 	''' dictionary = decode_header(header)
 
 	header is binary string.
@@ -102,8 +102,12 @@ def decode_header(self, header, verbose=False):
 	header = header.decode('utf-8')	#convert bytestream to string
 	header = header.splitlines()   	#break up into line by line.
 
+
 	#remove the datafile timestamp before extracting keys and values.
-	dictionary['timestamp'] = header.pop()
+	dictionary['timestamp'] = header.pop(0)
+	#remove the useless '[DATA]' line
+	header.pop()
+	if verbose: print(header)
 
 	for line in header:
 		if line[0] == ';':
