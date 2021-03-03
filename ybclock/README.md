@@ -1,6 +1,6 @@
 Welcome to Ybclock Labscript Edition!
 
-# Documentation
+#How to Edit & Build the Documentation
 
 Documentation is stored in '/html'.
 
@@ -22,7 +22,7 @@ See [the pdocs documentation](https://pdoc3.github.io/pdoc/doc/pdoc/#gsc.tab=0)
 for more.
 
 Run `compile_documentation.bat` to compile the docs. It will work if the labscript
-is on an anaconda install.
+is on an anaconda install.s
 
 If you wish to build documentation see `labscriptlib.html` for more.
 
