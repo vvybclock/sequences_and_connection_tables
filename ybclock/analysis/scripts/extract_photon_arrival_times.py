@@ -22,16 +22,14 @@ if __name__ == '__main__':
 	with h5py.File(path,'a') as hdf:
 		arrival_lst_binary = np.array(hdf['/data/photon_arrivals/all_arrivals'])
 		arrival_lst_bytestr = arrival_lst_binary.tobytes()
-		print(arrival_lst_bytestr)
-
-		#create folder for photon counts
-		# grp = hdf.create_group("/data/photon_arrivals")
-		# file_array = np.fromfile(p7888.p7888_data_file,dtype='<i4')
-		# lst_file = grp.create_dataset("all_arrivals",data=file_array)
-		# lst_file.attrs.create("Description", data=
-		#	'Contains the very large photon arrival file. This file contains the data of arrival times from multiple shots. Not just the one shot we care about here.'
-		# )
-
+		
+		(_,newline)                	= photon_counter.determine_newline_type(arrival_lst_bytestr)
+		(header, data)             	= photon_counter.split_file_into_header_and_data(entire_file=arrival_lst_bytestr, newline=newline)
+		header                     	= photon_counter.decode_header(header,verbose=False)
+		(channels, quantized_times)	= photon_counter.decode_data(data, verbose=False)
+		
+	print(channels)
+	print(quantized_times)
 	#extract the .lst binary
 
 	#process the .lst binary
