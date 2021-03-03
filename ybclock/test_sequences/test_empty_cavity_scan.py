@@ -31,6 +31,8 @@ if __name__ == '__main__':
 	probe_power_switch.enable(t)
 
 	tloop = t
+
+	
 	#sweep probe sideband frequency
 	sweep_duration = 30*ms
 	frequency_sweep_range = 60e3*kHz
