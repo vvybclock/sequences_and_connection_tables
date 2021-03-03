@@ -5,6 +5,7 @@
 	cards produced .LST files. Extracted from my old work on the blacs_worker.py
 	in the P7888 device in user_devices.
 '''
+import numpy as np
 
 def determine_newline_type(entire_file):
 	'''newline_type, newline = determine_newline_type(entire_file)
@@ -61,11 +62,19 @@ def decode_data(data,verbose=False):
 	Verbose print's the decoded data in binary format.
 	'''
 
+	if verbose:
+		for char in data:
+			print(char)
 	if len(data) % 4 != 0:
-		raise RuntimeError("Error: P7888 data isn't in 32 bit chunks")
+		#raise RuntimeError(f"Error: P7888 data isn't in 32 bit chunks.\n len(data)=4*({len(data)//4})+{len(data)%4}")
+		print(f"Warning: P7888 data isn't in 32 bit chunks.\n len(data)=4*({len(data)//4})+{len(data)%4}")
+		print(f"Truncating data to be in 32 bit chunks.")
+		data = data[0:(len(data)//4)*4]
+
 
 	number_of_32_bit_chunks = len(data)//4
 
+	#datalines breaks up the data string 'line' by 'line'. A 'line' is defined to be a 32-bit chunk.
 	datalines	= [None] * number_of_32_bit_chunks
 	dataints 	= np.zeros(number_of_32_bit_chunks, dtype=np.int64)
 
