@@ -30,15 +30,16 @@ if __name__ == '__main__':
 	(channels, quantized_times)	= photon_counter.decode_data(data, verbose=False)
 	arrival_times              	= photon_counter.convert_to_absolute_time(t0=0, channels=channels,quantized_times=quantized_times, start_trigger_period=1e-3, quantized_time_unit=2e-9)
 	
+	# print(quantized_times)
 	#save the processed variables to the hdf files
 	run = Run(path)
 	processed_arrivals = {}
 
 	for i in range(4):
 		run.save_result(
-			name 	=f'processed_arrivals_ch_{i}',
-			value	=np.array(arrival_times[i]),
-			group	='/data/photon_arrivals/'
+			name   	=f'processed_arrivals_ch_{i}',
+			value  	=np.array(arrival_times[i]),
+			# group	='/data/photon_arrivals/'
 			)
 
 	print("processed_arrivals saved in hdf.")
