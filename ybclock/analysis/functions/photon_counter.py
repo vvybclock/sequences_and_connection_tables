@@ -156,10 +156,14 @@ def convert_to_absolute_time(t0, channels, quantized_times, start_trigger_period
 	t = t0
 	start_triggers = 0 
 	for i in range(len(quantized_times)):
+		#find start trigger then increment time
 		if (channels[i] == 3) and (quantized_times[i] == 0):
 			start_triggers += 1
-			t += (start_triggers-1)*start_trigger_period #make sure dt = 0 after the first start trigger.
-			continue
+			if (start_triggers) > 1:
+				t += start_trigger_period #make sure dt = 0 after the first start trigger.
+			
+
+		#calculate single photon absolute arrival time
 		arrival_times[channels[i]].append(
 				t + quantized_time_unit*quantized_times[i]
 			)
