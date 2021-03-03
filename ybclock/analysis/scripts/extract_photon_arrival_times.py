@@ -20,7 +20,7 @@ if __name__ == '__main__':
 	#load data from the last run
 	path #path is defined in `from lyse ...`
 	with h5py.File(path,'a') as hdf:
-		arrival_lst_binary = np.ndarray(hdf['/data/photon_arrivals/all_arrivals'])
+		arrival_lst_binary = np.array(hdf['/data/photon_arrivals/all_arrivals'])
 		arrival_lst_bytestr = arrival_lst_binary.tobytes()
 		print(arrival_lst_bytestr)
 
