@@ -16,7 +16,10 @@ def residuals_of_lorentzian(params, x_data, y_data):
 	return diff
 
 def fit_single_cavity_peak(data,start,end,bin_interval):
-	''' fits a single_cavity_peak. assumes unbinned photon arrival times for data'''
+	''' Fits a single_cavity_peak using least squares. Assumes unbinned photon
+	arrival times for data.
+
+	Returns best_guess and cov_best_guess'''
 
 	#bin the data
 	(hist, bin_edges) = np.histogram(
@@ -37,6 +40,7 @@ def fit_single_cavity_peak(data,start,end,bin_interval):
 	#format the parameters
 	init_guess = [x0, amplitude, gamma, offset]
 
+	#fit
 	(best_guess, cov_best_guess) = leastsq(residuals_of_lorentzian, init_guess, args=(bin_edges[:-1]+bin_interval/2,hist))
 
 
