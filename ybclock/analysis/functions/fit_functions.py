@@ -7,6 +7,7 @@ def lorentzian(x, x0, a, gamma, offset):
 	x0   	= peak center,
 	a    	= amplitude of peak,
 	gamma	= Half width half max
+	cs
 	'''
 	return a*gamma**2/(gamma**2 + (x-x0)**2) + offset
 
