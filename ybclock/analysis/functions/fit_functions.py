@@ -47,3 +47,65 @@ def fit_single_cavity_peak(data,start,end,bin_interval):
 
 	return best_guess, cov_best_guess
 
+def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa):
+	'''
+	Returns the transmission through the cavity-atom system.
+
+
+	f 		= probe frequency (EOM)
+	fatom	= atomic frequency (in terms of probe frequency)
+	fcavity = empty cavity frequency ("")
+	Neta	= total cooperativity (single atom cooperativity eta times the total number of atoms in the up level)
+	gamma  	= atomic transition linewidth (184kHz)
+	kappa	= empty cavity linewidth (~500kHz)
+
+	'''
+	# define some local variables to simplify the writing of the formula
+
+	xa = 2*(f-fatom)/gamma
+	xc = 2*(f-fcavity)/kappa
+
+	return ((1+Neta/(1+xa**2))**2+(xc-Neta*xa/(1+xa**2))**2)**(-1)
+
+
+def logLikelihood_rabi_splitting_transmission(data, fatom, fcavity, Neta):
+	'''
+	calculates the loglikelihood of a set of data as a function of the other parameters.
+
+	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
+	
+	fatom	= atomic frequency (in terms of probe frequency)
+	fcavity = empty cavity frequency ("")
+	Neta	= total cooperativity (single atom cooperativity eta times the total number of atoms in the up level)
+
+	'''
+
+	# define some fixed value
+	kappa_loc = 0.510
+	gamma_loc = 0.184
+	rabi_splitting_transmission_Integral = 0.59 # for Neta>>1 the Rabi splitting integral formula converges to this value
+
+	loglikelihood=0
+	for i in data:
+		loglikelihood += np.log(rabi_splitting_transmission(i,fatom,fcavity,Neta,gamma_loc,kappa_loc))
+
+	return loglikelihood/len(data) # loglikelihood normalized to the atom number
+
+
+	
+
+def fit_rabi_splitting_transmission_MLE(data, params, params_range):
+
+	'''
+	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). returns the Neta
+	
+	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
+	params 			= list of parameters. [fatom, fcavity, Neta]
+	params_range 	= fit parameters allowed ranges 
+
+	frequency unit: MHz
+
+	Here we find the parameters for which we maximize the loglikelihood 
+	'''
+	# guess initial parameters, if not defined/fixed before like Neta
+	# TBD
