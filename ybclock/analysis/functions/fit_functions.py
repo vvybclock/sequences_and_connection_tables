@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.optimize import leastsq
+from scipy.optimize import minimize, leastsq
 
 def lorentzian(x, x0, a, gamma, offset):
 	'''
@@ -58,6 +58,8 @@ def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa):
 	Neta	= total cooperativity (single atom cooperativity eta times the total number of atoms in the up level)
 	gamma  	= atomic transition linewidth (184kHz)
 	kappa	= empty cavity linewidth (~500kHz)
+	
+	dkcounts= dark-counts per scan This should be implemented.
 
 	'''
 	# define some local variables to simplify the writing of the formula
@@ -65,19 +67,17 @@ def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa):
 	xa = 2*(f-fatom)/gamma
 	xc = 2*(f-fcavity)/kappa
 
-	return ((1+Neta/(1+xa**2))**2+(xc-Neta*xa/(1+xa**2))**2)**(-1)
+	return ((1+Neta/(1+xa**2))**2+(xc-Neta*xa/(1+xa**2))**2)**(-1)#+dkcounts
 
 
-def logLikelihood_rabi_splitting_transmission(data, fatom, fcavity, Neta):
+def logLikelihood_rabi_splitting_transmission(params, data):
 	'''
-	calculates the loglikelihood of a set of data as a function of the other parameters.
+	calculates the -loglikelihood of a set of data as a function of the other parameters. 
+	Minus LL because we maximze the LL using minimize().
 
 	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
+	params 	       	= (fatom, fcavity, Neta)
 	
-	fatom	= atomic frequency (in terms of probe frequency)
-	fcavity = empty cavity frequency ("")
-	Neta	= total cooperativity (single atom cooperativity eta times the total number of atoms in the up level)
-
 	'''
 
 	# define some fixed value
@@ -87,25 +87,60 @@ def logLikelihood_rabi_splitting_transmission(data, fatom, fcavity, Neta):
 
 	loglikelihood=0
 	for i in data:
-		loglikelihood += np.log(rabi_splitting_transmission(i,fatom,fcavity,Neta,gamma_loc,kappa_loc))
+		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc))
 
 	return loglikelihood/len(data) # loglikelihood normalized to the atom number
 
 
-	
-
-def fit_rabi_splitting_transmission_MLE(data, params, params_range):
+def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000))):
 
 	'''
 	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). returns the Neta
 	
 	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
-	params 			= list of parameters. [fatom, fcavity, Neta]
-	params_range 	= fit parameters allowed ranges 
+	bnds 			= list of bounds/ranges for parameters (fatoms, fcavity, Neta)
 
 	frequency unit: MHz
 
-	Here we find the parameters for which we maximize the loglikelihood 
+	Here we find the parameters for which we maximize the loglikelihood.
 	'''
-	# guess initial parameters, if not defined/fixed before like Neta
-	# TBD
+	# define some fixed value
+	kappa_loc = 0.510
+	gamma_loc = 0.184
+
+	# extract some parameter
+	Neta_range		= bnds[2]
+	fatoms_range	= bnds[0]
+	fcavity_range	= bnds[1]
+
+	# guess initial parameters, to fix the parameters, set the relative params_range to 0
+
+	fcavity_guess = np.mean(data)
+	fatoms_guess  =	fcavity_guess
+	Neta_guess = 4*np.var(data)/(gamma_loc * kappa_loc)
+
+	## check if guesses are in the set ranges, if not redefine the guesses
+	if fcavity_guess < fcavity_range[0] or fcavity_guess > fcavity_range[1]:
+		fcavity_guess = np.mean(fcavity_range)
+
+	if fatoms_guess < fatoms_range[0] or fatoms_guess > fatoms_range[1]:
+		fatoms_guess = np.mean(fatoms_range)
+
+	if Neta_guess < Neta_range[0] or Neta_guess > Neta_range[1]:
+		Neta_guess = np.mean(Neta_range)
+
+
+
+
+	#format the parameters
+	init_guess = (fatoms_guess, fcavity_guess, Neta_guess)
+
+	#fit
+	out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data, bounds=bnds)
+
+	best_param = out.x
+	cov = (out.hess_inv)/len(init_guess)
+
+
+
+	return (best_param, cov) 
