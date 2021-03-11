@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.optimize import minimize, leastsq
+import random
 
 def lorentzian(x, x0, a, gamma, offset):
 	'''
@@ -89,16 +90,19 @@ def logLikelihood_rabi_splitting_transmission(params, data):
 	for i in data:
 		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc))
 
-	return loglikelihood/len(data) # loglikelihood normalized to the atom number
+	return -loglikelihood/len(data) # loglikelihood normalized to the atom number
 
 
-def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000))):
+def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), param_error = 'off', bs_repetition = 25):
 
 	'''
 	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). returns the Neta
 	
 	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
 	bnds 			= list of bounds/ranges for parameters (fatoms, fcavity, Neta)
+
+	param_error		= if turned on, the function estimates parameters error by bootstrapping the data
+	bs_repetition	= specify how many bootstrapped datasample are we analyzing to perform statistics on fit
 
 	frequency unit: MHz
 
@@ -129,18 +133,26 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000))):
 	if Neta_guess < Neta_range[0] or Neta_guess > Neta_range[1]:
 		Neta_guess = np.mean(Neta_range)
 
-
-
-
 	#format the parameters
 	init_guess = (fatoms_guess, fcavity_guess, Neta_guess)
 
 	#fit
-	out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data, bounds=bnds)
+	if param_error == 'on':
+		# bootstrap the data and perform MLE fit for all databs. Then do statistics of bootstrapped results
+		# This method may be slow. It can be improved in speed by implementing Hessian matrix calculations, however it may be tricky becasue of bounds.
+		bs_list=[]
+		for i in range(bs_repetition):
+			data_bs = random.choices(data,k=len(data))
+			out=minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data_bs, bounds=bnds)
+			bs_list.append(out.x)
+		best_param = np.mean(np.transpose(bs_list),1)
+		cov = np.sqrt(np.transpose(bs_list)) # Covariance matrix
+		return (best_param, cov) 
+	elif param_error == 'off':
+		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data, bounds=bnds)
+		best_param = out.x
+		return (best_param,)
+	else :
+		return('incorrect param_error specification')
 
-	best_param = out.x
-	cov = (out.hess_inv)/len(init_guess)
-
-
-
-	return (best_param, cov) 
+	
