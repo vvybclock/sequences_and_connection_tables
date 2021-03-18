@@ -96,7 +96,7 @@ def logLikelihood_rabi_splitting_transmission(params, data):
 def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), param_error = 'off', bs_repetition = 25):
 
 	'''
-	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). returns the Neta
+	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). Returns the Neta.
 	
 	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
 	bnds 			= list of bounds/ranges for parameters (fatoms, fcavity, Neta)

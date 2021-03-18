@@ -38,6 +38,10 @@ plt.xlabel("Time (s)")
 	bin_interval=200e-6,
 )
 
+#perform fit with Rabi splitting MLE, I convert the 
+print(test_lib)
+
+
 #plot fit
 x = np.arange(0,30e-3,20e-6)
 y = fit_functions.lorentzian(x=x,x0=best_guess[0], a=best_guess[1], gamma=best_guess[2], offset=best_guess[3])

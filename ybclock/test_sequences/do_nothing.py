@@ -5,4 +5,6 @@ if __name__ == '__main__':
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
 	start()
+	print(test_lib)
+
 	stop(1)
