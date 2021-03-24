@@ -38,8 +38,7 @@ plt.xlabel("Time (s)")
 	bin_interval=200e-6,
 )
 
-#perform fit with Rabi splitting MLE, I convert the 
-print(test_lib)
+#perform fit with Rabi splitting MLE
 
 
 #plot fit
