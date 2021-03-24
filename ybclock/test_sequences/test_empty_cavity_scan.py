@@ -1,6 +1,8 @@
 from labscript import start, stop, AnalogOut, DigitalOut
 from labscriptlib.ybclock.connection_table import define_connection_table
 from labscriptlib.ybclock.subsequences import *
+from labscript_utils.unitconversions import *
+
 
 
 if __name__ == '__main__':
@@ -20,7 +22,7 @@ if __name__ == '__main__':
 
 	add_time_marker(t,"Cavity Scan Prep")
 	#set sideband frequency before turning on power
-	probe_sideband_frequency.constant(t, value=5)
+	probe_sideband_frequency.constant(t, value=0, units='MHz')
 	#turn on light power
 	probe_sideband_power_switch.enable(t)
 	probe_sideband_power.constant(t, value=1.8)
@@ -34,18 +36,21 @@ if __name__ == '__main__':
 
 	
 	#sweep probe sideband frequency
-	sweep_duration = 30*ms
-	frequency_sweep_range = 60e3*kHz
-	frequency_resolution = 50*kHz
-	samples = frequency_sweep_range/frequency_resolution
+	# sweep_duration = 30*ms
+	# frequency_sweep_range = 60e3*kHz
+	# frequency_resolution = 50*kHz
+	# samples = frequency_sweep_range/frequency_resolution
+	# probe_sideband_VCO= GreenFrequencyVCOCalibration()
+	# probe_sideband_VCO.MHz_to_base(empty_cavity_frequency_sweep_initial)
+	
 
 	t += probe_sideband_frequency.ramp(
 		t, 
-		duration=30*ms,
-		initial=5,
-		final=-2.5,
-		samplerate=(samples/sweep_duration)
-	)
+		duration=empty_cavity_sweep_duration*ms,
+		initial=empty_cavity_frequency_sweep_initial,
+		final=empty_cavity_frequency_sweep_initial+empty_cavity_frequency_sweep_range,
+		samplerate=empty_cavity_samples/(empty_cavity_sweep_duration*ms), units="MHz"
+		)
 
 	while tloop < t:
 		p7888_start_trigger.enable(tloop)
