@@ -3,23 +3,22 @@
 '''
 import labscript_utils.h5_lock
 import h5py
-
+import pickle
 
 class ExperimentalCavity:
 	'''
 	Records parameters and saves them once the program quits.
 	'''
 	cavity_scan_parameters = {}
-	met
 
 	def __init__(self):
-		''' Try to create the metadata group. '''
+		''' Try to create the metadata group if it doesn't exist. '''
 		with h5py.File(compiler.hdf5_filename, 'a') as hdf5_file:
 			hdf5_file.require_group('metadata')
 
 	def __del__(self):
 		with h5py.File(compiler.hdf5_filename, 'a') as hdf5_file:
-
+			#pickle the dictionary then save
 			pass
 
 	def scan(t, label):
