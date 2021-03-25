@@ -51,12 +51,10 @@ class ExperimentalCavity:
 		})
 
 		#tell labscript to perform the scan with the given parameters.
-
-
-t += probe_sideband_frequency.ramp(
-	t, 
-	duration=empty_cavity_sweep_duration*ms,
-	initial=empty_cavity_frequency_sweep_initial,
-	final= empty_cavity_frequency_sweep_initial+empty_cavity_frequency_sweep_range,
-	samplerate=empty_cavity_samples/(empty_cavity_sweep_duration*ms), units="MHz"
-	)
+		t += probe_sideband_frequency.ramp(
+			t, 
+			duration=duration,
+			initial=initial_f,
+			final=final_f,
+			samplerate=samplerate, units="MHz"
+		)
