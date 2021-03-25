@@ -8,6 +8,7 @@ from labscript_utils.unitconversions import *
 if __name__ == '__main__':
 
 	define_connection_table()
+	exp_cavity = ExperimentalCavity()
 	
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
