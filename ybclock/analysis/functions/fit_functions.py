@@ -139,7 +139,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	#fit
 	if param_error == 'on':
 		# bootstrap the data and perform MLE fit for all databs. Then do statistics of bootstrapped results
-		# This method may be slow. It can be improved in speed by implementing Hessian matrix calculations, however it may be tricky becasue of bounds.
+		# This method may be slow. It can be improved in speed by implementing Hessian matrix calculations, however it may be tricky because of bounds.
 		bs_list=[]
 		for i in range(bs_repetition):
 			data_bs = random.choices(data,k=len(data))
