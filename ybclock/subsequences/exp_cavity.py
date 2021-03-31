@@ -118,7 +118,7 @@ class ExperimentalCavity:
 		tloop = t
 
 		#update scan time to be right when the frequency scans
-		scan_parameters[label][-1]['t'] = t
+		self.scan_parameters[label][-1]['t'] = t
 		#tell labscript to perform the scan with the given parameters.
 		t += probe_sideband_frequency.ramp(
 			t, 
@@ -144,4 +144,6 @@ class ExperimentalCavity:
 
 		self.save_parameters()
 
-		return t-t0
+		#remove the shutter turn off time (5*ms) in case we want to loop.
+		#this will prevent unneccessary shutter pulses
+		return t-t0 - 5*ms
