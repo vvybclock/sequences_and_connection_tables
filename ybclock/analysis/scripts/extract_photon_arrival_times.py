@@ -1,6 +1,8 @@
 '''
 	extracts photon arrival times from the single shot .lst file. 
 
+	`arrival_times` is a list of lists of arrival times for each photon in each channel.
+
 	This is done manually. So if you want tips on how to extract data manually
 	from the HDF file look here.
 
@@ -46,7 +48,7 @@ if __name__ == '__main__':
 			)
 
 	print("processed_arrivals saved in hdf.")
-	
+
 
 	
 
