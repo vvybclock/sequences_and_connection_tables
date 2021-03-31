@@ -24,10 +24,14 @@ if __name__ == '__main__':
 	#calibration
 	for i in range(5):
 		t += exp_cavity.scan(t,label=f'empty_cavity')
+	t+=1
 
-	print(f"cavity_parameters:\n{exp_cavity.scan_parameters}")
+	for i in range(5):
+		t += exp_cavity.scan(t,label=f'empty_cavity')
+
+	# print(f"cavity_parameters:\n{exp_cavity.scan_parameters}")
 	exp_cavity.get_parameters()
-	print(f"HDF cavity_parameters:\n{exp_cavity.scan_parameters}")
+	# print(f"HDF cavity_parameters:\n{exp_cavity.scan_parameters}")
 	set_default_values(t+1*ms)
 	stop(t+2*ms)
 
