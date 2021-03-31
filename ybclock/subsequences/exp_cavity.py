@@ -116,6 +116,9 @@ class ExperimentalCavity:
 		probe_power_switch.enable(t)
 
 		tloop = t
+
+		#update scan time to be right when the frequency scans
+		scan_parameters[label][-1]['t'] = t
 		#tell labscript to perform the scan with the given parameters.
 		t += probe_sideband_frequency.ramp(
 			t, 
