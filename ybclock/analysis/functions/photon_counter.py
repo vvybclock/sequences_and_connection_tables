@@ -6,6 +6,9 @@
 	in the P7888 device in user_devices.
 '''
 import numpy as np
+from labscriptlib.ybclock.subsequences import ExperimentalCavity
+from lyse import path
+
 
 def determine_newline_type(entire_file):
 	'''newline_type, newline = determine_newline_type(entire_file)
@@ -152,15 +155,32 @@ def convert_to_absolute_time(t0, channels, quantized_times, start_trigger_period
 		print("Error: len(channels) != len(quantized_times)")
 		return
 
+	#extract cavity scan times from ExperimentalCavity class.
+	exp_cavity = ExperimentalCavity()
+	cavity_scan_parameters = exp_cavity.get_parameters(path)
+
+	all_scan_dicts = []
+	for each_scan_type in cavity_scan_parameters.keys():
+		all_scan_dicts += cavity_scan_parameters[each_scan_type]
+
+	absolute_time_of_each_scan_start_trigger = {}
+	for each_scan in all_scan_dicts:
+		print(each_scan)
+		absolute_time_of_each_scan_start_trigger[each_scan['initial_start_trigger']] = each_scan['t']
+
+
 	#scan through photon counts
 	t = t0
-	start_triggers = 0 
+	start_triggers = 0
 	for i in range(len(quantized_times)):
 		#find start trigger then increment time
 		if (channels[i] == 3) and (quantized_times[i] == 0):
+			if (start_triggers) > 0:
+				if start_triggers in absolute_time_of_each_scan_start_trigger:
+					t = absolute_time_of_each_scan_start_trigger[start_triggers]
+				else:
+					t += start_trigger_period #make sure dt = 0 after the first start trigger.
 			start_triggers += 1
-			if (start_triggers) > 1:
-				t += start_trigger_period #make sure dt = 0 after the first start trigger.
 			
 
 		#calculate single photon absolute arrival time
