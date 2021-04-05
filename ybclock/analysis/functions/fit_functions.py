@@ -81,9 +81,15 @@ def logLikelihood_rabi_splitting_transmission(params, data):
 	
 	'''
 
-	# define some fixed value
-	try: 
+	# define some fixed value. 
+	# Try to get values from globals. If globals is missing, it will use some preset value.
+	try:
+		kappa_loc = data_globals['exp_cavity_kappa']*0.001 # 0.001 becasue in globals this is specified in kHz
+	except:
 		kappa_loc = 0.510
+	try:
+		gamma_loc = data_globals['green_gamma']*0.001  # 0.001 becasue in globals this is specified in kHz
+	except:
 		gamma_loc = 0.184
 	
 	
@@ -134,9 +140,16 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	For deatails, see : https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29
 
 	'''
-	# define some fixed value
-	kappa_loc = 0.510
-	gamma_loc = 0.184
+	# define some fixed value. 
+	# Try to get values from globals. If globals is missing, it will use some preset value.
+	try:
+		kappa_loc = data_globals['exp_cavity_kappa']*0.001 # 0.001 becasue in globals this is specified in kHz
+	except:
+		kappa_loc = 0.510
+	try:
+		gamma_loc = data_globals['green_gamma']*0.001  # 0.001 becasue in globals this is specified in kHz
+	except:
+		gamma_loc = 0.184
 
 	# extract some parameter
 	Neta_range		= bnds[2]
@@ -166,8 +179,6 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	if param_error == 'on':
 		# bootstrap the data and perform MLE fit for all databs. Then do statistics of bootstrapped results
 		# This method may be slow. It can be improved in speed by implementing Hessian matrix calculations, however it may be tricky becasue of bounds.
-		# elucidate on best_param components
-
 		bs_list=[]
 		for i in range(bs_repetition):
 			data_bs = random.choices(data,k=len(data))
@@ -179,7 +190,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	elif param_error == 'off':
 		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data, bounds=bnds)
 		best_param = out.x
-		return (best_param,)
+		return (best_param,) # (fatoms, fcavity, Neta)
 	else :
 		return('incorrect param_error specification')
 
