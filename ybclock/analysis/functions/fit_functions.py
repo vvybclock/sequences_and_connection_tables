@@ -82,13 +82,16 @@ def logLikelihood_rabi_splitting_transmission(params, data):
 	'''
 
 	# define some fixed value
-	kappa_loc = 0.510
-	gamma_loc = 0.184
+	try: 
+		kappa_loc = 0.510
+		gamma_loc = 0.184
+	
+	
 	rabi_splitting_transmission_Integral = 0.59 # for Neta>>1 the Rabi splitting integral formula converges to this value
 
 	loglikelihood=0
 	for i in data:
-		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc))
+		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc)/rabi_splitting_transmission_Integral)
 
 	return -loglikelihood/len(data) # loglikelihood normalized to the atom number
 
@@ -98,15 +101,31 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	'''
 	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). Returns the Neta.
 	
+	output = fit_rabi_splitting_transmission_MLE(data,bnds,param_error,bs_repetition)
+
+
 	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
 	bnds 			= list of bounds/ranges for parameters (fatoms, fcavity, Neta)
 
-	param_error		= if turned on, the function estimates parameters error by bootstrapping the data
-	bs_repetition	= specify how many bootstrapped datasample are we analyzing to perform statistics on fit
+	param_error		: if turned on, the function estimates parameters error by bootstrapping the data
+	bs_repetition	: specify how many bootstrapped datasample are we analyzing to perform statistics on fit
+
+	output			: tuple with a MLE result as first element; it is a 3 elements ndarray reporting (fatoms, fcavity, Neta). 
+					  When param_error='on' the output tuple contains the covariance matrix of the fitted parameters as second element. The second element is absent if param_error='off'
+
 
 	frequency unit: MHz
 
 	Here we find the parameters for which we maximize the loglikelihood.
+
+	## Why we used bootstrapping method 
+
+	reason goes here
+	### What is bootstrapping?
+
+	explanation goes here
+
+
 	'''
 	# define some fixed value
 	kappa_loc = 0.510
@@ -140,6 +159,8 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	if param_error == 'on':
 		# bootstrap the data and perform MLE fit for all databs. Then do statistics of bootstrapped results
 		# This method may be slow. It can be improved in speed by implementing Hessian matrix calculations, however it may be tricky becasue of bounds.
+		# elucidate on best_param components
+
 		bs_list=[]
 		for i in range(bs_repetition):
 			data_bs = random.choices(data,k=len(data))
