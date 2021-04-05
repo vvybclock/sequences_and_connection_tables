@@ -111,7 +111,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	bs_repetition	: specify how many bootstrapped datasample are we analyzing to perform statistics on fit
 
 	output			: tuple with a MLE result as first element; it is a 3 elements ndarray reporting (fatoms, fcavity, Neta). 
-					  When param_error='on' the output tuple contains the covariance matrix of the fitted parameters as second element. The second element is absent if param_error='off'
+					  When param_error='on' the output tuple contains the covariance matrix of the fitted parameters as second element. The second element is absent if param_error='off'.
 
 
 	frequency unit: MHz
@@ -119,12 +119,19 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	Here we find the parameters for which we maximize the loglikelihood.
 
 	## Why we used bootstrapping method 
+	
+	The presence of bounds in fit parameters significantly increments the complexity in estimating uncertainties and correlations. This is due to the fact that it bacomes hard (if not impossible) to correctly calculate the Hessian matrix in the presence of bounds.
+	Therefore, to estimate the covariance matrix of the fitted parameters, we bootstrap the data (bootsrapping method). This allows us to estimate fit parameters and the experimental covariance matrix without computing Hessians or Jacobian.
 
-	reason goes here
+	
+	
 	### What is bootstrapping?
+	
+	Bootstrapping is a method widely used in statistics. Bootstrapping is any test or metric that uses random sampling with replacement (e.g. mimicking the sampling process). This technique allows estimation of the sampling distribution of almost any statistic using random sampling methods.
 
-	explanation goes here
+	The idea is to create a set of n "measurements" sampled from data with the same statistical properties as the data itself. We then perform the MLE fit to each of these n resampled data. Finally, we can extract mean values for the fit parameters and the experimental covariance matrix.
 
+	For deatails, see : https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29
 
 	'''
 	# define some fixed value
