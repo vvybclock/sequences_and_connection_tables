@@ -3,7 +3,7 @@ Define the channels of all the NI DAC cards. They are seperated by device.
 Hopefully, this will make learning the lab mechanism easier in the future.
 '''
 from labscript import AnalogOut, DigitalOut
-
+from labscript_utils.unitconversions import *
 
 def define_channels():
 	''' Contains all the function calls for declaring all the channels used by
@@ -362,9 +362,14 @@ def green_laser_channels():
 	#
 
 	AnalogOut(
-		name         	= 'probe_sideband_frequency',
-		parent_device	= ni_pci_6713_dev4,
-		connection   	= 'ao6'
+		name                      	= 'probe_sideband_frequency',
+		parent_device             	= ni_pci_6713_dev4,
+		connection                	= 'ao6',
+		unit_conversion_class     	= GreenFrequencyVCOCalibration,
+		unit_conversion_parameters	= {
+		    'raw_voltage'   : vco_raw_voltage_data,
+		    'raw_frequency' : vco_raw_frequency_data
+		}
 	)
 
 	DigitalOut(

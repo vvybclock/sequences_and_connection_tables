@@ -45,6 +45,11 @@ plt.xlabel("Time (s)")
 	bin_interval=200e-6,
 )
 
+<<<<<<< HEAD
+=======
+#perform fit with Rabi splitting MLE
+
+>>>>>>> fc8658fcb41cb2ef75082167e3a9455718f2578e
 
 #plot fit
 x = np.arange(0,30e-3,20e-6)

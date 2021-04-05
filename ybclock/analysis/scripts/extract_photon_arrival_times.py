@@ -1,6 +1,9 @@
 '''
 	extracts photon arrival times from the single shot .lst file. 
 
+	This is done manually. So if you want tips on how to extract data manually
+	from the HDF file look here.
+
 	Saves the results as attributes to the '/data/photon_arrivals' group
 '''
 from lyse import *
