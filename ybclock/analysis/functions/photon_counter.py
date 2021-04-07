@@ -7,7 +7,6 @@
 '''
 import numpy as np
 from labscriptlib.ybclock.subsequences import ExperimentalCavity
-from lyse import path
 
 
 def determine_newline_type(entire_file):
@@ -138,7 +137,7 @@ def decode_header(header, verbose=False):
 	
 	return dictionary
 
-def convert_to_absolute_time(t0, channels, quantized_times, start_trigger_period, quantized_time_unit):
+def convert_to_absolute_time(t0, channels, quantized_times, start_trigger_period, quantized_time_unit,path):
 	'''
 	Returns a 2D list, for each channel, returns the absolute arrival times of every photon.
 
@@ -168,18 +167,22 @@ def convert_to_absolute_time(t0, channels, quantized_times, start_trigger_period
 		# print(each_scan)
 		absolute_time_of_each_scan_start_trigger[each_scan['initial_start_trigger']] = each_scan['t']
 
+	print(absolute_time_of_each_scan_start_trigger)
 
-	#scan through photon counts
+	#scan through photon counts and calculate absolute arrival times
 	t = t0
 	start_triggers = 0
 	for i in range(len(quantized_times)):
 		#find start trigger then increment time
 		if (channels[i] == 3) and (quantized_times[i] == 0):
-			if (start_triggers) > 0:
-				if start_triggers in absolute_time_of_each_scan_start_trigger:
-					t = absolute_time_of_each_scan_start_trigger[start_triggers]
-				else:
-					t += start_trigger_period #make sure dt = 0 after the first start trigger.
+			#we've found a start trigger
+			if start_triggers in absolute_time_of_each_scan_start_trigger:
+				#hop the time because we've the start of a scan.
+				t = absolute_time_of_each_scan_start_trigger[start_triggers]
+				# print(f"Cavity_Scan_Time: {t}")
+			else:
+				#we are mid scan so go up by a 1ms.
+				t += start_trigger_period #make sure dt = 0 after the first start trigger.
 			start_triggers += 1
 			
 

@@ -33,7 +33,7 @@ if __name__ == '__main__':
 	(header, data)             	= photon_counter.split_file_into_header_and_data(entire_file=arrival_lst_bytestr, newline=newline)
 	header                     	= photon_counter.decode_header(header,verbose=False)
 	(channels, quantized_times)	= photon_counter.decode_data(data, verbose=False)
-	arrival_times              	= photon_counter.convert_to_absolute_time(t0=0, channels=channels,quantized_times=quantized_times, start_trigger_period=1e-3, quantized_time_unit=2e-9)
+	arrival_times              	= photon_counter.convert_to_absolute_time(t0=0, channels=channels,quantized_times=quantized_times, start_trigger_period=1e-3, quantized_time_unit=2e-9,path=path)
 	
 	# print(quantized_times)
 	#save the processed variables to the hdf files

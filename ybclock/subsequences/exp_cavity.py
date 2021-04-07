@@ -16,7 +16,10 @@ class ExperimentalCavity:
 
 	def __init__(self):
 		''' Try to create the metadata group if it doesn't exist. 
-		Clear the scan_parameters dict, as it seems to stay full after each shot compilation.'''
+		Clear the scan_parameters dict, as it seems to stay full after each shot compilation.
+		We need to keep track of the number of p7888 pulses sent so we know which ones, are spaced at 
+		strange intervals. This special pulse number is recorded as a parameter in `scan_parameters`
+		'''
 		self.scan_parameters = {}
 		self.number_of_p7888_start_triggers = 0
 
