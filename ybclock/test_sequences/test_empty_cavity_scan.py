@@ -18,21 +18,14 @@ if __name__ == '__main__':
 	ms = 1e-3
 	us = 1e-6
 	kHz = 1e3
-	t = 1*ms
+	t = 200*ms
 
 
 	#calibration
 	for i in range(5):
-		t += exp_cavity.scan(t,label=f'empty_cavity')
-	
-	t += 1
-
-	for i in range(5):
-		t += exp_cavity.scan(t,label=f'empty_cavity')
-	
-
+		t += exp_cavity.scan(t,label=f'empty_cavity')	
 
 	set_default_values(t+1*ms)
-	stop(t+10*ms)
+	stop(t+1000*ms)
 
 print("Compiled test_empty_cavity_scan!")
