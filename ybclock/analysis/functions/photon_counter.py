@@ -165,7 +165,7 @@ def convert_to_absolute_time(t0, channels, quantized_times, start_trigger_period
 
 	absolute_time_of_each_scan_start_trigger = {}
 	for each_scan in all_scan_dicts:
-		print(each_scan)
+		# print(each_scan)
 		absolute_time_of_each_scan_start_trigger[each_scan['initial_start_trigger']] = each_scan['t']
 
 
