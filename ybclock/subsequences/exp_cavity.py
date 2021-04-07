@@ -20,34 +20,35 @@ class ExperimentalCavity:
 		self.scan_parameters = {}
 		self.number_of_p7888_start_triggers = 0
 
-		try:
-			#only do this if we're compiling the shot.
-			with h5py.File(compiler.hdf5_filename, 'a') as hdf5_file:
-				print("Requring Metadata Folder.")
-				hdf5_file.require_group('metadata')
-				hdf5_file.require_group('/metadata/exp_cavity')
-		except:
-			pass
-
 	def save_parameters(self):
-		''' Pickle Parameters then Save to HDF'''
-		with h5py.File(compiler.hdf5_filename, 'a') as hdf5_file:
-			pickled_dict = pickle.dumps(self.scan_parameters)
-			grp = hdf5_file['/metadata/exp_cavity']
-			grp.attrs["scan_parameters"] = np.void(pickled_dict)
+		''' Pickle Parameters then Save to HDF.
+		We save to shot_properties so repetitions copy the dict.
+		Returns True if it saved. False if not.
+		This is designed to only work in runmanager
+		'''
 
+		if compiler.hdf5_filename != None:
+			pickled_dict = pickle.dumps(self.scan_parameters)
+			compiler.shot_properties["exp_cavity_scan_parameters"] = np.void(pickled_dict)
+			return True
+		else:
+			return False
 
 	def get_parameters(self,path=None):
-		''' Load from HDF file then Unpickle '''
+		''' Load from HDF file then Unpickle. Intended to work only in analysis.
+		This is important as the data will only be saved after the shot has been
+		compiled.'''
+		
 		if compiler.hdf5_filename != None:
-			hdf5_filename = compiler.hdf5_filename
+			#exit from the function as this is is only supposed to be used in lyse.
+			return None
 		else:
 			#we'll assume it's in being used in lyse.
 			hdf5_filename = path
 
 		with h5py.File(hdf5_filename, 'r') as hdf5_file:
-			grp = hdf5_file['/metadata/exp_cavity']
-			void_pickled_dict = grp.attrs["scan_parameters"]
+			grp = hdf5_file['/shot_properties']
+			void_pickled_dict = grp.attrs["exp_cavity_scan_parameters"]
 			pickled_dict = void_pickled_dict.tobytes()
 			self.scan_parameters = pickle.loads(pickled_dict)
 		return self.scan_parameters
