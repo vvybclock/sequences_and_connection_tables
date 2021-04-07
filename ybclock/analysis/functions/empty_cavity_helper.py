@@ -1,6 +1,9 @@
 from labscriptlib.ybclock.analysis.functions import fit_functions
+import numpy as np
+import matplotlib.pyplot as plt
+from labscriptlib.ybclock.analysis.functions.metadata import extract_sequence_repetition_numbers, extract_date,extract_sequence_name
 
-def empty_cavity_analysis(data, scan_parameters):
+def empty_cavity_analysis(data, scan_parameters,path):
 	'''
 
 	Here we take the photons arrival time (`data`), check which one has arrived within an
@@ -17,13 +20,42 @@ def empty_cavity_analysis(data, scan_parameters):
 
 		#Select photons in the scan range
 		photons_in_scan_time = data[(data > start_time) & (data < end_time)]
-
+                        
 		#Extract photon's frequency based on arrival time
 		#since we have calibrated frequency vs voltage, and performed the scan across frequency
 		#there is a true linear relationship between a arrival time and frequency :)
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
 		#Fit the Data using the MLE method.
-		best_param = fit_functions.fit_rabi_splitting_transmission_MLE(data=photon_arrivals_in_frequency_MHz)
-		print(best_param)
+		try:
+			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
+				data=photon_arrivals_in_frequency_MHz, 
+				bnds={"fatom_range":(5,5), "fcavity_range":(0,50), "Neta_range":(0,0)}
+			)
+			print(best_param)
+		except:
+			print("MLE Photon Arrival Time Fit Failed.")
+
+
+		#Plot
+		#Plot
+		#Plot
+
+		#extract metadata
+		(sequence_number, repetition_number)	= extract_sequence_repetition_numbers(path)
+		date                                	= extract_date(path)
+		sequence_name                       	= extract_sequence_name(path)
+		                                    		
+		#plot data
+		plt.hist(
+			photons_in_scan_time-start_time,
+			bins=np.arange(0,end_time-start_time, 200e-6),
+			align='mid'
+		 )
+
+		#decorate plot
+		plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
+		plt.ylabel("Photon Counts, (200us Bin)")
+		plt.xlabel("Time (s)")
+
 		
