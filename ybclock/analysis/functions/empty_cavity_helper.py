@@ -47,15 +47,40 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		sequence_name                       	= extract_sequence_name(path)
 		                                    		
 		#plot data
+		# plt.hist(
+		#	photons_in_scan_time-start_time,
+		#	bins=np.arange(0,end_time-start_time, 200e-6),
+		#	align='mid'
+		#  )
+
+		# #decorate plot
+		# plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
+		# plt.ylabel("Photon Counts, (200us Bin)")
+		# plt.xlabel("Time (s)")
+
 		plt.hist(
-			photons_in_scan_time-start_time,
-			bins=np.arange(0,end_time-start_time, 200e-6),
+			photon_arrivals_in_frequency_MHz,
+			bins=np.arange(0,50, 0.1),
 			align='mid'
 		 )
+		
 
 		#decorate plot
 		plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
-		plt.ylabel("Photon Counts, (200us Bin)")
-		plt.xlabel("Time (s)")
-
+		plt.ylabel("Photon Counts, (50 kHz Bin)")
+		plt.xlabel("frequency (MHz)")
 		
+		#plot fit
+		try:
+			x = np.arange(0,50, 0.1)
+			y = fit_functions.rabi_splitting_transmission(
+					f = x,
+					fatom = best_param["fatom"],
+					fcavity = best_param["fcavity"],
+					Neta = best_param["Neta"],
+					gamma = best_param["gamma"],
+					kappa = best_param["kappa"]
+				)
+			plt.plot(x,200*y) # I need to scale automatically the amplitude of the signal. I need to implement also the dark counts
+		except:
+			print("Failed plotting fit!")

@@ -42,30 +42,3 @@ for each_key in cavity_scan_parameters.keys():
 			scan_parameters=cavity_scan_parameters[each_key],
 			path=path
 		)
-
-#*********************
-#	Fit Cavity Scans with MLE
-#*********************
-
-# for each_key in cavity_scan_parameters.keys():
-#	switch each_key:
-#		'empty_cavity':
-#			empty_cavity_scan_analysis()
-#		'atomic_lifetime':
-#			atomic_lifetime_analysis()
-
-# #perform fit
-# (best_guess, cov_best_guess) = fit_functions.fit_single_cavity_peak(
-#	data=photon_arrival_times,
-#	start=0,
-#	end=30e-3,
-#	bin_interval=200e-6,
-# )
-
-# #perform fit with Rabi splitting MLE
-
-
-# #plot fit
-# x = np.arange(0,30e-3,20e-6)
-# y = fit_functions.lorentzian(x=x,x0=best_guess[0], a=best_guess[1], gamma=best_guess[2], offset=best_guess[3])
-# plt.plot(x,y)

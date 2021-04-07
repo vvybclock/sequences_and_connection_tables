@@ -48,7 +48,7 @@ def fit_single_cavity_peak(data,start,end,bin_interval):
 
 	return best_guess, cov_best_guess
 
-def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa):
+def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa, dkcounts = 0):
 	'''
 	Returns the transmission through the cavity-atom system.
 
@@ -68,7 +68,7 @@ def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa):
 	xa = 2*(f-fatom)/gamma
 	xc = 2*(f-fcavity)/kappa
 
-	return ((1+Neta/(1+xa**2))**2+(xc-Neta*xa/(1+xa**2))**2)**(-1)#+dkcounts
+	return ((1+Neta/(1+xa**2))**2+(xc-Neta*xa/(1+xa**2))**2)**(-1)+dkcounts
 
 
 def logLikelihood_rabi_splitting_transmission(params, data):
@@ -77,18 +77,22 @@ def logLikelihood_rabi_splitting_transmission(params, data):
 	Minus LL because we maximze the LL using minimize().
 
 	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
-	params 	       	= (fatom, fcavity, Neta)
+	params		= (fatom, fcavity, Neta, dkcounts)
 	
 	'''
 
-	# define some fixed value
+	# define some fixed value, these, later, should be retrieved from globals
 	kappa_loc = 0.510
 	gamma_loc = 0.184
+	dark_counts = 120*0.03 #dark counts times the scan time.	
+
+
+
 	rabi_splitting_transmission_Integral = 0.59 # for Neta>>1 the Rabi splitting integral formula converges to this value
 
 	loglikelihood=0
 	for i in data:
-		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc))
+		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc, dark_counts))
 
 	return -loglikelihood/len(data) # loglikelihood normalized to the atom number
 
@@ -111,6 +115,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 	# define some fixed value
 	kappa_loc = 0.510
 	gamma_loc = 0.184
+
 
 	# extract some parameter
 	Neta_range   		= bnds["Neta_range"]
@@ -149,13 +154,11 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 			bs_list.append(out.x)
 		fit_result= np.mean(np.transpose(bs_list),1)
 		cov = np.sqrt(np.transpose(bs_list)) # Covariance matrix
-		best_param = {"fatom" : fit_result[0], "fcavity" : fit_result[1], "Neta": fit_result[2], 'covariance' : cov}
+		best_param = {"fatom" : fit_result[0], "fcavity" : fit_result[1], "Neta": fit_result[2],  "gamma" : gamma_loc, "kappa" : kappa_loc,'covariance' : cov} # gamma and kappa are not fit parameters!
 		return best_param
 	elif param_error == 'off':
 		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data, bounds=bnds_list)
 		best_param = out.x
-		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2]}
+		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : gamma_loc, "kappa" : kappa_loc}
 	else :
 		return('incorrect param_error specification')
-
-	
