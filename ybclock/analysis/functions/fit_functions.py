@@ -93,15 +93,15 @@ def logLikelihood_rabi_splitting_transmission(params, data):
 	return -loglikelihood/len(data) # loglikelihood normalized to the atom number
 
 
-def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), param_error = 'off', bs_repetition = 25):
+def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavity_range":(0,25), "Neta_range":(0,2000)}, param_error = 'off', bs_repetition = 25):
 
 	'''
 	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). Returns the Neta.
 	
-	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
-	bnds 			= list of bounds/ranges for parameters (fatoms, fcavity, Neta)
+	data			= list of frequencies of detected photons. They are obtained from photons arrival times.
+	bnds			= dictionary specifying parameters's ranges (fatoms, fcavity, Neta)
 
-	param_error		= if turned on, the function estimates parameters error by bootstrapping the data
+	param_error  		= if turned on, the function estimates parameters error by bootstrapping the data
 	bs_repetition	= specify how many bootstrapped datasample are we analyzing to perform statistics on fit
 
 	frequency unit: MHz
@@ -113,9 +113,11 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 	gamma_loc = 0.184
 
 	# extract some parameter
-	Neta_range		= bnds[2]
-	fatoms_range	= bnds[0]
-	fcavity_range	= bnds[1]
+	Neta_range   		= bnds["Neta_range"]
+	fatoms_range 	= bnds["fatom_range"]
+	fcavity_range	= bnds["fcavity_range"]
+
+	bnds_list = (fatoms_range, fcavity_range, Neta_range)
 
 	# guess initial parameters, to fix the parameters, set the relative params_range to 0
 
@@ -143,15 +145,16 @@ def fit_rabi_splitting_transmission_MLE(data, bnds=((0, 25),(0,25),(0, 2000)), p
 		bs_list=[]
 		for i in range(bs_repetition):
 			data_bs = random.choices(data,k=len(data))
-			out=minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data_bs, bounds=bnds)
+			out=minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data_bs, bounds=bnds_list)
 			bs_list.append(out.x)
-		best_param = np.mean(np.transpose(bs_list),1)
+		fit_result= np.mean(np.transpose(bs_list),1)
 		cov = np.sqrt(np.transpose(bs_list)) # Covariance matrix
-		return (best_param, cov) 
+		best_param = {"fatom" : fit_result[0], "fcavity" : fit_result[1], "Neta": fit_result[2], 'covariance' : cov}
+		return best_param
 	elif param_error == 'off':
-		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data, bounds=bnds)
+		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data, bounds=bnds_list)
 		best_param = out.x
-		return (best_param,)
+		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2]}
 	else :
 		return('incorrect param_error specification')
 
