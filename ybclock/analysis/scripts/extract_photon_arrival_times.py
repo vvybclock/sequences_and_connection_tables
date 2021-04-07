@@ -41,10 +41,9 @@ if __name__ == '__main__':
 	processed_arrivals = {}
 
 	for i in range(4):
-		run.save_result(
-			name   	=f'processed_arrivals_ch_{i}',
-			value  	=np.array(arrival_times[i]),
-			# group	='/data/photon_arrivals/'
+		run.save_result_array(
+			name	= f'processed_arrivals_ch_{i}',
+			data	= np.array(arrival_times[i])
 			)
 
 	print("processed_arrivals saved in hdf.")
