@@ -14,12 +14,12 @@ date                                	= extract_date(path)
 sequence_name                       	= extract_sequence_name(path)
 
 #extract data
-photon_arrival_times = run.get_result(group='extract_photon_arrival_times',name='processed_arrivals_ch_1')
+photon_arrival_times = run.get_result_array(group='extract_photon_arrival_times',name='processed_arrivals_ch_1')
 
 #plot data
 plt.hist(
 	photon_arrival_times,
-	bins=np.arange(0, photon_arrival_times[-1], photon_arrival_times[-1]/200),
+	bins=np.arange(photon_arrival_times[0], photon_arrival_times[-1], photon_arrival_times[-1]/200),
 	align='mid'
 )
 
