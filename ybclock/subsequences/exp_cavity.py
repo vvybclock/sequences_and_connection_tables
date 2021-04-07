@@ -73,6 +73,9 @@ class ExperimentalCavity:
 		t    	- scan light across the cavity at time t.
 		label	- name of the cavity scan you are performing.
 		verbose - adds time markers and the beginning of  each scan.
+		
+		This function turns on the light for the experimental cavity `shutter_open_time`
+		before the scan time `t`.
 
 		The label will be used for analysis and grouping parameters together. The
 		label should be identical if you are using it for the same purpose. This
@@ -82,6 +85,9 @@ class ExperimentalCavity:
 		ms = 1e-3
 		us = 1e-6
 		t0 = t
+
+		shutter_open_time = 5*ms
+		t_buffer = 1*ms
 
 		#make room in the dictionary if this label is used for the first time.
 		self.scan_parameters.setdefault(label, [])
@@ -104,16 +110,17 @@ class ExperimentalCavity:
 		})
 
 		#initial laser light management
-		if verbose: add_time_marker(t,f"Cavity Scan Prep: {label}")
+		if verbose: add_time_marker(t - shutter_open_time ,f"Cavity Scan Prep: {label}")
 		#set sideband frequency before turning on power
-		probe_sideband_frequency.constant(t, value=initial_f, units='MHz')
+		probe_sideband_frequency.constant(t - shutter_open_time, value=initial_f, units='MHz')
 		#turn on light power
-		probe_sideband_power_switch.enable(t)
-		probe_sideband_power.constant(t, value=empty_cavity_scan_power)
+		probe_sideband_power_switch.enable(t - shutter_open_time)
+		probe_sideband_power.constant(t - shutter_open_time, value=empty_cavity_scan_power)
 
-		probe_power_switch.disable(t)
-		photon_counter_shutter.enable(t)	#open photon counter shutter
-		probe_shutter.enable(t); t += 5*ms
+		probe_power_switch.disable(t - shutter_open_time)
+		photon_counter_shutter.enable(t - shutter_open_time)	#open photon counter shutter
+		probe_shutter.enable(t - shutter_open_time); 
+
 		probe_power_switch.enable(t)
 
 		tloop = t
@@ -140,11 +147,12 @@ class ExperimentalCavity:
 
 		probe_power_switch.disable(t)
 		photon_counter_shutter.disable(t)	#open photon counter shutter
-		probe_shutter.disable(t); t += 5*ms
+		probe_shutter.disable(t); 
+		t += shutter_open_time
 		probe_power_switch.enable(t)
 
 		self.save_parameters()
 
-		#remove the shutter turn off time (5*ms) in case we want to loop.
+		#remove the shutter turn off time (shutter_open_time) in case we want to loop.
 		#this will prevent unneccessary shutter pulses
-		return t-t0 - 5*ms
+		return t-t0 
