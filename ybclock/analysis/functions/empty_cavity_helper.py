@@ -11,6 +11,8 @@ def empty_cavity_analysis(data, scan_parameters, path):
 	empty cavity scan, and, for each scan, we convert the arrival time into
 	photon's frequency. We finally fit each scan and plot a graph overlapping all the cavity scans.
 
+	If the number of photons detected is huge (set a limit here... maybe 1000), we bin the data and fit the resulting histogram with a normal minimization of residuals' variance-
+
 	'''
 
 	for params in scan_parameters:
@@ -48,17 +50,19 @@ def empty_cavity_analysis(data, scan_parameters, path):
 		(sequence_number, repetition_number)	= extract_sequence_repetition_numbers(path)
 		date                                	= extract_date(path)
 		sequence_name                       	= extract_sequence_name(path)
-		                                    		
-		#plot data
 		
+		run=Run(path)
+		data_globals = run.get_globals()
+
+		#plot data
+		histogram_resolution = .2;
+
 		n = plt.hist(
 			photon_arrivals_in_frequency_MHz,
-			bins=np.arange(0,50, 0.1),
+			bins=np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution),
 			align='mid'
 		 )
 		
-		print(max(n[1]))
-
 		#decorate plot
 		plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
 		plt.ylabel("Photon Counts, (50 kHz Bin)")
@@ -66,7 +70,7 @@ def empty_cavity_analysis(data, scan_parameters, path):
 		
 		#plot fit
 		try:
-			x = np.arange(0,50, 0.1)
+			x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution/3)
 			y = fit_functions.rabi_splitting_transmission(
 					f = x,
 					fatom = best_param["fatom"],
@@ -75,6 +79,6 @@ def empty_cavity_analysis(data, scan_parameters, path):
 					gamma = best_param["gamma"],
 					kappa = best_param["kappa"]
 				)
-			plt.plot(x,200*y) # I need to scale automatically the amplitude of the signal. Multiply by the max histogram value.
+			plt.plot(x,max(n[0])*y) # I need to scale automatically the amplitude of the signal. Multiply by the max histogram value.
 		except:
 			print("Failed plotting fit!")
