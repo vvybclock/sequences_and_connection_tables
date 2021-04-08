@@ -2,6 +2,8 @@ from labscriptlib.ybclock.analysis.functions import fit_functions
 import numpy as np
 import matplotlib.pyplot as plt
 from labscriptlib.ybclock.analysis.functions.metadata import extract_sequence_repetition_numbers, extract_date,extract_sequence_name
+from lyse import Run
+import pickle
 
 def empty_cavity_analysis(data, scan_parameters,path):
 	'''
@@ -11,6 +13,9 @@ def empty_cavity_analysis(data, scan_parameters,path):
 	photon's frequency. We finally fit each scan.
 
 	'''
+
+	results_to_save = []
+
 	for params in scan_parameters:
 		# params is a dictionary whose properties are defined in exp_cavity.py
 		start_time	= params['t']
@@ -46,33 +51,22 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		date                                	= extract_date(path)
 		sequence_name                       	= extract_sequence_name(path)
 		                                    		
-		#plot data
-		# plt.hist(
-		#	photons_in_scan_time-start_time,
-		#	bins=np.arange(0,end_time-start_time, 200e-6),
-		#	align='mid'
-		#  )
-
-		# #decorate plot
-		# plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
-		# plt.ylabel("Photon Counts, (200us Bin)")
-		# plt.xlabel("Time (s)")
-
+		#plot histogram                     	
+		freq_bin_width_MHz = 0.1
 		plt.hist(
 			photon_arrivals_in_frequency_MHz,
-			bins=np.arange(0,50, 0.1),
+			bins=np.arange(0,50, freq_bin_width_MHz),
 			align='mid'
 		 )
 		
-
 		#decorate plot
 		plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
-		plt.ylabel("Photon Counts, (50 kHz Bin)")
-		plt.xlabel("frequency (MHz)")
+		plt.ylabel(f"Photon Counts, ({freq_bin_width_MHz*1000:.3g} kHz Bin)")
+		plt.xlabel("Frequency (MHz)")
 		
 		#plot fit
 		try:
-			x = np.arange(0,50, 0.1)
+			x = np.arange(0,50, freq_bin_width_MHz)
 			y = fit_functions.rabi_splitting_transmission(
 					f = x,
 					fatom = best_param["fatom"],
@@ -81,6 +75,42 @@ def empty_cavity_analysis(data, scan_parameters,path):
 					gamma = best_param["gamma"],
 					kappa = best_param["kappa"]
 				)
-			plt.plot(x,200*y) # I need to scale automatically the amplitude of the signal. I need to implement also the dark counts
+			plt.plot(x,200*y) # I need to scale automatically the amplitude of the signal. Just multiply by the size of largest histogram.
 		except:
 			print("Failed plotting fit!")
+
+		#store all the results in a dictionary
+		parameters = best_param
+		#add all the scan_parameters to the dictionary
+		parameters.update(params)
+		results_to_save.append(parameters)
+
+	#save fit parameters into hdf file.
+	run = Run(path)
+
+	#save some documentation with the parameters
+	docstring = '''
+
+	Fit results are saved to a list. Each element represents an
+	empty_cavity_scan. Each element is a dictionary that holds all the
+	parameters describing the fit results. Pull the keys to see the fit values.
+
+	To extract the data use python3.8, pickle and numpy, and lyse.
+
+	void_pickled_dict_list = run.get_result_array(group='_scan_analysis_name_.py',
+	name='')
+	pickled_dict_list = void_pickled_dict.tobytes()
+	fit_parameter_list = pickle.loads(pickled_dict_list)
+
+	'''
+
+	pickled_dict_list = pickle.dumps(results_to_save)
+	run.save_result_array(
+		name='fitted_exp_cavity_frequency_parameters',
+		data=np.void(pickled_dict_list)
+	)
+	run.save_result(
+		name='documentation_fitted_exp_cavity_frequency_parameters',
+		value=docstring
+	)
+			
