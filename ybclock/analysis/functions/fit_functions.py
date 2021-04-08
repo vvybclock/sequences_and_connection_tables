@@ -68,7 +68,6 @@ def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa, dkcounts 
 	xa = 2*(f-fatom)/gamma
 	xc = 2*(f-fcavity)/kappa
 
-	return ((1+Neta/(1+xa**2))**2+(xc-Neta*xa/(1+xa**2))**2)**(-1)+dkcounts
 
 
 def logLikelihood_rabi_splitting_transmission(params, data):
@@ -81,18 +80,27 @@ def logLikelihood_rabi_splitting_transmission(params, data):
 	
 	'''
 
-	# define some fixed value, these, later, should be retrieved from globals
-	kappa_loc = 0.510
-	gamma_loc = 0.184
-	dark_counts = 120*0.03 #dark counts times the scan time.	
-
-
+	# define some fixed value. 
+	# Try to get values from globals. If globals is missing, it will use some preset value.
+	try:
+		kappa_loc = data_globals['exp_cavity_kappa']*0.001 # 0.001 becasue in globals this is specified in kHz
+	except:
+		kappa_loc = 0.510
+		print("Failed getting kappa from globals.")
+	try:
+		gamma_loc = data_globals['green_gamma']*0.001  # 0.001 becasue in globals this is specified in kHz
+	except:
+		gamma_loc = 0.184
+	try:
+		dark_counts = data_globals['dark_counts']*data_globals['empty_cavity_sweep_duration']
+	except:
+		dark_counts = 120*0.03
 
 	rabi_splitting_transmission_Integral = 0.59 # for Neta>>1 the Rabi splitting integral formula converges to this value
 
 	loglikelihood=0
 	for i in data:
-		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc, dark_counts))
+		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc, dark_counts)/rabi_splitting_transmission_Integral)
 
 	return -loglikelihood/len(data) # loglikelihood normalized to the atom number
 
@@ -102,20 +110,49 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 	'''
 	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). Returns the Neta.
 	
-	data			= list of frequencies of detected photons. They are obtained from photons arrival times.
-	bnds			= dictionary specifying parameters's ranges (fatoms, fcavity, Neta)
+	output = fit_rabi_splitting_transmission_MLE(data,bnds,param_error,bs_repetition)
 
-	param_error  		= if turned on, the function estimates parameters error by bootstrapping the data
-	bs_repetition	= specify how many bootstrapped datasample are we analyzing to perform statistics on fit
+
+	data  			: list of frequencies of detected photons. They are obtained from photons arrival times.
+	bnds 			: dictionary specifying parameters's ranges (fatoms, fcavity, Neta)
+
+	param_error		: if turned on, the function estimates parameters error by bootstrapping the data
+	bs_repetition	: specify how many bootstrapped datasample are we analyzing to perform statistics on fit
+
+	output			: tuple with a MLE result as first element; it is a 3 elements ndarray reporting (fatoms, fcavity, Neta). 
+					  When param_error='on' the output tuple contains the covariance matrix of the fitted parameters as second element. The second element is absent if param_error='off'.
+
 
 	frequency unit: MHz
 
 	Here we find the parameters for which we maximize the loglikelihood.
-	'''
-	# define some fixed value
-	kappa_loc = 0.510
-	gamma_loc = 0.184
 
+	## Why we used bootstrapping method 
+	
+	The presence of bounds in fit parameters significantly increments the complexity in estimating uncertainties and correlations. This is due to the fact that it bacomes hard (if not impossible) to correctly calculate the Hessian matrix in the presence of bounds.
+	Therefore, to estimate the covariance matrix of the fitted parameters, we bootstrap the data (bootsrapping method). This allows us to estimate fit parameters and the experimental covariance matrix without computing Hessians or Jacobian.
+
+	
+	
+	### What is bootstrapping?
+	
+	Bootstrapping is a method widely used in statistics. Bootstrapping is any test or metric that uses random sampling with replacement (e.g. mimicking the sampling process). This technique allows estimation of the sampling distribution of almost any statistic using random sampling methods.
+
+	The idea is to create a set of n "measurements" sampled from data with the same statistical properties as the data itself. We then perform the MLE fit to each of these n resampled data. Finally, we can extract mean values for the fit parameters and the experimental covariance matrix.
+
+	For deatails, see : https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29
+
+	'''
+	# define some fixed value. 
+	# Try to get values from globals. If globals is missing, it will use some preset value.
+	try:
+		kappa_loc = data_globals['exp_cavity_kappa']*0.001 # 0.001 becasue in globals this is specified in kHz
+	except:
+		kappa_loc = 0.510
+	try:
+		gamma_loc = data_globals['green_gamma']*0.001  # 0.001 becasue in globals this is specified in kHz
+	except:
+		gamma_loc = 0.184
 
 	# extract some parameter
 	Neta_range   		= bnds["Neta_range"]
