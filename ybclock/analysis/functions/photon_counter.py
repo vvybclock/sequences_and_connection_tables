@@ -167,7 +167,7 @@ def convert_to_absolute_time(t0, channels, quantized_times, start_trigger_period
 		# print(each_scan)
 		absolute_time_of_each_scan_start_trigger[each_scan['initial_start_trigger']] = each_scan['t']
 
-	print(absolute_time_of_each_scan_start_trigger)
+	# print(absolute_time_of_each_scan_start_trigger)
 
 	#scan through photon counts and calculate absolute arrival times
 	t = t0
