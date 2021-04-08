@@ -17,6 +17,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import labscriptlib.ybclock.analysis.functions.fit_functions as fit_functions
 from labscriptlib.ybclock.analysis.functions.empty_cavity_helper import empty_cavity_analysis
+import pickle
 
 run = Run(path)
 
