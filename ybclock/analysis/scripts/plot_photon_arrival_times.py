@@ -25,7 +25,7 @@ plt.hist(
 
 #decorate plot
 plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
-plt.ylabel("Photon Counts, (200us Bin)")
+plt.ylabel(f"Photon Counts, ({photon_arrival_times[-1]/200  *1000:.3g}ms Bin)")
 plt.xlabel("Time (s)")
 
 
