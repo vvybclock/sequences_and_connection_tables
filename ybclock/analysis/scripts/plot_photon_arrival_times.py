@@ -3,7 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from labscriptlib.ybclock.analysis.functions.metadata import extract_sequence_repetition_numbers, extract_date,extract_sequence_name
 import labscriptlib.ybclock.analysis.functions.fit_functions as fit_functions
+
 run = Run(path)
+
+# load globals (gives an empty variable {} if there are no globals)
+data_globals = run.get_globals()
+
 
 #extract metadata
 (sequence_number, repetition_number)	= extract_sequence_repetition_numbers(path)
