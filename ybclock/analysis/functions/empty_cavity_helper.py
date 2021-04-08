@@ -2,15 +2,17 @@ from labscriptlib.ybclock.analysis.functions import fit_functions
 import numpy as np
 import matplotlib.pyplot as plt
 from labscriptlib.ybclock.analysis.functions.metadata import extract_sequence_repetition_numbers, extract_date,extract_sequence_name
+from lyse import Run
 
-def empty_cavity_analysis(data, scan_parameters,path):
+def empty_cavity_analysis(data, scan_parameters, path):
 	'''
 
 	Here we take the photons arrival time (`data`), check which one has arrived within an
 	empty cavity scan, and, for each scan, we convert the arrival time into
-	photon's frequency. We finally fit each scan.
+	photon's frequency. We finally fit each scan and plot a graph overlapping all the cavity scans.
 
 	'''
+
 	for params in scan_parameters:
 		# params is a dictionary whose properties are defined in exp_cavity.py
 		start_time	= params['t']
@@ -30,7 +32,8 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		try:
 			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(5,5), "fcavity_range":(0,50), "Neta_range":(0,0)}
+				bnds={"fatom_range":(5,5), "fcavity_range":(0,50), "Neta_range":(0,0)},
+				path=path
 			)
 			print(best_param)
 		except:
@@ -47,23 +50,14 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		sequence_name                       	= extract_sequence_name(path)
 		                                    		
 		#plot data
-		# plt.hist(
-		#	photons_in_scan_time-start_time,
-		#	bins=np.arange(0,end_time-start_time, 200e-6),
-		#	align='mid'
-		#  )
-
-		# #decorate plot
-		# plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
-		# plt.ylabel("Photon Counts, (200us Bin)")
-		# plt.xlabel("Time (s)")
-
-		plt.hist(
+		
+		n = plt.hist(
 			photon_arrivals_in_frequency_MHz,
 			bins=np.arange(0,50, 0.1),
 			align='mid'
 		 )
 		
+		print(max(n[1]))
 
 		#decorate plot
 		plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
@@ -81,6 +75,6 @@ def empty_cavity_analysis(data, scan_parameters,path):
 					gamma = best_param["gamma"],
 					kappa = best_param["kappa"]
 				)
-			plt.plot(x,200*y) # I need to scale automatically the amplitude of the signal. I need to implement also the dark counts
+			plt.plot(x,200*y) # I need to scale automatically the amplitude of the signal. Multiply by the max histogram value.
 		except:
 			print("Failed plotting fit!")

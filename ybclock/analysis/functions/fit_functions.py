@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.optimize import minimize, leastsq
 import random
+from lyse import Run
 
 def lorentzian(x, x0, a, gamma, offset):
 	'''
@@ -68,44 +69,28 @@ def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa, dkcounts 
 	xa = 2*(f-fatom)/gamma
 	xc = 2*(f-fcavity)/kappa
 
+	return ((1+Neta/(1+xa**2))**2+(xc-Neta*xa/(1+xa**2))**2)**(-1)+dkcounts
 
 
-def logLikelihood_rabi_splitting_transmission(params, data):
+def logLikelihood_rabi_splitting_transmission(params, data,):
 	'''
 	calculates the -loglikelihood of a set of data as a function of the other parameters. 
 	Minus LL because we maximze the LL using minimize().
 
 	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
-	params		= (fatom, fcavity, Neta, dkcounts)
+	params		= (fatom, fcavity, Neta, gamma, kappa, dkcounts)
 	
 	'''
-
-	# define some fixed value. 
-	# Try to get values from globals. If globals is missing, it will use some preset value.
-	try:
-		kappa_loc = data_globals['exp_cavity_kappa']*0.001 # 0.001 becasue in globals this is specified in kHz
-	except:
-		kappa_loc = 0.510
-		print("Failed getting kappa from globals.")
-	try:
-		gamma_loc = data_globals['green_gamma']*0.001  # 0.001 becasue in globals this is specified in kHz
-	except:
-		gamma_loc = 0.184
-	try:
-		dark_counts = data_globals['dark_counts']*data_globals['empty_cavity_sweep_duration']
-	except:
-		dark_counts = 120*0.03
-
 	rabi_splitting_transmission_Integral = 0.59 # for Neta>>1 the Rabi splitting integral formula converges to this value
 
 	loglikelihood=0
 	for i in data:
-		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],gamma_loc,kappa_loc, dark_counts)/rabi_splitting_transmission_Integral)
+		loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],params[3],params[4],params[5]))
 
 	return -loglikelihood/len(data) # loglikelihood normalized to the atom number
 
 
-def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavity_range":(0,25), "Neta_range":(0,2000)}, param_error = 'off', bs_repetition = 25):
+def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavity_range":(0,25), "Neta_range":(0,2000)}, param_error = 'off', bs_repetition = 25, path=None):
 
 	'''
 	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). Returns the Neta.
@@ -143,23 +128,36 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 	For deatails, see : https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29
 
 	'''
-	# define some fixed value. 
+	try:
+		run = Run(path)
+		data_globals = run.get_globals() # path should be called inside the function. 
+	except:
+		print("Failed Importing Globals")
+
+	print(path)
+		# define some fixed value. 
 	# Try to get values from globals. If globals is missing, it will use some preset value.
 	try:
 		kappa_loc = data_globals['exp_cavity_kappa']*0.001 # 0.001 becasue in globals this is specified in kHz
 	except:
 		kappa_loc = 0.510
+		print("Failed getting kappa from globals.")
 	try:
 		gamma_loc = data_globals['green_gamma']*0.001  # 0.001 becasue in globals this is specified in kHz
 	except:
 		gamma_loc = 0.184
+	try:
+		dark_counts = data_globals['dark_counts']*data_globals['empty_cavity_sweep_duration']
+	except:
+		dark_counts = 120*0.03
 
 	# extract some parameter
-	Neta_range   		= bnds["Neta_range"]
+	Neta_range   	= bnds["Neta_range"]
 	fatoms_range 	= bnds["fatom_range"]
 	fcavity_range	= bnds["fcavity_range"]
 
-	bnds_list = (fatoms_range, fcavity_range, Neta_range)
+
+	bnds_list = (fatoms_range, fcavity_range, Neta_range, (gamma_loc, gamma_loc), (kappa_loc, kappa_loc), (dark_counts, dark_counts)) # this is a tuple defining boundaries. Contants defined in globals need to be treated as a parameter without dimensionless range.
 
 	# guess initial parameters, to fix the parameters, set the relative params_range to 0
 
@@ -178,7 +176,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 		Neta_guess = np.mean(Neta_range)
 
 	#format the parameters
-	init_guess = (fatoms_guess, fcavity_guess, Neta_guess)
+	init_guess = (fatoms_guess, fcavity_guess, Neta_guess, gamma_loc, kappa_loc, dark_counts)
 
 	#fit
 	if param_error == 'on':
@@ -196,6 +194,6 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 	elif param_error == 'off':
 		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data, bounds=bnds_list)
 		best_param = out.x
-		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : gamma_loc, "kappa" : kappa_loc}
+		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : gamma_loc, "kappa" : kappa_loc, "dark_counts" : dark_counts}
 	else :
 		return('incorrect param_error specification')

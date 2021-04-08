@@ -20,8 +20,6 @@ from labscriptlib.ybclock.analysis.functions.empty_cavity_helper import empty_ca
 
 run = Run(path)
 
-
-
 #extract cavity_scan_parameters metadata
 exp_cavity = ExperimentalCavity()
 cavity_scan_parameters = exp_cavity.get_parameters(path)
