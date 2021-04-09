@@ -12,16 +12,21 @@ def empty_cavity_analysis(data, scan_parameters,path):
 	empty cavity scan, and, for each scan, we convert the arrival time into
 	photon's frequency. We finally fit each scan.
 
+	This script saves cavity frequency parameters, as well as some vestigial parameters that
+	come from the free parameters in the fitting function.
+
+	The save parameters are stored in "results/empty_cavity_helper/fitted_exp_cavity_frequency_parameters"
+
 	'''
 
 	results_to_save = []
 
-	for params in scan_parameters:
-		# params is a dictionary whose properties are defined in exp_cavity.py
-		start_time	= params['t']
-		end_time  	= start_time + params['duration']
-		final_f   	= params['final_f']
-		initial_f 	= params['initial_f']
+	for a_scan in scan_parameters:
+		# a_scan is a dictionary whose properties are defined in exp_cavity.py
+		start_time	= a_scan['t']
+		end_time  	= start_time + a_scan['duration']
+		final_f   	= a_scan['final_f']
+		initial_f 	= a_scan['initial_f']
 
 		#Select photons in the scan range
 		photons_in_scan_time = data[(data > start_time) & (data < end_time)]
@@ -82,7 +87,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		#store all the results in a dictionary
 		parameters = best_param
 		#add all the scan_parameters to the dictionary
-		parameters.update(params)
+		parameters.update(a_scan)
 		results_to_save.append(parameters)
 
 	#save fit parameters into hdf file.
@@ -111,6 +116,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 	)
 	run.save_result(
 		name='documentation_fitted_exp_cavity_frequency_parameters',
-		value=docstring
+		value=docstring,
+		group='empty_cavity_helper/fitted_exp_cavity_frequency_parameters'
 	)
 			
