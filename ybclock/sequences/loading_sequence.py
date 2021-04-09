@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
 	t += 200*ms
 
-	t += exp_cavity.scan(t, label='empty_cavity')
+	t += exp_cavity.scan(t, label='atoms_in_cavity')
 
 	set_default_values(t)
 	# Stop the experiment shot with stop()

@@ -17,6 +17,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import labscriptlib.ybclock.analysis.functions.fit_functions as fit_functions
 from labscriptlib.ybclock.analysis.functions.empty_cavity_helper import empty_cavity_analysis
+from labscriptlib.ybclock.analysis.functions.atoms_in_cavity_helper import atom_cavity_analysis
 import pickle
 
 run = Run(path)
@@ -38,18 +39,19 @@ except:
 
 	#check to see if we need to run empty cavity analysis
 for each_key in cavity_scan_parameters.keys():
-	try:
-		if each_key == 'empty_cavity':
-			empty_cavity_analysis(
-				data=photon_arrival_times,
-				scan_parameters=cavity_scan_parameters[each_key],
-				path=path
-			)
-		if each_key == 'atom_cavity':
-			atom_cavity_analysis(
-				data=photon_arrival_times,
-				scan_parameters=cavity_scan_parameters[each_key],
-				path=path
-			)
-	except:
-		print(f"Error: Could not analyse '{each_key}' scans.")
+# try:
+	if each_key == 'empty_cavity':
+		empty_cavity_analysis(
+			data=photon_arrival_times,
+			scan_parameters=cavity_scan_parameters[each_key],
+			path=path
+		)
+	if each_key == 'atoms_in_cavity':
+		print("Performing atom_cavity_analysis.")
+		atom_cavity_analysis(
+			data=photon_arrival_times,
+			scan_parameters=cavity_scan_parameters[each_key],
+			path=path
+		)
+# except:
+	# print(f"Error: Could not analyse '{each_key}' scans.")
