@@ -135,10 +135,12 @@ emails to straighten out a mutual understanding. Phil's answers I believe have
 the most useful answers as well as technical information for how to store
 metadata.
 
-Currently, one must save the metadata in the HDF group 'shot_properties'. This
-can be done with `compiler.shot_properties` which is a dictionary. One can
-import `compiler` from `labscript`, i.e., `from labscript import compiler`.
-This works only when executing a sequence script in runmanager.
+Currently, one must save the metadata in the HDF group 'shot_properties'. It
+is necessary to store the files here so that BLACS keeps a copy of the
+metadata when repeating the experimental shot. This can be done with
+`compiler.shot_properties` which is a dictionary. One can import `compiler`
+from `labscript`, i.e., `from labscript import compiler`. This works only when
+executing a sequence script in runmanager.
 
 To save complicated formats of data like dictionaries (which are quite nice as
 they serve the ability to be self documenting since they can be indexed by
