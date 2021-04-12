@@ -30,17 +30,24 @@ def atom_cavity_analysis(data, scan_parameters, path):
 		#there is a true linear relationship between a arrival time and frequency :)
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
-		#Fit the Data using the MLE method.
+		#Fit the Data using both least_square method and MLE method.	
+		try:
+			best_param_lstsq = fit_functions.fit_rabi_splitting_transmission(
+				data = photon_arrivals_in_frequency_MHz,
+				path = path
+				)
+			print(best_param_lstsq)
+		except:
+			print("Photon Arrival Time Fit Failed.")
 		try:
 			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(15,40), "fcavity_range":(15,40), "Neta_range":(0,10000)},
+				bnds={"fatom_range":(15,30), "fcavity_range":(15,30), "Neta_range":(0,10000)},
 				path=path
 			)
 			print(best_param)
 		except:
 			print("MLE Photon Arrival Time Fit Failed.")
-
 
 		#Plot
 		#Plot
@@ -73,6 +80,19 @@ def atom_cavity_analysis(data, scan_parameters, path):
 			x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution/3)
 			y = fit_functions.rabi_splitting_transmission(
 					f = x,
+					fatom = best_param_lstsq["fatom"],
+					fcavity = best_param_lstsq["fcavity"],
+					Neta = best_param_lstsq["Neta"],
+					gamma = best_param_lstsq["gamma"],
+					kappa = best_param_lstsq["kappa"]
+				)
+			plt.plot(x,2*max(n[0])*y)		
+		except:
+			print("Failed plotting fit!")
+		try:
+			x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution/3)
+			y = fit_functions.rabi_splitting_transmission(
+					f = x,
 					fatom = best_param["fatom"],
 					fcavity = best_param["fcavity"],
 					Neta = best_param["Neta"],
@@ -81,4 +101,4 @@ def atom_cavity_analysis(data, scan_parameters, path):
 				)
 			plt.plot(x,2*max(n[0])*y) # I need to scale automatically the amplitude of the signal. Multiply by the max histogram value.
 		except:
-			print("Failed plotting fit!")
+			print("Failed plotting MLE fit!")
