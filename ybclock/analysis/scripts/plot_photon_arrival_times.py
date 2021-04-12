@@ -1,3 +1,10 @@
+'''
+
+	Plots all photon arrival times out. Merely a Diagnostic Tool. Bins the data
+	into 200 parts according to experimental run time.
+
+'''
+
 from lyse import *
 import numpy as np
 import matplotlib.pyplot as plt

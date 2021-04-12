@@ -1,7 +1,9 @@
-####################################################
-####################################################
-#
-#
+'''
+
+	Loops through the parameters saved by ExperimentalCavity() class and
+	performs analysis by passing the 3 parameters needed to an analysis function.
+
+'''
 from lyse import *
 from pylab import *
 
@@ -20,26 +22,28 @@ from labscriptlib.ybclock.analysis.functions.empty_cavity_helper import empty_ca
 from labscriptlib.ybclock.analysis.functions.atoms_in_cavity_helper import atom_cavity_analysis
 import pickle
 
+#get data
 run = Run(path)
 
 
-
+#extract cavity_scan_parameters metadata
 try:
-	#extract cavity_scan_parameters metadata
 	exp_cavity = ExperimentalCavity()
 	cavity_scan_parameters = exp_cavity.get_parameters(path)
 except:
 	print("Error: Could not extract cavity_scan_parameters.")
 
+
+#extract photon data
 try:
-	#extract data
 	photon_arrival_times = run.get_result_array(group='extract_photon_arrival_times',name='processed_arrivals_ch_1')
 except:
 	print("Error: Could not extract photon_arrival_times.")
 
-	#check to see if we need to run empty cavity analysis
+
+
+#check to see if we need to run any sort of cavity analysis
 for each_key in cavity_scan_parameters.keys():
-# try:
 	if each_key == 'empty_cavity':
 		empty_cavity_analysis(
 			data=photon_arrival_times,
@@ -53,5 +57,3 @@ for each_key in cavity_scan_parameters.keys():
 			scan_parameters=cavity_scan_parameters[each_key],
 			path=path
 		)
-# except:
-	# print(f"Error: Could not analyse '{each_key}' scans.")
