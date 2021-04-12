@@ -17,6 +17,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import labscriptlib.ybclock.analysis.functions.fit_functions as fit_functions
 from labscriptlib.ybclock.analysis.functions.test_atom_cavity_helper import atom_cavity_analysis
+from labscriptlib.ybclock.analysis.functions.empty_cavity_helper import empty_cavity_analysis
 
 run = Run(path)
 
@@ -35,7 +36,7 @@ photon_arrival_times = run.get_result_array(group='extract_photon_arrival_times'
 #check to see if we need to run empty cavity analysis
 for each_key in cavity_scan_parameters.keys():
 	if each_key == 'empty_cavity':
-		empty_cavity_analysis(
+		atom_cavity_analysis(
 			data=photon_arrival_times,
 			scan_parameters=cavity_scan_parameters[each_key],
 			path=path

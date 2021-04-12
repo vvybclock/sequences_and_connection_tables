@@ -34,7 +34,7 @@ def atom_cavity_analysis(data, scan_parameters, path):
 		try:
 			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(10,25), "fcavity_range":(10,25), "Neta_range":(0,10000)},
+				bnds={"fatom_range":(15,40), "fcavity_range":(15,40), "Neta_range":(0,10000)},
 				path=path
 			)
 			print(best_param)
@@ -79,6 +79,6 @@ def atom_cavity_analysis(data, scan_parameters, path):
 					gamma = best_param["gamma"],
 					kappa = best_param["kappa"]
 				)
-			plt.plot(x,max(n[0])*y) # I need to scale automatically the amplitude of the signal. Multiply by the max histogram value.
+			plt.plot(x,2*max(n[0])*y) # I need to scale automatically the amplitude of the signal. Multiply by the max histogram value.
 		except:
 			print("Failed plotting fit!")

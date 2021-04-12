@@ -147,9 +147,9 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 	except:
 		gamma_loc = 0.184
 	try:
-		dark_counts = data_globals['dark_counts']*data_globals['empty_cavity_sweep_duration']
+		dark_counts = data_globals['dark_counts']*data_globals['empty_cavity_sweep_duration']*0.001
 	except:
-		dark_counts = 120*0.03
+		dark_counts = 120*0.03 
 
 	# extract some parameter
 	Neta_range   	= bnds["Neta_range"]
@@ -157,13 +157,13 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 	fcavity_range	= bnds["fcavity_range"]
 
 
-	bnds_list = (fatoms_range, fcavity_range, Neta_range, (gamma_loc, gamma_loc), (kappa_loc, kappa_loc), (dark_counts, dark_counts)) # this is a tuple defining boundaries. Contants defined in globals need to be treated as a parameter without dimensionless range.
+	bnds_list = (fatoms_range, fcavity_range, Neta_range, (gamma_loc, gamma_loc), (kappa_loc, kappa_loc), (0*dark_counts, 10*dark_counts)) # this is a tuple defining boundaries. Contants defined in globals need to be treated as a parameter without dimensionless range.
 
 	# guess initial parameters, to fix the parameters, set the relative params_range to 0
 
 	fcavity_guess = np.mean(data)
 	fatoms_guess  =	fcavity_guess
-	Neta_guess = 4*np.var(data)/(gamma_loc * kappa_loc)
+	Neta_guess = 2*np.var(data)/(gamma_loc * kappa_loc)
 
 	## check if guesses are in the set ranges, if not redefine the guesses
 	if fcavity_guess < fcavity_range[0] or fcavity_guess > fcavity_range[1]:
