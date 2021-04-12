@@ -34,6 +34,13 @@ is on an anaconda install.s
 
 If you wish to build documentation see `labscriptlib.html` for more.
 
+# Opening Labscript
+
+For labscript to function properly it must be opened in order. 
+
+1. `runmanager`
+2. `BLACS`
+3. `Lyse`
 
 # Recommended Programming Environment (Sublime Text)
 
@@ -160,7 +167,9 @@ If you add a new device, it can be defined in either the virtual environment
 directory of `labscript_devices` or the local directory
 `labscript-suite/userlib/user_devices`. See `AnalogIMAQdxCamera` for a simple
 example of the file structure needed. You also might need to look up Phil
-Starkey's Thesis.
+Starkey's Thesis. `P7888` is the device I built from the ground up. So that's
+a good example for the least that's needed, although it's file structure isn't
+clear.
 
 Every change you make beyond might need to be accompanied by a reset of the
 appropriate portion labscript program.  You can get away sometimes with
