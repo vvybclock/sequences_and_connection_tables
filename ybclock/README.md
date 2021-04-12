@@ -157,7 +157,10 @@ for allowing compilation by run manager.
 ## Adding Devices
 
 If you add a new device, it can be defined in either the virtual environment
-directory of `labscript_devices` or the local directory `user_devices`.
+directory of `labscript_devices` or the local directory
+`labscript-suite/userlib/user_devices`. See `AnalogIMAQdxCamera` for a simple
+example of the file structure needed. You also might need to look up Phil
+Starkey's Thesis.
 
 Every change you make beyond might need to be accompanied by a reset of the
 appropriate portion labscript program.  You can get away sometimes with
