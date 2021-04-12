@@ -1,5 +1,7 @@
 '''
-	extracts photon arrival times from the single shot .lst file. 
+
+	extracts photon arrival times from the single shot .lst file and converts
+	them to absolute time, i.e., from the start of the experiment.
 
 	`arrival_times` is a list of lists of arrival times for each photon in each channel.
 
@@ -36,7 +38,6 @@ if __name__ == '__main__':
 		(channels, quantized_times)	= photon_counter.decode_data(data, verbose=False)
 		arrival_times              	= photon_counter.convert_to_absolute_time(t0=0, channels=channels,quantized_times=quantized_times, start_trigger_period=1e-3, quantized_time_unit=2e-9,path=path)
 		
-		# print(quantized_times)
 		#save the processed variables to the hdf files
 		run = Run(path)
 		processed_arrivals = {}
@@ -47,7 +48,7 @@ if __name__ == '__main__':
 				data	= np.array(arrival_times[i])
 				)
 
-		print("processed_arrivals saved in hdf.")
+		print("Saved processed_arrivals in hdf.")
 	except:
 		print("Could not extract photon_arrivals.")
 
