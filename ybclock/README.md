@@ -10,10 +10,12 @@ stick it in `Bugs.md`.
 
 # How to Edit & Build the Documentation
 
-Documentation is stored in '/html'.
-
 Documentation shall be performed using 'pdoc', as it is simple. Perfect for grad
-students. 
+students. Built Documentation is stored in '/html'.
+
+**pdoc** let's the user documentation stored in python `'''docstrings.'''` You
+might have trouble compiling the documentation if you forget to wrap your
+scripts, in `if __name__ == '__main__':` blocks. This prevents your code from trying to execute when pdoc imports it in the build process, and thus from hanging on errors, or unsatisfied requirements/inputs inside your code.
 
 Whenever possible, divide code into functions, modules, etc. and document those
 functions via  'docstrings'. These keeps the documentation close to the source
@@ -30,7 +32,7 @@ See [the pdocs documentation](https://pdoc3.github.io/pdoc/doc/pdoc/#gsc.tab=0)
 for more.
 
 Run `compile_documentation.bat` to compile the docs. It will work if the labscript
-is on an anaconda install.s
+is on an anaconda install.
 
 If you wish to build documentation see `labscriptlib.html` for more.
 
@@ -244,6 +246,9 @@ us record the analysis label, as well as in the future, keep track of any
 extra parameters that will be useful.
 
 This class takes advantage of the ability to use metadata researched above.
+
+For an example of the wonderful simplicity this gives the analysis, see
+`ybclock.analysis.scripts.cavity_scan_analysis`.
 
 ## Hardware Versioning
 
