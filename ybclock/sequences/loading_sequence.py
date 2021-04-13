@@ -9,6 +9,9 @@ from labscriptlib.ybclock.subsequences import *
 
 if __name__ == '__main__':
 
+	ms = 1e-3
+	kHz = 1e3
+
 	define_connection_table()
 	exp_cavity = ExperimentalCavity()
 
@@ -18,10 +21,10 @@ if __name__ == '__main__':
 
 	set_default_values()
 
-	ms = 1e-3
-	kHz = 1e3
 	t = 0.1*ms
 
+
+	#load atoms
 	t += load_from_oven_to_optical_lattice(t)
 
 	#ramp magnetic fields
@@ -31,8 +34,10 @@ if __name__ == '__main__':
 	y_bias_field.ramp(t, duration=ramp_duration, initial=0.32,final=-1.86,samplerate=1*kHz)
 	x_bias_field.ramp(t, duration=ramp_duration, initial=5.29,final=-0.02,samplerate=1*kHz)
 
+	#wait
 	t += 200*ms
 
+	#read atom number.
 	t += exp_cavity.scan(t, label='atoms_in_cavity')
 
 	set_default_values(t)
