@@ -214,6 +214,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 
 	We first perform a `least_square fit` to the data binned into histograms. We use this parameter guess as a starting point for `maximize` the loglikelihood function.
 
+
 	## Why we used bootstrapping method 
 	
 	The presence of bounds in fit parameters significantly increments the complexity in estimating uncertainties and correlations. This is due to the fact that it bacomes hard (if not impossible) to correctly calculate the Hessian matrix in the presence of bounds.
@@ -253,19 +254,25 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 	except:
 		dark_counts = 120*0.03 
 
-	#remove data from wings very far away
+	#remove data from wings very far away. This photons are either dark counts or carry very low Fisher information.
 	data =  data[round(len(data)*0.07) : round(len(data)*0.93)]
 
 	# guess initial parameters, to fix the parameters, set the relative params_range to 0
 
-	preFit = fit_rabi_splitting_transmission(data,bnds=bnds, bin_interval=0.2, path=None)
+	preFit = fit_rabi_splitting_transmission(data,bnds=bnds, bin_interval=0.2, path=path)
 	init_guess = (preFit["fatom"], preFit["fcavity"], preFit["Neta"], preFit["gamma"], preFit["kappa"], preFit["dark_counts"]);
 
 	fatoms_range 	= (preFit["fatom"]-0.3, preFit["fatom"]+0.3)
 	fcavity_range 	= (preFit["fcavity"]-0.3, preFit["fcavity"]+0.3)
-	Neta_range		= (preFit["Neta"]*0.75, preFit["Neta"]*1.25)
+	# Calculate some degree of freedom in Neta range. It should depend on Neta and total number of photons. From theory, with an eta~ 1, e have 1 SQL per ~ 20 photons. We use this as weight factor.
+	# This can be further optimized and studied.
+	try:
+		range_factor = 0.05 + 1/sqrt(preFit["Neta"])*20/(len(data)-preFit['dark_counts'])
+	except:
+		range_factor = 1
+	Neta_range		= (preFit["Neta"]*(1-range_factor), preFit["Neta"]*(1+range_factor))
 
-	bnds_list = (fatoms_range, fcavity_range, Neta_range, (gamma_loc-0.001, gamma_loc), (kappa_loc-0.05, kappa_loc+.1), (0*dark_counts, 10*dark_counts)) # this is a tuple defining boundaries. Contants defined in globals need to be treated as a parameter without dimensionless range.
+	bnds_list = (fatoms_range, fcavity_range, Neta_range, (gamma_loc-0.001, gamma_loc), (kappa_loc-0.05, kappa_loc+.1), (0*dark_counts, 10*dark_counts)) # this is a tuple defining boundaries. Contants defined in globals need to be treated as a parameter with near dimensionless range.
 
 
 	#fit
@@ -275,14 +282,14 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 		bs_list=[]
 		for i in range(bs_repetition):
 			data_bs = random.choices(data,k=len(data))
-			out=minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data_bs, bounds=bnds_list, tol=0.000001)
+			out=minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data_bs, bounds=bnds_list, tol=0.001)
 			bs_list.append(out.x)
 		fit_result= np.mean(np.transpose(bs_list),1)
 		cov = np.sqrt(np.transpose(bs_list)) # Covariance matrix
 		best_param = {"fatom" : fit_result[0], "fcavity" : fit_result[1], "Neta": fit_result[2],  "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5],'covariance' : cov} # gamma and kappa are not fit parameters!
 		return best_param
 	elif param_error == 'off':
-		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data,bounds=bnds_list, tol=0.000001)
+		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data,bounds=bnds_list, tol=0.001)
 		best_param = out.x
 		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5]}
 	else :

@@ -31,10 +31,15 @@ def empty_cavity_analysis(data, scan_parameters, path):
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
 		#Fit the Data using the MLE method.
+		best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
+			data=photon_arrivals_in_frequency_MHz, 
+			bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,.001)}, 
+			path=path
+		)
 		try:
 			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(5,5), "fcavity_range":(0,50), "Neta_range":(0,0)},
+				bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.001)}, #  Each lower bound must be strictly less than each upper bound. Use fatom_range = fcavity_range, to avoid any possible error.
 				path=path
 			)
 			print(best_param)
@@ -69,6 +74,16 @@ def empty_cavity_analysis(data, scan_parameters, path):
 		plt.xlabel("frequency (MHz)")
 		
 		#plot fit
+		x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution/3)
+		y = fit_functions.rabi_splitting_transmission(
+				f = x,
+				fatom = best_param["fatom"],
+				fcavity = best_param["fcavity"],
+				Neta = best_param["Neta"],
+				gamma = best_param["gamma"],
+				kappa = best_param["kappa"]
+			)
+		plt.plot(x,max(n[0])*y)
 		try:
 			x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution/3)
 			y = fit_functions.rabi_splitting_transmission(
@@ -81,4 +96,4 @@ def empty_cavity_analysis(data, scan_parameters, path):
 				)
 			plt.plot(x,max(n[0])*y) # I need to scale automatically the amplitude of the signal. Multiply by the max histogram value.
 		except:
-			print("Failed plotting fit!")
+			print("Failed plotting empty_cavity fit!")

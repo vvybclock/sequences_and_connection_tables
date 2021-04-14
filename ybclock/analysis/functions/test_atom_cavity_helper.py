@@ -11,7 +11,8 @@ def atom_cavity_analysis(data, scan_parameters, path):
 	empty cavity scan, and, for each scan, we convert the arrival time into
 	photon's frequency. We finally fit each scan and plot a graph overlapping all the cavity scans.
 
-	If the number of photons detected is huge (set a limit here... maybe 1000), we bin the data and fit the resulting histogram with a normal minimization of residuals' variance-
+	It will be useful to implement the following: 
+	If the number of photons detected is huge (set a limit here... maybe 500), we fit the splitting only with the leastsq approach.
 
 	'''
 
