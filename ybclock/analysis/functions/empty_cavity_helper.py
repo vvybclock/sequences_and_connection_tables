@@ -86,11 +86,14 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		except:
 			print("Failed plotting fit!")
 
-		#store all the results in a dictionary
-		parameters = best_param
-		#add all the scan_parameters to the dictionary
-		parameters.update(a_scan)
-		results_to_save.append(parameters)
+		try:
+			#store all the results in a dictionary
+			parameters = best_param
+			#add all the scan_parameters to the dictionary
+			parameters.update(a_scan)
+			results_to_save.append(parameters)
+		except:
+			pass
 
 	#save fit parameters into hdf file.
 	run = Run(path)
@@ -116,6 +119,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		name='fitted_exp_cavity_frequency_parameters',
 		data=np.void(pickled_dict_list)
 	)
+	
 	run.save_result(
 		name='documentation_fitted_exp_cavity_frequency_parameters',
 		value=docstring,
