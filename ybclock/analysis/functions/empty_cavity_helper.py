@@ -40,7 +40,9 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		try:
 			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(5,5), "fcavity_range":(0,50), "Neta_range":(0,0)}
+				bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.001)},
+				#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
+				path=path
 			)
 			print(best_param)
 		except:
@@ -58,7 +60,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		                                    		
 		#plot histogram                     	
 		freq_bin_width_MHz = 0.1
-		plt.hist(
+		n = plt.hist(
 			photon_arrivals_in_frequency_MHz,
 			bins=np.arange(0,50, freq_bin_width_MHz),
 			align='mid'
@@ -80,7 +82,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 					gamma = best_param["gamma"],
 					kappa = best_param["kappa"]
 				)
-			plt.plot(x,200*y) # I need to scale automatically the amplitude of the signal. Just multiply by the size of largest histogram.
+			plt.plot(x,max(n[0])*y) # I need to scale automatically the amplitude of the signal. Just multiply by the size of largest histogram.
 		except:
 			print("Failed plotting fit!")
 
