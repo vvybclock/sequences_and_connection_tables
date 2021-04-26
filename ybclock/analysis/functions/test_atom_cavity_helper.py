@@ -11,8 +11,8 @@ def atom_cavity_analysis(data, scan_parameters, path):
 	empty cavity scan, and, for each scan, we convert the arrival time into
 	photon's frequency. We finally fit each scan and plot a graph overlapping all the cavity scans.
 
-	It will be useful to implement the following: 
-	If the number of photons detected is huge (set a limit here... maybe 500), we fit the splitting only with the leastsq approach.
+	We do not perform MLE analysis if we detect enough photons in the scan. "Enough photons" means that MLE and least_square provide the same uncertainty on the atom number estimation, see [MLE_vs_leastSquare](https://paper.dropbox.com/doc/Fit-and-measurement-quality--BJneIwnJqNOnEEYUYTkog5qxAg-szpYsBrXGK81Qq4BF6jEF) for details.
+
 
 	'''
 
@@ -32,23 +32,26 @@ def atom_cavity_analysis(data, scan_parameters, path):
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
 		#Fit the Data using both least_square method and MLE method.	
-		try:
-			best_param_lstsq = fit_functions.fit_rabi_splitting_transmission(
-				data = photon_arrivals_in_frequency_MHz,
-				path = path
+		if len(photon_arrivals_in_frequency_MHz) > 200:
+			#Fit the Data using the least_square method.
+			try:
+				best_param_lstsq = fit_functions.fit_rabi_splitting_transmission(
+					data = photon_arrivals_in_frequency_MHz,
+					path = path
+					)
+				print(best_param_lstsq)
+			except:
+				print("least square Photon Arrival Time Fit Failed.")
+		else:
+			try:
+				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
+					data=photon_arrivals_in_frequency_MHz, 
+					bnds={"fatom_range":(15,30), "fcavity_range":(15,30), "Neta_range":(0,10000)},
+					path=path
 				)
-			print(best_param_lstsq)
-		except:
-			print("Photon Arrival Time Fit Failed.")
-		try:
-			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
-				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(15,30), "fcavity_range":(15,30), "Neta_range":(0,10000)},
-				path=path
-			)
-			print(best_param)
-		except:
-			print("MLE Photon Arrival Time Fit Failed.")
+				print(best_param)
+			except:
+				print("MLE Photon Arrival Time Fit Failed.")
 
 		#Plot
 		#Plot
