@@ -44,8 +44,5 @@ try:
 				scan_parameters=cavity_scan_parameters[each_key],
 				path=path
 			)
-		if each_key == 'atom_cavity':
-			atom_cavity_analysis(
-				)
 except:
 	print("Error: Could not extract cavity_scan_parameters or photon_arrival_times?")

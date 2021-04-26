@@ -53,7 +53,6 @@ if __name__ == '__main__':
 				path=path
 			)
 		if each_key == 'atoms_in_cavity':
-			print("Performing atom_cavity_analysis.")
 			atom_cavity_analysis(
 				data=photon_arrival_times,
 				scan_parameters=cavity_scan_parameters[each_key],
