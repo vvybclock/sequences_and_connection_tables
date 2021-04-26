@@ -1,11 +1,21 @@
 Welcome to Ybclock Labscript Edition!
 
-#How to Edit & Build the Documentation
+See the Feature List for what we've built and what you can do. Make sure you
+understand how to edit & build the documentation if you're going to
+contribute. This experiment should be able to be ran even if helpful grad
+students aren't around.
 
-Documentation is stored in '/html'.
+If you find an interesting bug, that keeps you occupied for a couple of days,
+stick it in `Bugs.md`.
+
+# How to Edit & Build the Documentation
 
 Documentation shall be performed using 'pdoc', as it is simple. Perfect for grad
-students. 
+students. Built Documentation is stored in '/html'.
+
+**pdoc** let's the user documentation stored in python `'''docstrings.'''` You
+might have trouble compiling the documentation if you forget to wrap your
+scripts, in `if __name__ == '__main__':` blocks. This prevents your code from trying to execute when pdoc imports it in the build process, and thus from hanging on errors, or unsatisfied requirements/inputs inside your code.
 
 Whenever possible, divide code into functions, modules, etc. and document those
 functions via  'docstrings'. These keeps the documentation close to the source
@@ -22,13 +32,25 @@ See [the pdocs documentation](https://pdoc3.github.io/pdoc/doc/pdoc/#gsc.tab=0)
 for more.
 
 Run `compile_documentation.bat` to compile the docs. It will work if the labscript
-is on an anaconda install.s
+is on an anaconda install.
 
 If you wish to build documentation see `labscriptlib.html` for more.
 
-.. include:: ./BUGS.md
+# Opening Labscript
 
-# Renaming a Variable
+For labscript to function properly it must be opened in order. 
+
+1. `runmanager`
+2. `BLACS`
+3. `Lyse`
+
+# Recommended Programming Environment (Sublime Text)
+
+Use Sublime Text, and Sublime Merge for a fantastic text editor and repository
+manager respectively.  Use the elasticTabstops package in Sublime Text! Very
+useful for maintaining readable code.
+
+## Renaming a Variable
 
 Occasionally, you need to rename a channel, either to improve clarity or to
 reflect an update. A multi-file search and replace is ideal for this, and
@@ -47,9 +69,22 @@ in question. Check to see that find is accurate, then write down the variable
 name replacement. Double check the replacement spelling. Commit after the
 change. This way it's easy to revert any unforseen incidents.
 
+# Feature List
+
+This implementation of labview was developed by the most fundamental feature
+to the most obscure. It's thus how this list is ordered, which will help users
+acclimate to the system.
+
+This section is intended to enumerate the features, whose implementation will
+occasionally be scattered across many file, so that future users can easily
+find simple explanations of their intended use as well as the functions,
+classes, or libraries that implemented them where one can find in depth
+documentation.
 
 
-# Virtual Environments
+
+
+## Virtual Environments
 
 I am not familiar with the use of virtual environments. I know only that they 
 are used to maintain independent versions of different programs. 
@@ -71,14 +106,42 @@ I'm using conda to manage virtual environments I believe. They are used via
 how this virtual environment management is implemented. See [the labscript docs](https://docs.labscriptsuite.org/en/stable/installation/regular-anaconda/) for
 more. Hopefully, that link won't break in the future.
 
-# Using Sequences
+## Working with HDF files
+
+HDF files are nice, they're sort of like zip files, in that they are one file
+that can hold "groups" which are just like Windows Folders, and "datasets"
+which are like files, but restricted to multidimensional arrays consisting of
+integers or floats. (This means if one wants to save something one needs to
+encode it in such a format. Of course, this is less restrictive than a binary
+format.)
+
+However, unfortunately, **they are easy to corrupt**. If you access the HDF
+file from two programs at once, it will corrupt. So if you leave it open in
+python for instance and open it up with an HDF viewer, it will corrupt. So one
+needs to take care not to open it from two places at once. This obviously
+becomes less risky when working with old datasets (HDFs) as that means
+labscript isn't opening the data. The biggest danger I've found is to work on
+it with python and then open it up with an external HDF Viewer GUI. So if one
+doesn't use the HDF Viewer, as well as only access HDF files via a `with
+h5py.File(hdf5_filename, 'r') as hdf5_file:` syntax calls, which always close
+the files when you leave their scope, you'll be fine. 
+
+Labscript I believe also takes effort to prevent corruption, but I'm not so
+well versed with it's protection techniques. So I'm not sure how much harder
+it makes it to mess things up.
+
+It definitely does not protect against 3rd Party Programs from reading an HDF
+file simultaneously and causing corruption.
+
+## Organized Sequence Structure
+### Using Sequences
 
 Open up `runmanager (ybclock)` and select the sequence you want. (De)select
 run/view shots as you please. 
 
 For testing compilation, turn off run/view shot then engage.
 
-# Sequence File Structure
+### Sequence File Structure
 
 Sequence files can be stored anywhere. The way they import modules makes them
 free to be wherever. So you can use whatever folder structure you desire to
@@ -86,7 +149,7 @@ organize the large number of sequences that will arise in the future.
 
 I have them in `ybclock.sequences`
 
-# Subsequence File Structure
+### Subsequence File Structure
 
 The sequence must be defined in compartmentalized sections. That means a file
 for a the Loading Sequence, maybe a file for the green mot, maybe for the blue.
@@ -100,19 +163,117 @@ See 'loading_sequence.py' for a good example. It has a function in there you can
 constant mode to optimize the mot by hand you can, as there is a second block
 for allowing compilation by run manager.
 
-# Recommended Programming Environment
-
-Use Sublime Text, and Sublime Merge for a fantastic text editor and repository
-manager respectively.  Use the elasticTabstops package in Sublime Text! Very
-useful for maintaining readable code.
-
-# Adding Devices
+## Adding Devices
 
 If you add a new device, it can be defined in either the virtual environment
-directory of `labscript_devices` or the local directory `user_devices`.
+directory of `labscript_devices` or the local directory
+`labscript-suite/userlib/user_devices`. See `AnalogIMAQdxCamera` for a simple
+example of the file structure needed. You also might need to look up Phil
+Starkey's Thesis. `P7888` is the device I built from the ground up. So that's
+a good example for the least that's needed, although it's file structure isn't
+clear.
 
 Every change you make beyond might need to be accompanied by a reset of the
 appropriate portion labscript program.  You can get away sometimes with
 smaller resets in each of the programs. Try it, but if it fails you know why.
 
 If you edit `labscript_devices`, you definitely need to reset the whole program.
+
+## Using Metadata (Essential)
+
+Labscript was designed for BEC/Fermi gas type experiments that involve
+manipulation of quantum gases. Such experiments are typically probed via
+absorption imaging. A process which is destructive to the atoms, so one can
+only measure once at the end of the experiment.
+
+Our experiment isn't at all destructive, while it perturbs the spin state, for
+the most part, the atoms are left intact. While the measurement can cause
+unwanted heating and spin mixing, the atoms aren't guaranteed to be lost.
+
+This allows us to measure repeatedly. And furthermore we can measure to
+extract different aspects of the atomic spin state. Unfortunately, each
+measurement can be quite similar in execution. This is essentially scanning
+light across the cavity. 
+
+However, *context* on the desired experiment can change analysis. So it's
+useful to save **metadata** to be able to simplify analysis. This metadata
+lets us easily save parameters that are available when writing the experiment,
+that is much harder to infer from the instructions sent to the NI cards (which
+is typically the only thing guaranteed to be saved either in your average AMO
+lab or in Labscript).
+
+While Labscript does not have wrapper functions for simplifying this process,
+thanks to the help of the labscript writers, there exists a method for saving
+metadata. The earliest implementation occured in the ExperimentalCavity class,
+currently (April 9, 2021) saved in subsequences. (It's location may change in
+the future.) See [this google group chat](groups.google.com/g/labscriptsuite/c/5ZzEHWkWft0) 
+for more contextual information as well as technical detail. Look for my
+questions (Enrique Mendez) to understand the intention. It took a number of
+emails to straighten out a mutual understanding. Phil's answers I believe have
+the most useful answers as well as technical information for how to store
+metadata.
+
+Currently, one must save the metadata in the HDF group 'shot_properties'. It
+is necessary to store the files here so that BLACS keeps a copy of the
+metadata when repeating the experimental shot. This can be done with
+`compiler.shot_properties` which is a dictionary. One can import `compiler`
+from `labscript`, i.e., `from labscript import compiler`. This works only when
+executing a sequence script in runmanager.
+
+To save complicated formats of data like dictionaries (which are quite nice as
+they serve the ability to be self documenting since they can be indexed by
+strings), one can use the `pickle` library which serializes (turns into a
+binary stream), something that doesn't have a predefined algorithm for
+serializing. In other words, it allows you to store `dict`s in a file or
+array.
+
+Data can be saved by opening up the HDF file directly or using labscripts
+techniques for saving data: for example, in lyse, one can use
+`run.save_result()`, or in the sequence generation side
+`compiler.shot_properties`. 
+
+## Class-Based Cavity Scan/Photon Counter/Data Management
+
+Using Classes, we can make an object `ExperimentalCavity()` that: keeps track
+of *start* pulses sent to the Photon Counting Card -- this lets us keep track
+of how data is spaced in the binary file the P7888 DLL creates; contains a
+dictionary for recording all the types of scans performed -- each seperated by
+their method of analysis; as well as lists of dictionaries that contain the
+parameters for each particular scan; and functions for saving these and
+extracting these parameters from the HDF file for easy usage; the most
+important is the development of the `scan(t,label)` function call which let's
+us record the analysis label, as well as in the future, keep track of any
+extra parameters that will be useful.
+
+This class takes advantage of the ability to use metadata researched above.
+
+For an example of the wonderful simplicity this gives the analysis, see
+`ybclock.analysis.scripts.cavity_scan_analysis`.
+
+## Hardware Versioning
+
+The idea for the version number is to separate mutually exclusive hardware
+wirings. For example when we use something that was driving the mot now drives
+an AOM, we should change version number so as not to run (old AOM) code that
+could break our MOT by over-driving it.
+
+Documentation as to what changed shall go into HW_VERSIONING.md
+
+If however we are installing new channels without disconnecting old channels
+, then the hardware version shall remain the same, and the git shall account
+for improvements and new connections.
+
+### What do I do when I do a major change?
+
+Change the git branch number. Change it from `master` to `v2.x`, and `v2.x`
+to `v3.x`. This way there's a clear cut divide between massive hardware versions.
+
+Since Lab Changes are almost always minor by design, and in an effort to
+maintain backward compatibility, I doubt anyone will ever actually need to
+increment the number.
+
+
+
+
+
+.. include:: ./BUGS.md

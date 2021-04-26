@@ -5,15 +5,16 @@ from labscriptlib.ybclock.analysis.functions.metadata import extract_sequence_re
 from lyse import Run
 import pickle
 
-def empty_cavity_analysis(data, scan_parameters,path):
+def atom_cavity_analysis(data, scan_parameters,path):
 	'''
+
+	This script calculates and saves "vacuum" rabi splitting parameters, as well
+	as some vestigial parameters that come from the free parameters in the
+	fitting function.
 
 	Here we take the photons arrival time (`data`), check which one has arrived within an
 	empty cavity scan, and, for each scan, we convert the arrival time into
 	photon's frequency. We finally fit each scan.
-
-	This script saves cavity frequency parameters, as well as some vestigial parameters that
-	come from the free parameters in the fitting function.
 
 	The save parameters are stored in "results/empty_cavity_helper/fitted_exp_cavity_frequency_parameters"
 
@@ -40,7 +41,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		try:
 			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(5,5), "fcavity_range":(0,50), "Neta_range":(0,0)}
+				bnds={"fatom_range":(20,25), "fcavity_range":(20,30), "Neta_range":(0,3000)}
 			)
 			print(best_param)
 		except:

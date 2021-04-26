@@ -10,6 +10,16 @@ import numpy as np
 class ExperimentalCavity:
 	'''
 	Records parameters and saves them after each scan call.
+
+	This makes it easier to save and keep track of parameters for simpler analysis.
+
+	`ExperimentalCavity.scan(t, label)` is useful for scanning the cavity.
+
+	`ExperimentalCavity.save_parameters()` is how we record the data to the HDF
+	file, currently `.scan()` is using at the end of ever call. A more efficient
+	practice might be devised but this will most definitely work for now.
+
+
 	'''
 	scan_parameters = {}
 	number_of_p7888_start_triggers = None
@@ -18,10 +28,19 @@ class ExperimentalCavity:
 		''' Try to create the metadata group if it doesn't exist. 
 		Clear the scan_parameters dict, as it seems to stay full after each shot compilation.
 		We need to keep track of the number of p7888 pulses sent so we know which ones, are spaced at 
-		strange intervals. This special pulse number is recorded as a parameter in `scan_parameters`
+		strange intervals. This special pulse number is recorded as a parameter in `scan_parameters`.
+
+		Also tell the P7888 BLACS tab that we're going to need the photon counter.
+		This will be done by defining a variable in the HDF file, if it exists we
+		are, if not, skip saving data with the photon counter. This will save time
+		as currently, in it's inefficient implementation, the P7888 BLACS tab takes
+		at least 2 seconds to run.
+
 		'''
 		self.scan_parameters = {}
 		self.number_of_p7888_start_triggers = 0
+		compiler.shot_properties["is_P7888_used"] = True
+
 
 	def save_parameters(self):
 		''' Pickle Parameters then Save to HDF.
