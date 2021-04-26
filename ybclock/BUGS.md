@@ -7,7 +7,7 @@ you do not need to specify all the digits, only the first few are needed. For
 example for commit `943ba098ecf980737e23cd4bf9122c39dc1fd89a`, you could just
 write `943ba098` - the first few digits of the hash.
 
-##photon_counter bug
+##photon_counter bug (Resolved)
 
 Author: Enrique Mendez (2021/02/08)
 
@@ -21,6 +21,15 @@ counter does not wait enough time for the photon counting card to dump it's data
 So occasionally it will complain that the file is in use by the time you
 request the next run. We need to update the logic in this class to prevent
 unnecessary breaks in sequence runs. 
+
+The **resolution** was adding several checks for file usage before attempting a
+write, or delete. Despite telling the file to delete at earlier points in the
+script, the DLL or OS would not faithfully act out commands. This required
+these redunant checks. Wait conditions were also added to not send too many
+commands. This was mostly so debug print commands wouldn't overload the
+Ybclock Operator. This can possibly slow down multiple shot speed. 
+
+
 
 ##Analog Camera Triggers are inverted. (Resolved)
 
