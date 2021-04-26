@@ -264,7 +264,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 
 	fatoms_range 	= (preFit["fatom"]-0.3, preFit["fatom"]+0.3)
 	fcavity_range 	= (preFit["fcavity"]-0.3, preFit["fcavity"]+0.3)
-	# Calculate some degree of freedom in Neta range. It should depend on Neta and total number of photons. From theory, with an eta~ 1, e have 1 SQL per ~ 20 photons. We use this as weight factor.
+	# Calculate some amount of freedom in Neta range. It should depend on Neta and total number of photons. From theory, with an eta~ 1, e have 1 SQL per ~ 20 photons. We use this as weight factor.
 	# This can be further optimized and studied.
 	try:
 		range_factor = 0.05 + 1/sqrt(preFit["Neta"])*20/(len(data)-preFit['dark_counts'])
