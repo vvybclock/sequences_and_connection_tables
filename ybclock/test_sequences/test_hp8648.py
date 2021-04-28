@@ -6,7 +6,7 @@ if __name__ == '__main__':
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
 	start()
-	
-	HP8648B.constant(frequency_MHz=400)
+
+	HP8648Cfor759.constant(frequency_MHz=400)
 
 	stop(1)
