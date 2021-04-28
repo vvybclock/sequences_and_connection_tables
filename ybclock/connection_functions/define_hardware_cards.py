@@ -2,6 +2,7 @@ from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_671
 from labscript_devices.PineBlaster import PineBlaster
 from user_devices.P7888.labscript_devices import P7888
 from user_devices.AnalogIMAQdxCamera.labscript_devices import AnalogIMAQdxCamera
+from user_devices.HP8648.labscript_devices import HP8648
 from labscriptlib.ybclock.connection_functions  import camera_settings
 
 '''
@@ -92,3 +93,16 @@ def define_hardware_cards():
 		manual_mode_camera_attributes	= camera_settings.manual_camera_attributes
 	)
 
+	### Synthesizers
+
+	print("Defining Synthesizers...",)
+	HP8648(
+		name        	= 'HP8648Cfor759',
+		gpib_address	= 'GPIB0::18::INSTR'
+	)
+
+	HP8648(
+		name        	= 'HP8648B',
+		gpib_address	= 'GPIB0::7::INSTR'
+	)
+	print("Done!")
