@@ -17,6 +17,7 @@ def define_hardware_cards():
 		or secondary NI cards.
 		
 	'''
+	print("\tDefining Pseudoclocks, NI Cards, P7888...",end='')
 	### Pseudo Clock
 	PineBlaster(
 		name              	= 'digital_clock',
@@ -70,7 +71,10 @@ def define_hardware_cards():
 		MAX_name      	='Dev4'
 	)
 
+	print('Done!')
+
 	### Cameras
+	print("\tDefining Cameras...",end='')
 	AnalogIMAQdxCamera(
 		name                         	= 'wide_angle_cam',
 		parent_device                	= ni_pci_6713_dev5,
@@ -92,10 +96,11 @@ def define_hardware_cards():
 		camera_attributes            	= camera_settings.seq_camera_attributes,
 		manual_mode_camera_attributes	= camera_settings.manual_camera_attributes
 	)
+	print("Done!")
 
 	### Synthesizers
 
-	print("Defining Synthesizers...",)
+	print("\tDefining HP Synthesizers...",end="")
 	HP8648(
 		name        	= 'HP8648Cfor759',
 		gpib_address	= 'GPIB0::18::INSTR'
