@@ -7,43 +7,23 @@ import matplotlib.pyplot as plt
 #exposes all the variables available in the lyse window
 dataframe = data()
 
+
 runtimes = list(dataframe['run time'])
 paths = list(dataframe['filepath'])
+frequencies = list(dataframe['empty_cavity_helper','exp_cavity_frequency'])
+#this is what we call the run number. we'll use it to change the color, so we can tell when we changed the sequence.
+sequence_index = list(dataframe['sequence_index'])
 
-fitted_cavity_frequency = []
-cavity_scan_runtime = []
 
-for path in paths:
-	#pull pickled fit parameters from file
-	with h5py.File(path, 'r') as hdf5_file:
-		try:
-			grp = hdf5_file['/results/empty_cavity_helper']
-		except:
-			print("Failed to open results group.")
+#make some colors.
+cerulean = (4/256,146/256,194/256)
+crimson = (185/256, 14/256, 10/256)
+colors = [cerulean if seq%2 == 0 else crimson for seq in sequence_index]
 
-		try:
-			void_pickled_dict = np.array(grp["fitted_exp_cavity_frequency_parameters"])
-		except:
-			print("Failed to pull pickled dict.")
 
-		try:
-			#de-pickle them
-			pickled_dict_list = void_pickled_dict.tobytes()
-		except:
-			print("Failed to convert to bytestream")
+#s - size
+plt.scatter(runtimes, frequencies, s=1, c = colors)
 
-		try:
-			fit_parameter_list = pickle.loads(pickled_dict_list)
-		except:
-			print("Failed to de-pickle")
-
-	#pull fitted cavity frequencies
-	i = paths.index(path)
-	for each_scan in fit_parameter_list:
-		cavity_scan_runtime.append(runtimes[i])
-		fitted_cavity_frequency.append(each_scan["fcavity"])
-
-plt.scatter(cavity_scan_runtime, fitted_cavity_frequency)
 plt.title("Empty Cavity Frequency")
 plt.ylabel("Frequency (MHz)")
 plt.xlabel("Time")

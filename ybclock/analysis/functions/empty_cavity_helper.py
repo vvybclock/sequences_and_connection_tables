@@ -114,15 +114,32 @@ def empty_cavity_analysis(data, scan_parameters,path):
 
 	'''
 
+	#save all parameters
 	pickled_dict_list = pickle.dumps(results_to_save)
 	run.save_result_array(
 		name='fitted_exp_cavity_frequency_parameters',
 		data=np.void(pickled_dict_list)
 	)
 	
+	#save some documentation
 	run.save_result(
 		name='documentation_fitted_exp_cavity_frequency_parameters',
 		value=docstring,
 		group='empty_cavity_helper/fitted_exp_cavity_frequency_parameters'
 	)
-			
+
+	#save averaged sample of the cavity frequency.
+	try:
+		average_frequency = 0
+		number_of_scans = 0
+		for each_scan in results_to_save:
+			average_frequency += each_scan['fcavity']
+			number_of_scans += 1
+
+		average_frequency = average_frequency / number_of_scans
+		run.save_result(
+			name='exp_cavity_frequency',
+			value=average_frequency
+		)
+	except:
+		pass
