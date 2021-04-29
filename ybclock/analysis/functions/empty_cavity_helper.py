@@ -17,6 +17,8 @@ def empty_cavity_analysis(data, scan_parameters,path):
 
 	The save parameters are stored in "results/empty_cavity_helper/fitted_exp_cavity_frequency_parameters"
 
+	We do not perform MLE analysis if we detect enough photons in the scan. "Enough photons" means that MLE and least_square provide the same uncertainty on the atom number estimation, see [MLE_vs_leastSquare](https://paper.dropbox.com/doc/Fit-and-measurement-quality--BJneIwnJqNOnEEYUYTkog5qxAg-szpYsBrXGK81Qq4BF6jEF) for details.
+
 	'''
 
 	results_to_save = []
@@ -33,20 +35,34 @@ def empty_cavity_analysis(data, scan_parameters,path):
                         
 		#Extract photon's frequency based on arrival time
 		#since we have calibrated frequency vs voltage, and performed the scan across frequency
-		#there is a true linear relationship between a arrival time and frequency :)
+		#there is a true linear relationship between arrival time and frequency :)
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
-		#Fit the Data using the MLE method.
-		try:
-			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
-				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.001)},
-				#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
-				path=path
-			)
-			print(best_param)
-		except:
-			print("MLE Photon Arrival Time Fit Failed.")
+		# Decide if we should use MLE fit or not.
+		if len(photon_arrivals_in_frequency_MHz) > 250:
+			#Fit the Data using the least_square method.
+			try:
+				best_param = fit_functions.fit_rabi_splitting_transmission(
+					data=photon_arrivals_in_frequency_MHz, 
+					bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.001)},
+					#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
+					path=path
+				)
+				print(best_param)
+			except:
+				print("Least_square Photon Arrival Time Fit Failed.")
+		else:
+			#Fit the Data using the MLE method.
+			try:
+				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
+					data=photon_arrivals_in_frequency_MHz, 
+					bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.001)},
+					#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
+					path=path
+				)
+				print(best_param)
+			except:
+				print("MLE Photon Arrival Time Fit Failed.")
 
 
 		#Plot
