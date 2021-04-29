@@ -250,6 +250,16 @@ This class takes advantage of the ability to use metadata researched above.
 For an example of the wonderful simplicity this gives the analysis, see
 `ybclock.analysis.scripts.cavity_scan_analysis`.
 
+## Simple Feedback Loops
+
+One feature we need is to perform feedback on measured atom data and adjust
+future experiments accordingly. 
+
+The simplest example we have of this, is measuring the empty experimental
+cavity frequency and adjusting the bridging frequency for the 759nm laser.
+This allows us to position the experimental cavity to be on resonance with the
+atoms.
+
 ## Hardware Versioning
 
 The idea for the version number is to separate mutually exclusive hardware
