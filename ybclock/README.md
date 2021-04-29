@@ -250,6 +250,26 @@ This class takes advantage of the ability to use metadata researched above.
 For an example of the wonderful simplicity this gives the analysis, see
 `ybclock.analysis.scripts.cavity_scan_analysis`.
 
+## Analysis/Run Creation On A Different Computer
+
+To take a load off of the current aging computer, we're going to take
+advantage of labscripts ability to run across multiple computers. 
+
+This isn't as simple as just installing labscript. As to compile shots, one
+needs to also have access to the NI Card .py scripts. So I made a git repo in
+the `labscript-devices` folder stored in the `ybclock` virtual environment. I
+pulled it on the analysis comp to ensure that we can have the same labscript
+files for when we inevitably need to add the NI Analog Input cards (April
+2021).
+
+One also need to keep a record of the Calibration Scripts. This is stored in
+`labscript_utils` in the virtual enviroment as well.
+
+
+To ensure a connection, one needs to change the `.ini` files stored in the
+`%USERPROFILE%\labscript-suite\labconfig\` to ensure they both look for the
+same secret key and the correct IP addresses for the `[servers]`.
+
 ## Simple Feedback Loops
 
 One feature we need is to perform feedback on measured atom data and adjust
