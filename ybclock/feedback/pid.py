@@ -10,7 +10,7 @@ class PID:
 	'''
 
 	#memory variables
-	integrator	= 0
+	# integrator	= 0
 	last_error	= None
 
 	#gain values 
@@ -22,6 +22,9 @@ class PID:
 	#output vars
 	output = 0
 
+	def __init__(self):
+		self.integrator = 0
+		
 	def loop(self, error, dt):
 		'''
 			Updates output using PID algorithm.
@@ -41,3 +44,8 @@ class PID:
 		self.output	+=	derivate_error 
 
 		return total_gain*output
+
+	def test_mem(self):
+		self.integrator += 1
+
+		print(self.integrator)

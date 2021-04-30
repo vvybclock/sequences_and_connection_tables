@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
 
 	#calibration
-	for i in range(5):
+	for i in range(1):
 		t += exp_cavity.scan(t,label=f'empty_cavity')	
 
 	set_default_values(t+1*ms)
