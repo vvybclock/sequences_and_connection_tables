@@ -2,6 +2,7 @@ from labscript_devices.NI_DAQmx.labscript_devices import NI_PCI_6723, NI_PCI_671
 from labscript_devices.PineBlaster import PineBlaster
 from user_devices.P7888.labscript_devices import P7888
 from user_devices.AnalogIMAQdxCamera.labscript_devices import AnalogIMAQdxCamera
+from user_devices.HP8648.labscript_devices import HP8648
 from labscriptlib.ybclock.connection_functions  import camera_settings
 
 '''
@@ -16,6 +17,7 @@ def define_hardware_cards():
 		or secondary NI cards.
 		
 	'''
+	print("\tDefining Pseudoclocks, NI Cards, P7888...",end='')
 	### Pseudo Clock
 	PineBlaster(
 		name              	= 'digital_clock',
@@ -69,7 +71,10 @@ def define_hardware_cards():
 		MAX_name      	='Dev4'
 	)
 
+	print('Done!')
+
 	### Cameras
+	print("\tDefining Cameras...",end='')
 	AnalogIMAQdxCamera(
 		name                         	= 'wide_angle_cam',
 		parent_device                	= ni_pci_6713_dev5,
@@ -91,4 +96,18 @@ def define_hardware_cards():
 		camera_attributes            	= camera_settings.seq_camera_attributes,
 		manual_mode_camera_attributes	= camera_settings.manual_camera_attributes
 	)
+	print("Done!")
 
+	### Synthesizers
+
+	print("\tDefining HP Synthesizers...",end="")
+	HP8648(
+		name        	= 'HP8648Cfor759',
+		gpib_address	= 'GPIB0::18::INSTR'
+	)
+
+	HP8648(
+		name        	= 'HP8648B',
+		gpib_address	= 'GPIB0::7::INSTR'
+	)
+	print("Done!")

@@ -32,6 +32,7 @@ if __name__ == '__main__':
 	try:
 		exp_cavity = ExperimentalCavity()
 		cavity_scan_parameters = exp_cavity.get_parameters(path)
+		print(f'Discovered {len(cavity_scan_parameters)} types of scans: {cavity_scan_parameters.keys()}')
 	except:
 		print("Error: Could not extract cavity_scan_parameters.")
 

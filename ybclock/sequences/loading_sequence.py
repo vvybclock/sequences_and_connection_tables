@@ -14,6 +14,7 @@ if __name__ == '__main__':
 
 	define_connection_table()
 	exp_cavity = ExperimentalCavity()
+	HP8648Cfor759.constant(bridging_frequency_759)
 
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
@@ -21,24 +22,31 @@ if __name__ == '__main__':
 
 	set_default_values()
 
-	t = 0.1*ms
+	t = 10.1*ms
 
 
 	#load atoms
 	t += load_from_oven_to_optical_lattice(t)
 
-	#ramp magnetic fields
+	#ramp magnetic fields (for setting atoms on resonance with cavity)
 	add_time_marker(t, "Ramp Bias Fields.")
 	ramp_duration = 2*ms
-	z_bias_field.ramp(t, duration=ramp_duration, initial=-0.8,final=7.35,samplerate=1*kHz)
-	y_bias_field.ramp(t, duration=ramp_duration, initial=0.32,final=-1.86,samplerate=1*kHz)
-	x_bias_field.ramp(t, duration=ramp_duration, initial=5.29,final=-0.02,samplerate=1*kHz)
+	z_bias_field.ramp(t, duration=ramp_duration, initial=-0.795,final=7.35,samplerate=1*kHz)
+	y_bias_field.ramp(t, duration=ramp_duration, initial=0.28,final=-1.86,samplerate=1*kHz)
+	x_bias_field.ramp(t, duration=ramp_duration, initial=5.105,final=-0.02,samplerate=1*kHz)
 
 	#wait
 	t += 200*ms
 
 	#read atom number.
 	t += exp_cavity.scan(t, label='atoms_in_cavity')
+	
+
+	#perform an empty cavity scan
+	blue_mot_shutter.enable(t)
+	blue_mot_power.constant(t, value=0.28)
+	t += 20*ms
+	t += exp_cavity.scan(t, label='empty_cavity')
 
 	set_default_values(t)
 	# Stop the experiment shot with stop()
