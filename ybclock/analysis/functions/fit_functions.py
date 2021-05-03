@@ -153,7 +153,7 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_ra
 	#format the parameters
 	init_guess = (fatoms_guess, fcavity_guess, Neta_guess, gamma_loc, kappa_loc, dark_counts, amplitude)
 
-	bnds_list = ((fatom_range[0], fcavity_range[0], Neta_range[0], gamma_loc-0.004, kappa_loc-0.05, 0,.5*amplitude),(fatom_range[1], fcavity_range[1], Neta_range[1], gamma_loc+0.001, kappa_loc+0.1, 10*dark_counts,2*amplitude))
+	bnds_list = ((fatoms_guess-2, fcavity_guess-2, Neta_guess/2, gamma_loc-0.004, kappa_loc-0.05, 0,.25*amplitude),(fatoms_guess+2, fcavity_guess+2, Neta_guess*2, gamma_loc+0.001, kappa_loc+0.1, 10*dark_counts,2*amplitude))
 	
 	#fit
 	out = least_squares(

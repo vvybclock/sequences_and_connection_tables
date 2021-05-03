@@ -16,6 +16,9 @@ def atom_cavity_analysis(data, scan_parameters,path):
 	empty cavity scan, and, for each scan, we convert the arrival time into
 	photon's frequency. We finally fit each scan.
 
+	We do not perform MLE analysis if we detect enough photons in the scan. "Enough photons" means that MLE and least_square provide the same uncertainty on the atom number estimation, see [MLE_vs_leastSquare](https://paper.dropbox.com/doc/Fit-and-measurement-quality--BJneIwnJqNOnEEYUYTkog5qxAg-szpYsBrXGK81Qq4BF6jEF) for details.
+
+
 	The save parameters are stored in "results/empty_cavity_helper/fitted_exp_cavity_frequency_parameters"
 
 	'''
@@ -37,62 +40,68 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		#there is a true linear relationship between a arrival time and frequency :)
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
-		#Fit the Data using the MLE method.
-		try:
-			best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
-				data=photon_arrivals_in_frequency_MHz, 
-				bnds={"fatom_range":(20,25), "fcavity_range":(20,30), "Neta_range":(0,3000)}
-			)
-			print(best_param)
-		except:
-			print("MLE Photon Arrival Time Fit Failed.")
+		#Fit the Data using both least_square method and MLE method.	
+		if len(photon_arrivals_in_frequency_MHz) > 200:
+			#Fit the Data using the least_square method.
+			try:
+				best_param = fit_functions.fit_rabi_splitting_transmission(
+					data = photon_arrivals_in_frequency_MHz,
+					path = path
+					)
+				print(best_param)
+			except:
+				print("least square Photon Arrival Time Fit Failed.")
+		else:
+			try:
+				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
+					data=photon_arrivals_in_frequency_MHz, 
+					bnds={"fatom_range":(22,25), "fcavity_range":(23.5,24.5), "Neta_range":(0,10000)},
+					path=path
+				)
+				print(best_param)
+			except Exception as e:
+				print(f"MLE Photon Arrival Time Fit Failed. {e}")
 
+		#Plot
 
-		#Plot
-		#Plot
-		#Plot
 
 		#extract metadata
 		(sequence_number, repetition_number)	= extract_sequence_repetition_numbers(path)
 		date                                	= extract_date(path)
 		sequence_name                       	= extract_sequence_name(path)
 		                                    		
-		#plot histogram                     	
-		freq_bin_width_MHz = 0.1
-		plt.hist(
+		run=Run(path)
+		data_globals = run.get_globals()
+
+		#plot histogram	
+		#plot data
+		histogram_resolution = .2;
+
+		n = plt.hist(
 			photon_arrivals_in_frequency_MHz,
-			bins=np.arange(0,50, freq_bin_width_MHz),
+			bins=np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution),
 			align='mid'
 		 )
 		
 		#decorate plot
 		plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
-		plt.ylabel(f"Photon Counts, ({freq_bin_width_MHz*1000:.3g} kHz Bin)")
-		plt.xlabel("Frequency (MHz)")
+		plt.ylabel("Photon Counts, (50 kHz Bin)")
+		plt.xlabel("frequency (MHz)")
 		
 		#plot fit
 		try:
-			x = np.arange(0,50, freq_bin_width_MHz)
+			x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution/3)
 			y = fit_functions.rabi_splitting_transmission(
-					f = x,
-					fatom = best_param["fatom"],
-					fcavity = best_param["fcavity"],
-					Neta = best_param["Neta"],
-					gamma = best_param["gamma"],
-					kappa = best_param["kappa"]
-				)
-			plt.plot(x,200*y) # I need to scale automatically the amplitude of the signal. Just multiply by the size of largest histogram.
-		except:
-			print("Failed plotting fit!")
-
-		try:
-			#store all the results in a dictionary
-			parameters = best_param
-			#add all the scan_parameters to the dictionary
-			parameters.update(a_scan)
-			results_to_save.append(parameters)
-		except:
-			pass
+			                         		f = x,
+			                         		fatom = best_param["fatom"],
+			                         		fcavity = best_param["fcavity"],
+			                         		Neta = best_param["Neta"],
+			                         		gamma = best_param["gamma"],
+			                         		kappa = best_param["kappa"]
+			                         	)
+			plt.plot(x,2*max(n[0])*y)		
+		except Exception as e:
+			print(f"Failed plotting fit! {e}")
 
 	#save fit parameters into hdf file.
 	run = Run(path)
