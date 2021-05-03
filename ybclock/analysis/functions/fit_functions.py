@@ -79,7 +79,7 @@ def residuals_of_rabi_splitting_transmission(params, x_data, y_data):
 	diff = [params[6]*rabi_splitting_transmission(x, params[0], params[1], params[2], params[3], params[4], params[5]) - y for x,y in zip(x_data,y_data)]
 	return diff
 
-def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_range":(0,25), "Neta_range":(0,2000)}, bin_interval=0.2, path=None):
+def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,20000)}, bin_interval=0.2, path=None):
 
 	''' Fits a rabi_splitting_data using least squares. Assumes unbinned photon
 	arrival times for data.
@@ -115,7 +115,7 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_ra
 
 	# extract some parameter
 	Neta_range   	= bnds["Neta_range"]
-	fatom_range 	= bnds["fatom_range"]
+	fatoms_range 	= bnds["fatom_range"]
 	fcavity_range	= bnds["fcavity_range"]
 
 
@@ -131,9 +131,10 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_ra
 
 	fcavity_guess = np.mean(data)
 	fatoms_guess  =	fcavity_guess
-	Neta_guess = 2*np.var(data)/(gamma_loc * kappa_loc)
+	Neta_guess = 4*np.var(data)/(gamma_loc * kappa_loc)
 	# guess initial parameters, to fix the parameters, set the relative params_range to 0
 	## check if guesses are in the set ranges, if not redefine the guesses
+	print(Neta_guess)
 	try:
 		if fcavity_guess < fcavity_range[0] or fcavity_guess > fcavity_range[1]:
 			fcavity_guess = np.mean(fcavity_range)
@@ -153,18 +154,18 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_ra
 	#format the parameters
 	init_guess = (fatoms_guess, fcavity_guess, Neta_guess, gamma_loc, kappa_loc, dark_counts, amplitude)
 
-	bnds_list = ((fatoms_guess-2, fcavity_guess-2, Neta_guess/2, gamma_loc-0.004, kappa_loc-0.05, 0,.25*amplitude),(fatoms_guess+2, fcavity_guess+2, Neta_guess*2, gamma_loc+0.001, kappa_loc+0.1, 10*dark_counts,2*amplitude))
+	bnds_list = ((fatoms_guess-2, fcavity_guess-1, Neta_guess/2, gamma_loc-0.004, kappa_loc-0.05, 0,.25*amplitude),(fatoms_guess+2, fcavity_guess+1, Neta_guess*4, gamma_loc+0.001, kappa_loc+0.1, 10*dark_counts,2*amplitude))
 	
 	#fit
 	out = least_squares(
 		residuals_of_rabi_splitting_transmission, 
 		init_guess, 
 		args=(bin_edges[:-1]+bin_interval/2,hist), 
-		bounds =bnds_list
+		bounds =bnds_list,
+		ftol = 1e-10
 		)
 	best_param=out.x
 	jac_best_guess=out.jac
-
 
 	return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : dark_counts,"amplitude": best_param[6], "jacobian":jac_best_guess}
 

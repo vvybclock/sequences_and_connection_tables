@@ -46,6 +46,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission(
 					data = photon_arrivals_in_frequency_MHz,
+					bnds={"fatom_range":(23,25), "fcavity_range":(23,25), "Neta_range":(0,20000)},
 					path = path
 					)
 				print(best_param)
@@ -55,7 +56,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 					data=photon_arrivals_in_frequency_MHz, 
-					bnds={"fatom_range":(22,25), "fcavity_range":(23.5,24.5), "Neta_range":(0,10000)},
+					bnds={"fatom_range":(0,27.5), "fcavity_range":(0,27.5), "Neta_range":(0,20000)},
 					path=path
 				)
 				print(best_param)
