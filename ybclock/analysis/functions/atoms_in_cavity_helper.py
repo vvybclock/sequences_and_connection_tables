@@ -85,11 +85,14 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		except:
 			print("Failed plotting fit!")
 
-		#store all the results in a dictionary
-		parameters = best_param
-		#add all the scan_parameters to the dictionary
-		parameters.update(a_scan)
-		results_to_save.append(parameters)
+		try:
+			#store all the results in a dictionary
+			parameters = best_param
+			#add all the scan_parameters to the dictionary
+			parameters.update(a_scan)
+			results_to_save.append(parameters)
+		except:
+			pass
 
 	#save fit parameters into hdf file.
 	run = Run(path)
