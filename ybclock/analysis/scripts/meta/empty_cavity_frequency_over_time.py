@@ -1,3 +1,11 @@
+'''
+	Plot's the Empty Cavity Frequency over Time.
+
+	Currently it changes plot point color depending on the parity of the sequence
+	number. This helps keep track of changes to the sequence. This feature is
+	kind of useless seeing as with feedback the sequence will change every shot.
+
+'''
 from lyse import *
 import pickle
 import numpy as np
