@@ -32,6 +32,15 @@ class LaserFrequency():
 	__frequency_channel = None
 	pass
 class LaserIntensity():
+	'''
+		This is a controller for dealing with the annoying details of turning a laser on and off.
+
+		Auto turnoff, turnon features assume sequential usage of the light power
+		commands. If you do them out of order, they will not behave correctly. In
+		this case, you need to manually set is_on = True/False, or set the overload
+		arg to true.
+
+	'''
 	__intensity_channel = None
 	__shutter_channel  	= None
 	__turnoff_voltage  	= None
@@ -45,11 +54,11 @@ class LaserIntensity():
 		self.__turnoff_voltage  	= turnoff_voltage
 		self.__shutter_closetime	= shutter_closetime
 
-	def turnoff(self, t):
+	def turnoff(self, t,overload=False):
 		'''
-			Turns off beam if and only if on.
+			Turns off beam if and only if on unless `overload == True` then always turn off.
 		'''
-		if is_on:
+		if is_on or overload:
 			#turn off aom/eom
 			if self.__turnoff_voltage is None:
 				self.__intensity_channel.constant(t,value=0)
@@ -74,13 +83,27 @@ class LaserIntensity():
 
 
 			#change on/off status
-			self.is_on = False
+			if not overload:
+				self.is_on = False
 	
-	def turnon(self, t):
+	def turnon(self, t, overload=False):
 		'''
 			Turns on beam if and only if off.
+
+			## Sequence Turn On Details
+
+			We turn off the beam with the fast control (AOM/EOM) before opening. This
+			ensures that the light profile across the atoms is 1) always uniform and 2)
+			well controlled in the time domain.
+
 		'''
-		self.is_on = True
+		if (not is_on) or overload:
+			#turn off beam
+			#open shutter if we have a shutter
+			#turn on beam
+			pass
+			if not overload:
+				self.is_on = True
 
 	def constant(self, t):
 		self.turnon(t)
