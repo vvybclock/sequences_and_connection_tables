@@ -79,7 +79,7 @@ def residuals_of_rabi_splitting_transmission(params, x_data, y_data):
 	diff = [params[6]*rabi_splitting_transmission(x, params[0], params[1], params[2], params[3], params[4], params[5]) - y for x,y in zip(x_data,y_data)]
 	return diff
 
-def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_range":(0,25), "Neta_range":(0,2000)}, bin_interval=0.2, path=None):
+def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,20000)}, bin_interval=0.2, path=None):
 
 	''' Fits a rabi_splitting_data using least squares. Assumes unbinned photon
 	arrival times for data.
@@ -130,8 +130,7 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_ra
 	amplitude = np.amax(hist)/2
 
 	fcavity_guess = np.mean(data)
-	fatoms_guess  =	fcavity_guess
-	Neta_guess = 2*np.var(data)/(gamma_loc * kappa_loc)
+	Neta_guess = 4*np.var(data)/(gamma_loc * kappa_loc)
 	# guess initial parameters, to fix the parameters, set the relative params_range to 0
 	## check if guesses are in the set ranges, if not redefine the guesses
 	try:
@@ -139,10 +138,13 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_ra
 			fcavity_guess = np.mean(fcavity_range)
 	except:
 		pass
+
+	fatoms_guess  =	fcavity_guess
 	try:
-		if fatoms_guess < fatoms_range[0] or fatoms_guess > fatoms_range[1]:
-			fatoms_guess = np.mean(fatoms_range)
-	except:
+		if fatoms_guess < fatom_range[0] or fatoms_guess > fatom_range[1]:
+			fatoms_guess = np.mean(fatom_range)
+	except Exception as e:
+		print("fatoms_guess failed. Error:", e)
 		pass
 	try:
 		if Neta_guess < Neta_range[0] or Neta_guess > Neta_range[1]:
@@ -150,11 +152,15 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,25), "fcavity_ra
 	except:
 		pass
 
+
+	print("FOCA------------",fatoms_guess, fcavity_guess, Neta_guess)
+
 	#format the parameters
 	init_guess = (fatoms_guess, fcavity_guess, Neta_guess, gamma_loc, kappa_loc, dark_counts, amplitude)
 
-	bnds_list = ((fatoms_guess-2, fcavity_guess-2, Neta_guess/2, gamma_loc-0.004, kappa_loc-0.05, 0,.25*amplitude),(fatoms_guess+2, fcavity_guess+2, Neta_guess*2, gamma_loc+0.001, kappa_loc+0.1, 10*dark_counts,2*amplitude))
+	bnds_list = ([fatom_range[0], fcavity_range[0], Neta_range[0], gamma_loc-0.004, kappa_loc-0.05, 0,.25*amplitude],[fatom_range[1], fcavity_range[1], Neta_range[1], gamma_loc+0.001, kappa_loc+0.1, 10*dark_counts,2*amplitude])
 	
+	print(bnds_list)
 	#fit
 	out = least_squares(
 		residuals_of_rabi_splitting_transmission, 

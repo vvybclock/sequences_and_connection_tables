@@ -19,9 +19,12 @@ import labscriptlib.ybclock.analysis.functions.fit_functions as fit_functions
 from labscriptlib.ybclock.analysis.functions.empty_cavity_helper import empty_cavity_analysis
 import pickle
 
+'''
+This is a test code where we analyse empty cavities scan in our sequences.
+
+'''
+
 run = Run(path)
-
-
 
 try:
 	#extract cavity_scan_parameters metadata

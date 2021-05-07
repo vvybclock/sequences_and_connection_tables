@@ -24,6 +24,19 @@ def atom_cavity_analysis(data, scan_parameters,path):
 	'''
 
 	results_to_save = []
+	#get empty cavity scan parameters from hdf file.
+	run = Run(path)
+	#Fit the Data using both least_square method or MLE method.
+	try:
+		# Check if there is an empty cavity fit and extract empty cavity frequency
+		empty_cavity_frequency_from_fit = run.get_result("empty_cavity_helper", "exp_cavity_frequency")
+		# When we have atoms in the spin down state, the effective empty cavity
+		# frequency is "pushed" up by ~400kHz per 1000 N_downeta, hence the
+		# asymmetric bounds 
+		cavity_range = (empty_cavity_frequency_from_fit - 0.3, empty_cavity_frequency_from_fit + 2.3);
+	except Exception as e:
+		cavity_range = (0,50);
+		print(f"No empty cavity scan result found. {e}")
 
 	for a_scan in scan_parameters:
 		# a_scan is a dictionary whose properties are defined in exp_cavity.py
@@ -40,22 +53,24 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		#there is a true linear relationship between a arrival time and frequency :)
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
-		#Fit the Data using both least_square method and MLE method.	
+
 		if len(photon_arrivals_in_frequency_MHz) > 200:
 			#Fit the Data using the least_square method.
+			# Remember to add fatom_guess in globals!
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission(
 					data = photon_arrivals_in_frequency_MHz,
+					bnds={"fatom_range":(23.5-1,23.5+1), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
 					path = path
 					)
 				print(best_param)
-			except:
-				print("least square Photon Arrival Time Fit Failed.")
+			except Exception as e:
+				print("least square Photon Arrival Time Fit Failed. Because: ", e)
 		else:
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 					data=photon_arrivals_in_frequency_MHz, 
-					bnds={"fatom_range":(22,25), "fcavity_range":(23.5,24.5), "Neta_range":(0,10000)},
+					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
 					path=path
 				)
 				print(best_param)
