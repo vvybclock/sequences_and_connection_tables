@@ -6,3 +6,5 @@
 	variables for easier data analysis.
 	
 '''
+
+from .laser_beams import *
