@@ -55,7 +55,7 @@ if __name__ == '__main__':
 			)
 
 	for each_key in cavity_scan_parameters.keys():
-		#we analyse all other cavity scan no
+		#we analyse all other cavity scan not empty
 		if each_key == 'atoms_in_cavity':
 			atom_cavity_analysis(
 				data=photon_arrival_times,

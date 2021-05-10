@@ -48,7 +48,10 @@ def empty_cavity_analysis(data, scan_parameters,path):
 					#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
 					path=path
 				)
-				print(best_param)
+				print("Empty Cavity Fit Params:")
+				for key, value in best_param.items():
+					if key not in "jacobian":
+						print(f"{key}: {value}")
 			except:
 				print("Least_square Photon Arrival Time Fit Failed.")
 		else:
@@ -60,7 +63,10 @@ def empty_cavity_analysis(data, scan_parameters,path):
 					#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
 					path=path
 				)
-				print(best_param)
+				print("Empty Cavity Fit Params:")
+				for key, value in best_param.items():
+					if key not in 'covariance':
+						print(f"{key}: {value}")
 			except:
 				print("MLE Photon Arrival Time Fit Failed.")
 

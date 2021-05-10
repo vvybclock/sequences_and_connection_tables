@@ -79,6 +79,17 @@ def residuals_of_rabi_splitting_transmission(params, x_data, y_data):
 	diff = [params[6]*rabi_splitting_transmission(x, params[0], params[1], params[2], params[3], params[4], params[5]) - y for x,y in zip(x_data,y_data)]
 	return diff
 
+def chi_2(y_data, y_model):
+	'''
+	Calculates the normalized chi^2 of a fitted model as: , where N is the total amount of data dtectd.
+
+	'''
+	try:
+		total_chi_2 = [((y-ye)**2)/(y+1) for y,ye in zip(y_data,y_model)]
+		return sum(total_chi_2)
+	except Exception as e:
+		print("Failed calculating chi_square. Error:",e)
+
 def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,20000)}, bin_interval=0.2, path=None):
 
 	''' Fits a rabi_splitting_data using least squares. Assumes unbinned photon
@@ -127,7 +138,7 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_ra
 	
 
 	#estimate initial parameters
-	amplitude = np.amax(hist)/2
+	amplitude = sum(hist)
 
 	fcavity_guess = np.mean(data)
 	Neta_guess = 4*np.var(data)/(gamma_loc * kappa_loc)
@@ -156,23 +167,27 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_ra
 	print("FOCA------------",fatoms_guess, fcavity_guess, Neta_guess)
 
 	#format the parameters
-	init_guess = (fatoms_guess, fcavity_guess, Neta_guess, gamma_loc, kappa_loc, dark_counts, amplitude)
+	init_guess = (fatoms_guess, fcavity_guess, Neta_guess, gamma_loc, kappa_loc, dark_counts, 2*amplitude)
 
-	bnds_list = ([fatom_range[0], fcavity_range[0], Neta_range[0], gamma_loc-0.004, kappa_loc-0.05, 0,.25*amplitude],[fatom_range[1], fcavity_range[1], Neta_range[1], gamma_loc+0.001, kappa_loc+0.1, 10*dark_counts,2*amplitude])
+	bnds_list = ([fatom_range[0], fcavity_range[0], Neta_range[0], gamma_loc-0.004, kappa_loc-0.05, 0,.25*amplitude],[fatom_range[1], fcavity_range[1], Neta_range[1], gamma_loc+0.001, kappa_loc+0.2, 10*dark_counts,400*amplitude])
 	
 	print(bnds_list)
 	#fit
+	bin_centers=bin_edges[:-1]+bin_interval/2;
 	out = least_squares(
 		residuals_of_rabi_splitting_transmission, 
 		init_guess, 
-		args=(bin_edges[:-1]+bin_interval/2,hist), 
+		args=(bin_centers,hist), 
 		bounds =bnds_list
 		)
 	best_param=out.x
 	jac_best_guess=out.jac
+	y_model = [best_param[6]*rabi_splitting_transmission(x, best_param[0], best_param[1], best_param[2], best_param[3], best_param[4], best_param[5]) for x in bin_centers]
+	y = hist
+	chi_sq = chi_2(y, y_model)
 
 
-	return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : dark_counts,"amplitude": best_param[6], "jacobian":jac_best_guess}
+	return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : dark_counts,"amplitude": best_param[6], "jacobian":jac_best_guess, "chi_square": chi_sq}
 
 def logLikelihood_rabi_splitting_transmission(params, data,):
 	'''
@@ -292,11 +307,37 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 			bs_list.append(out.x)
 		fit_result= np.mean(np.transpose(bs_list),1)
 		cov = np.sqrt(np.transpose(bs_list)) # Covariance matrix
-		best_param = {"fatom" : fit_result[0], "fcavity" : fit_result[1], "Neta": fit_result[2],  "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5],'covariance' : cov} # gamma and kappa are not fit parameters!
+		# Get the chi_2
+		#bin the data
+		(hist, bin_edges) = np.histogram(
+		data,
+		bins=np.arange(data[0]-1,data[-1]+1, 0.2)
+		)
+		#estimate initial parameters
+		amplitude = sum(hist)
+		bin_centers=bin_edges[:-1]+bin_interval/2;
+		y_model = [amplitude*rabi_splitting_transmission(x, fit_result[0], fit_result[1], fit_result[2], fit_result[3], fit_result[4], fit_result[5]) for x in bin_centers]
+		y = hist
+		chi_sq = chi_2(y, y_model)
+
+		best_param = {"fatom" : fit_result[0], "fcavity" : fit_result[1], "Neta": fit_result[2],  "gamma" : fit_result[3], "kappa" : fit_result[4], "dark_counts" : fit_result[5],'covariance' : cov,"chi_square" : chi_sq} # gamma and kappa are not fit parameters!
 		return best_param
 	elif param_error == 'off':
 		out = minimize(logLikelihood_rabi_splitting_transmission, init_guess,args=data,bounds=bnds_list, tol=0.001)
 		best_param = out.x
-		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5]}
+		# Get the chi_2
+		#bin the data
+		(hist, bin_edges) = np.histogram(
+		data,
+		bins=np.arange(data[0]-1,data[-1]+1, 0.2)
+		)
+		#estimate initial parameters
+		amplitude = sum(hist)
+		bin_centers=bin_edges[:-1]+bin_interval/2;
+		y_model = [amplitude*rabi_splitting_transmission(x, best_param[0], best_param[1], best_param[2], best_param[3], best_param[4], best_param[5]) for x in bin_centers]
+		y = hist
+		chi_sq = chi_2(y, y_model)
+
+		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5],"chi_square" : chi_sq}
 	else :
 		return('incorrect param_error specification')

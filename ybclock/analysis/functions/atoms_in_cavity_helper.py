@@ -63,7 +63,10 @@ def atom_cavity_analysis(data, scan_parameters,path):
 					bnds={"fatom_range":(23.5-1,23.5+1), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
 					path = path
 					)
-				print(best_param)
+				print("Rabi Splitting Fit Params:")
+				for key, value in best_param.items():
+					if key not in "jacobian":
+						print(f"{key}: {value}")
 			except Exception as e:
 				print("least square Photon Arrival Time Fit Failed. Because: ", e)
 		else:
@@ -73,7 +76,11 @@ def atom_cavity_analysis(data, scan_parameters,path):
 					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
 					path=path
 				)
-				print(best_param)
+				print("Rabi Splitting Fit Params:")
+				for key, value in best_param.items():
+					if key not in 'covariance':
+						print(f"{key}: {value}")
+
 			except Exception as e:
 				print(f"MLE Photon Arrival Time Fit Failed. {e}")
 
@@ -114,9 +121,14 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			                         		gamma = best_param["gamma"],
 			                         		kappa = best_param["kappa"]
 			                         	)
-			plt.plot(x,2*max(n[0])*y)		
+			try:
+				plt.plot(x,best_param["amplitude"]*y)
+			except:
+				plt.plot(x,2*max(n[0])*y)
 		except Exception as e:
 			print(f"Failed plotting fit! {e}")
+
+
 
 	#save fit parameters into hdf file.
 	run = Run(path)
