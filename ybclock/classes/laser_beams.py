@@ -255,17 +255,13 @@ class BlueLaser(Laser):
 		'''
 
 		#define the beampaths
-		try:
-			self.mot = LaserBeam(
-					intensity_control	= LaserIntensity(
-					                 		intensity_channel	= blue_mot_power,
-					                 		shutter_channel  	= blue_mot_shutter
-					                 	),
-					frequency_control	= None
-				)
-		except Exception as e:
-			print(f"Error creating mot beampath: {e}")
-			pass
+		self.mot = LaserBeam(
+				intensity_control	= LaserIntensity(
+				                 		intensity_channel	= blue_mot_power,
+				                 		shutter_channel  	= blue_mot_shutter
+				                 	),
+				frequency_control	= None
+			)
 
 class GreenLaser(Laser):
 
@@ -277,33 +273,29 @@ class GreenLaser(Laser):
 
 	def __init__(self):
 		#define the beampaths
-		try:
-			self.mot = LaserBeam(
-					intensity_control = LaserIntensity(
-							intensity_channel = green_mot_power,
-							rf_switch_channel = green_mot_power_switch,
-							shutter_channel = green_mot_shutter
-						),
-					frequency_control = None,
-				)
+		self.mot = LaserBeam(
+				intensity_control = LaserIntensity(
+						intensity_channel = green_mot_power,
+						rf_switch_channel = green_mot_power_switch,
+						shutter_channel = green_mot_shutter
+					),
+				frequency_control = None,
+			)
 
-			self.probe = LaserBeam(
-					intensity_control = None,
-					frequency_control = None,
-				)
+		self.probe = LaserBeam(
+				intensity_control = None,
+				frequency_control = None,
+			)
 
-			self.pump = LaserBeam(
-					intensity_control = None,
-					frequency_control = None,
-				)
+		self.pump = LaserBeam(
+				intensity_control = None,
+				frequency_control = None,
+			)
 
-			self.cooling = LaserBeam(
-					intensity_control = None,
-					frequency_control = None,
-				)
-		except Exception as e:
-			pass
-		pass
+		self.cooling = LaserBeam(
+				intensity_control = None,
+				frequency_control = None,
+			)
 
 class RedLaser(Laser):
 
@@ -312,21 +304,18 @@ class RedLaser(Laser):
 	transverse	= None
 
 	def __init__(self):
-		try:
-			self.cavity = LaserBeam(
-					intensity_control = LaserIntensity(
-							intensity_channel = rec_cavity_power,
-							rf_switch_channel = red_cavity_power_switch
-						)
-				)
+		self.cavity = LaserBeam(
+				intensity_control = LaserIntensity(
+						intensity_channel = rec_cavity_power,
+						rf_switch_channel = red_cavity_power_switch
+					)
+			)
 
-			self.transverse = LaserBeam(
-					intensity_control = LaserIntensity(
-							intensity_channel = red_transverse_power
-						)
-				)
-		except Exception as e:
-			pass
+		self.transverse = LaserBeam(
+				intensity_control = LaserIntensity(
+						intensity_channel = red_transverse_power
+					)
+			)
 
 
 
