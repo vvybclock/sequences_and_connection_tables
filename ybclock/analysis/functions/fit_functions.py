@@ -138,7 +138,7 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_ra
 	
 
 	#estimate initial parameters
-	amplitude = sum(hist)
+	amplitude = sum(hist)/0.59
 
 	fcavity_guess = np.mean(data)
 	Neta_guess = 4*np.var(data)/(gamma_loc * kappa_loc)
@@ -317,7 +317,8 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 		
 		bin_centers=bin_edges[:-1]+bin_interval/2
 		amplitude = sum(hist)*bin_interval
-		y_model = [amplitude*rabi_splitting_transmission(x, fit_result[0], fit_result[1], fit_result[2], fit_result[3], fit_result[4], fit_result[5]) for x in bin_centers]
+		y_model = [rabi_splitting_transmission(x, fit_result[0], fit_result[1], fit_result[2], fit_result[3], fit_result[4], fit_result[5]) for x in bin_centers]
+		y_model = y_model/sum(y_model)*sum(hist);
 		y = hist
 		chi_sq = chi_2(y, y_model)
 
@@ -333,10 +334,10 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 		data,
 		bins=np.arange(data[0]-1,data[-1]+1, bin_interval)
 		)
-		
 		bin_centers=bin_edges[:-1]+bin_interval/2
-		amplitude = sum(hist)*bin_interval
-		y_model = [amplitude*rabi_splitting_transmission(x, best_param[0], best_param[1], best_param[2], best_param[3], best_param[4], best_param[5]) for x in bin_centers]
+		y_model = [rabi_splitting_transmission(x, best_param[0], best_param[1], best_param[2], best_param[3], best_param[4], best_param[5]) for x in bin_centers]
+		y_model = y_model/sum(y_model)*sum(hist);
+		
 		y = hist
 		chi_sq = chi_2(y, y_model)
 
