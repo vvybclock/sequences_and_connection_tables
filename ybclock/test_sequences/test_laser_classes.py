@@ -35,9 +35,8 @@ if __name__ == '__main__':
 	t += 1
 
 	add_time_marker(t, label='Turn Off')
-	blue.mot.intensity.turnoff(t)
+	blue.mot.intensity.turnoff(t, warmup_value=1)
 
-	blue.mot.intensity.turnoff(t + 0.5)
 	t += 1 
 
 	add_time_marker(t, label='Ramp')	

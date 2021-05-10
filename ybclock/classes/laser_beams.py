@@ -65,39 +65,43 @@ class LaserIntensity():
 		self.__shutter_closetime	= shutter_closetime
 		self.__rf_switch_channel	= rf_switch_channel
 
-	def turnoff(self, t,overload=False):
+	def turnoff(self, t, warmup_value, overload=False):
 		'''
 			Turns off beam if and only if on unless `overload == True` then always turn off.
+			`warmup_value` is what value you want for the aom while the shutter is closed.
 
 			#To Do
-				[ ]	Set up AOM/EOM turn on/off
+				[x]	Set up AOM/EOM turn on/off
 				[ ]	Set up Shutter turn on/off
 				[ ]	Set up RF Switch turn on/off
 
 		'''
+
+		#determine shutter close time
+		if self.__shutter_closetime is None:
+			shutter_closetime =	global_shutter_closetime
+		else:
+			shutter_closetime = self.__shutter_closetime
+		#determine aom/eom turnoff voltage
+		if self.__turnoff_voltage is None:
+			turnoff_voltage = 0
+		else:
+			turnoff_voltage = self.__turnoff_voltage
+
+
+
+
+
 		if self.is_on or overload:
 			#turn off aom/eom
-			if self.__turnoff_voltage is None:
-				self.__intensity_channel.constant(t,value=0)
-			else:
-				self.__intensity_channel.constant(t,value=self.__turnoff_voltage)
+			self.__intensity_channel.constant(t,value=turnoff_voltage)
 			
 			#close shutter iff we have a shutter
 			if self.__shutter_channel is not None:
-				if self.__shutter_closetime is None:
-					self.__shutter_channel.disable(t-global_shutter_closetime)
-				else:
-					self.__shutter_channel.disable(t-self.__shutter_closetime)
+				self.__shutter_channel.disable(t - shutter_closetime)
 
 			#turn on  aom/eom
-			'''
-			if self.__shutter_closetime is None:
-					self.__intensity_channel.constant(t+global_shutter_closetime,value=turnon_value)
-				else:
-					self.__intensity_channel.constant(t+self.__shutter_closetime,value=turnon_value)
-			'''
-			print("Not turning on AOM after shutter close!")
-
+			self.__intensity_channel.constant(t + shutter_closetime,value=warmup_value)
 
 			#change on/off status
 			if not overload:
@@ -137,7 +141,7 @@ class LaserIntensity():
 			#turn off beam
 			if self.__rf_switch_channel is not None:
 				#just turn off the rf switch
-				self.__rf_switch_channel.disable(t)
+				self.__rf_switch_channel.disable(t - shutter_closetime)
 			else:
 				#turn off the aom/eom
 				self.__intensity_channel.constant(t,value=turnoff_voltage)
