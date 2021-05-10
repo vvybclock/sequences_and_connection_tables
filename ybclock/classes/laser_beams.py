@@ -62,18 +62,20 @@ class LaserIntensity():
 	'''
 	__intensity_channel = None
 	__shutter_channel  	= None
+	__rf_switch_channel	= None
+
 	__turnoff_voltage  	= None
 	__shutter_closetime	= None
-	__rf_switch_channel	= None
 
 	is_on = False
 
 	def __init__(self, intensity_channel=None, shutter_channel=None, turnoff_voltage=None,shutter_closetime=None,rf_switch_channel=None):
 		self.__intensity_channel	= intensity_channel
-		self.__turnoff_voltage  	= turnoff_voltage
 		self.__shutter_channel  	= shutter_channel
-		self.__shutter_closetime	= shutter_closetime
 		self.__rf_switch_channel	= rf_switch_channel
+		
+		self.__turnoff_voltage  	= turnoff_voltage
+		self.__shutter_closetime	= shutter_closetime
 
 	def turnoff(self, t, warmup_value, overload=False):
 		'''
