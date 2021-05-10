@@ -3,7 +3,7 @@ will be used to monitor how fitting Rabi splitting works over the time and/or
 as a function of experimental parameters
 
  # To Do 
- 	[x] make atoms_in_cavity_helper.py write the chi^2 value (and/or LogLikelihood) of fit in lyse parameters
+ 	[x] make empty_cavity_helper.py write the chi^2 value (and/or LogLikelihood) of fit in lyse parameters
  	[x] read lyse parameters here
  	[x] plot chi^2 over the time
  	[] statistics (hist plot, for example) of chi^2 results
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
 	runtimes = list(dataframe['run time'])
 	paths = list(dataframe['filepath'])
-	fit_quality = list(dataframe['atoms_in_cavity_helper','cavity_scan_fit_chi2'])
+	fit_quality = list(dataframe['empty_cavity_helper','cavity_scan_fit_chi2'])
 	#this is what we call the run number. we'll use it to change the color, so we can tell when we changed the sequence.
 	sequence_index = list(dataframe['sequence_index'])
 
@@ -37,6 +37,6 @@ if __name__ == '__main__':
 	#s - size
 	plt.scatter(runtimes, fit_quality, s=20, c = colors)
 
-	plt.title("Rabi Splitting Fit Quality")
+	plt.title("Empty Fit Quality")
 	plt.ylabel("chi squared")
 	plt.xlabel("Time")
