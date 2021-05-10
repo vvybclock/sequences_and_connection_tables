@@ -60,20 +60,29 @@ class LaserIntensity():
 			[x] ramp
 
 	'''
-	__intensity_channel = None
-	__shutter_channel  	= None
-	__rf_switch_channel	= None
 
-	__turnoff_voltage  	= None
-	__shutter_closetime	= None
+	#channels for each of the possible hardware controls
+	__intensity_channel = None #AOM/EOM
+	__shutter_channel  	= None #Shutter
+	__rf_switch_channel	= None #RF Switch
 
-	is_on = False
+	__turnoff_voltage  	= None #For the AOM/EOM
+	__shutter_closetime	= None #Close time from after the TTL is sent
 
-	def __init__(self, intensity_channel=None, shutter_channel=None, turnoff_voltage=None,shutter_closetime=None,rf_switch_channel=None):
+	#state variable for keeping track of turning the laser on or off
+	is_on = False 
+
+	def __init__(self, 
+		intensity_channel=None, 
+		shutter_channel=None, 
+		turnoff_voltage=None,
+		shutter_closetime=None,
+		rf_switch_channel=None):
+
 		self.__intensity_channel	= intensity_channel
 		self.__shutter_channel  	= shutter_channel
 		self.__rf_switch_channel	= rf_switch_channel
-		
+
 		self.__turnoff_voltage  	= turnoff_voltage
 		self.__shutter_closetime	= shutter_closetime
 
@@ -164,7 +173,7 @@ class LaserIntensity():
 					self.__rf_switch_channel.disable(t - shutter_closetime)
 				else:
 					#turn off the aom/eom
-					self.__intensity_channel.constant(t,value=turnoff_voltage)
+					self.__intensity_channel.constant(t - shutter_closetime,value=turnoff_voltage)
 
 				#open shutter
 				self.__shutter_channel.enable(t - shutter_closetime)
