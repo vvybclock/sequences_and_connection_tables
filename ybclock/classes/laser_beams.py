@@ -307,7 +307,7 @@ class RedLaser(Laser):
 	def __init__(self):
 		self.cavity = LaserBeam(
 				intensity_control = LaserIntensity(
-						intensity_channel = rec_cavity_power,
+						intensity_channel = red_cavity_power,
 						rf_switch_channel = red_cavity_power_switch
 					)
 			)

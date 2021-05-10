@@ -9,9 +9,10 @@ from labscriptlib.ybclock.classes import *
 
 
 
-if __name__ == '__main__':	
+if __name__ == '__main__':
 	define_connection_table()
 	define_classes()
+
 
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
