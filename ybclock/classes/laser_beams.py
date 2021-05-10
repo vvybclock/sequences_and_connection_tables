@@ -44,10 +44,10 @@ class LaserIntensity():
 
 		#To Do
 
-			[ ] turnoff function
-			[ ] turnon function
-			[ ] constant
-			[ ] ramp
+			[x] turnoff function
+			[x] turnon function
+			[x] constant
+			[x] ramp
 
 	'''
 	__intensity_channel = None
@@ -72,8 +72,8 @@ class LaserIntensity():
 
 			#To Do
 				[x]	Set up AOM/EOM turn on/off
-				[ ]	Set up Shutter turn on/off
-				[ ]	Set up RF Switch turn on/off
+				[x]	Set up Shutter turn on/off
+				[x]	Set up RF Switch turn on/off
 
 		'''
 
@@ -94,14 +94,20 @@ class LaserIntensity():
 
 		if self.is_on or overload:
 			#turn off aom/eom
-			self.__intensity_channel.constant(t,value=turnoff_voltage)
+			if self.__rf_switch_channel is None:
+				self.__intensity_channel.constant(t,value=turnoff_voltage)
+			else:
+				self.__rf_switch_channel.disable(t)
 			
 			#close shutter iff we have a shutter
 			if self.__shutter_channel is not None:
 				self.__shutter_channel.disable(t - shutter_closetime)
 
 			#turn on  aom/eom
-			self.__intensity_channel.constant(t + shutter_closetime,value=warmup_value)
+			if self.__rf_switch_channel is None:
+				self.__intensity_channel.constant(t + shutter_closetime,value=warmup_value)
+			else:
+				self.__rf_switch_channel.enable(t + shutter_closetime)
 
 			#change on/off status
 			if not overload:
