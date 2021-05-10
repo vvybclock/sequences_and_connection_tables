@@ -26,7 +26,9 @@ class LaserFrequency():
 	pass
 class LaserIntensity():
 	'''
-		This is a controller for dealing with the annoying details of turning a laser on and off.
+		
+		This is a controller for dealing with the annoying details of turning a
+		laser on and off.
 
 		Auto turnoff, turnon features assume sequential usage of the light power
 		commands. If you do them out of order, they will not behave correctly. In
@@ -109,7 +111,14 @@ class LaserIntensity():
 	pass
 
 class LaserBeam():
-	"""This is a template that holds functions for controlling the laser beam properties of a *single beampath*: intensity, and frequency."""
+	""" 
+
+	This is a template that holds functions for controlling the laser beam
+	properties of a *single beampath*: intensity, and frequency. This class
+	mostly just holds together, semantically, the two controllers for the
+	intensity and frequency of our laserbeam.
+
+	"""
 
 	intensity	= None
 	frequency	= None
@@ -124,8 +133,6 @@ class LaserBeam():
 			I want to particular about how my classes distinguish between the channel
 			and the custom functions defined in the `LaserIntensity` and
 			`LaserFrequency` classes.
-
-
 		'''
 		#save the controller
 		self.intensity = intensity_control
@@ -152,8 +159,9 @@ class Laser():
 
 class BlueLaser(Laser):
 
+	#beampath names go here
 	mot = None
-	beampaths = []
+
 	def __init__(self):
 		''' 
 
@@ -171,7 +179,6 @@ class BlueLaser(Laser):
 					                 		shutter_channel  	= blue_mot_shutter
 					                 	)
 				)
-			self.beampaths.append('mot')
 		except Exception as e:
 			print(f"Error creating mot beampath: {e}")
 			pass
