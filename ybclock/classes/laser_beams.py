@@ -1,6 +1,13 @@
 '''
 	Holds the classes for laser light control.
 
+	#Laser Classes
+
+	`Laser()` is just meant to group together `LaserBeam`s as part of the
+	datatypes it remembers. `LaserBeam()` is just meant to group together
+	frequency and intensity controller classes: `LaserIntensity()` and
+	`LaserFrequency()`.
+	
 	##Desired Example Definitions
 
 	```python
