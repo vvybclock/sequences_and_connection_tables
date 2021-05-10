@@ -6,16 +6,9 @@
 	```python
 
 	#define the lasers
-	green 	= Laser()
-	yellow	= Laser()
-	trap  	= Laser()
-
-	#define the beampaths for the green laser
-	green.probe	= LaserBeam()
-	green.pump 	= LaserBeam()
-
-	#define the methods for each LaserBeam.
-	green.probe.turnoff = 
+	green 	= GreenLaser()
+	yellow	= YellowLaser()
+	trap  	= TrapLaser()
 	```
 
 	##Desired Example Usage
@@ -162,13 +155,14 @@ class BlueLaser(Laser):
 	mot = None
 	beampaths = []
 	def __init__(self):
-		''' Defines the `LaserBeam`s, and `LaserIntensity` and `LaserFrequency` controls.
+		''' 
+
+		Defines the `LaserBeam`s, and `LaserIntensity` and `LaserFrequency`
+		controls.
 
 		Beampaths: (mot)
 		'''
-		print("Constructing blue laser...")
 
-		print("\tblue.mot...")
 		#define the beampaths
 		try:
 			mot = LaserBeam(
@@ -182,13 +176,6 @@ class BlueLaser(Laser):
 			print(f"Error creating mot beampath: {e}")
 			pass
 
-		print("\tDone!")
 
-	def __str__(self):
-		string = f'Blue Laser has the beampaths {self.beampaths}'
-
-		return string
-	pass
-	pass
 if __name__ == '__main__':
 	pass
