@@ -112,11 +112,11 @@ class LaserIntensity():
 			if self.__shutter_channel is not None:
 				self.__shutter_channel.disable(t - shutter_closetime)
 
-			#turn on  aom/eom
-			if self.__rf_switch_channel is None:
-				self.__intensity_channel.constant(t + shutter_closetime,value=warmup_value)
-			else:
-				self.__rf_switch_channel.enable(t + shutter_closetime)
+				#turn on  aom/eom iff we have a shutter
+				if self.__rf_switch_channel is None:
+					self.__intensity_channel.constant(t + shutter_closetime,value=warmup_value)
+				else:
+					self.__rf_switch_channel.enable(t + shutter_closetime)
 
 			#change on/off status
 			if not overload:
@@ -153,16 +153,17 @@ class LaserIntensity():
 
 
 		if (not self.is_on) or overload:
-			#turn off beam
-			if self.__rf_switch_channel is not None:
-				#just turn off the rf switch
-				self.__rf_switch_channel.disable(t - shutter_closetime)
-			else:
-				#turn off the aom/eom
-				self.__intensity_channel.constant(t,value=turnoff_voltage)
-
-			#open shutter if we have a shutter
+			#if we have a shutter
 			if self.__shutter_channel is not None:
+				#turn off beam
+				if self.__rf_switch_channel is not None:
+					#just turn off the rf switch
+					self.__rf_switch_channel.disable(t - shutter_closetime)
+				else:
+					#turn off the aom/eom
+					self.__intensity_channel.constant(t,value=turnoff_voltage)
+
+				#open shutter
 				self.__shutter_channel.enable(t - shutter_closetime)
 
 			#turn on beam
@@ -173,6 +174,7 @@ class LaserIntensity():
 				#turn on the aom/eom if we've been told a value.
 				if args or kwargs:
 					self.__intensity_channel.constant(t, *args, **kwargs)
+				#else turn on to whatever was last set.
 			if not overload:
 				self.is_on = True
 
