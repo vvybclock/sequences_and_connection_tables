@@ -3,7 +3,8 @@
 '''
 
 from labscript import start, stop,add_time_marker
-from labscriptlib.ybclock.connection_table import define_connection_table, define_classes
+from labscriptlib.ybclock.connection_functions import define_classes
+from labscriptlib.ybclock.connection_table import define_connection_table
 from labscriptlib.ybclock.classes import *
 
 
