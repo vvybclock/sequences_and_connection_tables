@@ -2,11 +2,13 @@
 	Example usage for classes. This is also a development tool for myself.
 '''
 
-from labscript import start, stop
+from labscript import start, stop,add_time_marker
 from labscriptlib.ybclock.connection_table import define_connection_table
 from labscriptlib.ybclock.classes import *
 
 def define_classes():
+	global blue
+
 	print(f"Constructing green...")
 	green = Laser()
 	print(f"Constructing green.probe...")
@@ -16,8 +18,6 @@ def define_classes():
 
 	blue = BlueLaser()
 
-	print(blue)
-	pass
 
 
 if __name__ == '__main__':
@@ -28,15 +28,19 @@ if __name__ == '__main__':
 	# start() elicits the commencement of the shot
 	start(); t = 0;
 
+	t += 1
+	add_time_marker(t, label='Turn On')
+	blue.mot.intensity.turnon(t, value=3)
 
-	blue.mot.turnon(t)
+	t += 1
 
-	t = 1
+	add_time_marker(t, label='Turn Off')
+	blue.mot.intensity.turnoff(t)
 
-	blue.mot.turnoff(t)
+	blue.mot.intensity.turnoff(t + 0.5)
+	t += 1 
 
-	t = 2 
+	add_time_marker(t, label='Ramp')	
+	blue.mot.intensity.ramp(t=t, duration=0.5, initial=1,final=2,samplerate=1e3)
 
-	blue.mot.constant(t, value=)
-
-	stop(1)
+	stop(t+1)

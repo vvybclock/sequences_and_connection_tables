@@ -54,14 +54,16 @@ class LaserIntensity():
 	__shutter_channel  	= None
 	__turnoff_voltage  	= None
 	__shutter_closetime	= None
+	__rf_switch_channel	= None
 
 	is_on = False
 
-	def __init__(self, intensity_channel=None, shutter_channel=None, turnoff_voltage=None,shutter_closetime=None):
+	def __init__(self, intensity_channel=None, shutter_channel=None, turnoff_voltage=None,shutter_closetime=None,rf_switch_channel=None):
 		self.__intensity_channel	= intensity_channel
-		self.__shutter_channel  	= shutter_channel
 		self.__turnoff_voltage  	= turnoff_voltage
+		self.__shutter_channel  	= shutter_channel
 		self.__shutter_closetime	= shutter_closetime
+		self.__rf_switch_channel	= rf_switch_channel
 
 	def turnoff(self, t,overload=False):
 		'''
@@ -73,7 +75,7 @@ class LaserIntensity():
 				[ ]	Set up RF Switch turn on/off
 
 		'''
-		if is_on or overload:
+		if self.is_on or overload:
 			#turn off aom/eom
 			if self.__turnoff_voltage is None:
 				self.__intensity_channel.constant(t,value=0)
@@ -101,9 +103,9 @@ class LaserIntensity():
 			if not overload:
 				self.is_on = False
 	
-	def turnon(self, t, overload=False):
+	def turnon(self, t, *args, overload=False, **kwargs):
 		'''
-			Turns on beam if and only if off.
+			Turns on beam if and only if off. `*args`, `**kwargs` get passed to the turn on value for the laser.
 
 			## Sequence Turn On Details
 
@@ -111,25 +113,52 @@ class LaserIntensity():
 			ensures that the light profile across the atoms is 1) always uniform and 2)
 			well controlled in the time domain.
 
+			#To Do
+				[] 	Set up AOM/EOM turn on/off
+				[x]	Set up Shutter turn on/off
+				[x]	Set up RF Switch turn on/off
 		'''
-		if (not is_on) or overload:
+		if (not self.is_on) or overload:
 			#turn off beam
+			if self.__rf_switch_channel is not None:
+				#just turn off the rf switch
+				self.__rf_switch_channel.disable(t)
+			else:
+				#turn off the aom/eom
+				if self.__turnoff_voltage is None:
+					self.__intensity_channel.constant(t,value=0)
+				else:
+					self.__intensity_channel.constant(t,value=self.__turnoff_voltage)
+
 			#open shutter if we have a shutter
+			if self.__shutter_channel is not None:
+				if self.__shutter_closetime is None:
+					self.__shutter_channel.enable(t-global_shutter_closetime)
+				else:
+					self.__shutter_channel.enable(t-self.__shutter_closetime)
+
 			#turn on beam
-			pass
+			if self.__rf_switch_channel is not None:
+				#just turn on the rf switch
+				self.__rf_switch_channel.enable(t)
+			else:
+				#turn on the aom/eom if we've been told a value.
+				if args or kwargs:
+					self.__intensity_channel.constant(t, *args, **kwargs)
 			if not overload:
 				self.is_on = True
 
 	def constant(self, t, *args, **kwargs):
-		self.turnon(t)
+		self.turnon(t, *args, **kwargs)
 		self.__intensity_channel.constant(t, *args, **kwargs)
-		pass
 
-	def ramp(self, t):
+	def ramp(self, t, *args, **kwargs):
+		#save args, and kwargs as they get modified after self.turnon(t) call for some reason
+		_args = args
+		_kwargs = kwargs
 		self.turnon(t)
-		self.__intensity_channel.constant(t, *args, **kwargs)
-		pass
-	pass
+		self.__intensity_channel.ramp(t, *_args, **_kwargs)
+
 
 class LaserBeam():
 	""" 
@@ -194,7 +223,7 @@ class BlueLaser(Laser):
 
 		#define the beampaths
 		try:
-			mot = LaserBeam(
+			self.mot = LaserBeam(
 					intensity_control	= LaserIntensity(
 					                 		intensity_channel	= blue_mot_power,
 					                 		shutter_channel  	= blue_mot_shutter
