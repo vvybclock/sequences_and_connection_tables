@@ -42,6 +42,13 @@ class LaserIntensity():
 		this case, you need to manually set is_on = True/False, or set the overload
 		arg to true.
 
+		#To Do
+
+			[ ] turnoff function
+			[ ] turnon function
+			[ ] constant
+			[ ] ramp
+
 	'''
 	__intensity_channel = None
 	__shutter_channel  	= None
@@ -59,6 +66,12 @@ class LaserIntensity():
 	def turnoff(self, t,overload=False):
 		'''
 			Turns off beam if and only if on unless `overload == True` then always turn off.
+
+			#To Do
+				[ ]	Set up AOM/EOM turn on/off
+				[ ]	Set up Shutter turn on/off
+				[ ]	Set up RF Switch turn on/off
+
 		'''
 		if is_on or overload:
 			#turn off aom/eom
@@ -107,13 +120,14 @@ class LaserIntensity():
 			if not overload:
 				self.is_on = True
 
-	def constant(self, t):
+	def constant(self, t, *args, **kwargs):
 		self.turnon(t)
-		self.__intensity_channel.constant(args)
+		self.__intensity_channel.constant(t, *args, **kwargs)
 		pass
 
 	def ramp(self, t):
 		self.turnon(t)
+		self.__intensity_channel.constant(t, *args, **kwargs)
 		pass
 	pass
 

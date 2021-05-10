@@ -26,6 +26,17 @@ if __name__ == '__main__':
 
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
-	start()
+	start(); t = 0;
+
+
+	blue.mot.turnon(t)
+
+	t = 1
+
+	blue.mot.turnoff(t)
+
+	t = 2 
+
+	blue.mot.constant(t, value=)
 
 	stop(1)
