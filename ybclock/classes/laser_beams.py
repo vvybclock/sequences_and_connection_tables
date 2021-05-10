@@ -28,9 +28,18 @@
 	green.probe.turnoff(t)
 	```
 '''
-class LaserFrequency():
-	__frequency_channel = None
+
+class LaserFrequency(AnalogQuantity):
+	'''
+
+		You actually don't need a special class for LaserFrequency. It's just of
+		type AnalogQuantity, so just pass the frequency channel to
+		`LaserBeam(frequency_control)`.
+	
+	'''
 	pass
+
+
 class LaserIntensity():
 	'''
 		
@@ -249,7 +258,8 @@ class BlueLaser(Laser):
 					intensity_control	= LaserIntensity(
 					                 		intensity_channel	= blue_mot_power,
 					                 		shutter_channel  	= blue_mot_shutter
-					                 	)
+					                 	),
+					frequency_control	= None
 				)
 		except Exception as e:
 			print(f"Error creating mot beampath: {e}")
