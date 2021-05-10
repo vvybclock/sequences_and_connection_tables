@@ -104,7 +104,10 @@ def empty_cavity_analysis(data, scan_parameters,path):
 					gamma = best_param["gamma"],
 					kappa = best_param["kappa"]
 				)
-			plt.plot(x,max(n[0])*y) # I need to scale automatically the amplitude of the signal. Just multiply by the size of largest histogram.
+			try:
+				plt.plot(x,best_param["amplitude"]*y)
+			except:
+				plt.plot(x,sum(n[0])*freq_bin_width_MHz*y) # I need to scale automatically the amplitude of the signal. Just multiply by the size of largest histogram.
 		except:
 			print("Failed plotting fit!")
 
@@ -165,3 +168,9 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		)
 	except:
 		pass
+
+#save chi square for each fit
+	run.save_result(
+			name='empty_cavity_fit_quality',
+			value=0
+			)

@@ -124,7 +124,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			try:
 				plt.plot(x,best_param["amplitude"]*y)
 			except:
-				plt.plot(x,2*max(n[0])*y)
+				plt.plot(x,sum(n[0])*histogram_resolution*y)
 		except Exception as e:
 			print(f"Failed plotting fit! {e}")
 

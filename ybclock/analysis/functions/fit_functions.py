@@ -309,13 +309,14 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 		cov = np.sqrt(np.transpose(bs_list)) # Covariance matrix
 		# Get the chi_2
 		#bin the data
+		bin_interval=0.2
 		(hist, bin_edges) = np.histogram(
 		data,
-		bins=np.arange(data[0]-1,data[-1]+1, 0.2)
+		bins=np.arange(data[0]-1,data[-1]+1, bin_interval)
 		)
-		#estimate initial parameters
-		amplitude = sum(hist)
-		bin_centers=bin_edges[:-1]+bin_interval/2;
+		
+		bin_centers=bin_edges[:-1]+bin_interval/2
+		amplitude = sum(hist)*bin_interval
 		y_model = [amplitude*rabi_splitting_transmission(x, fit_result[0], fit_result[1], fit_result[2], fit_result[3], fit_result[4], fit_result[5]) for x in bin_centers]
 		y = hist
 		chi_sq = chi_2(y, y_model)
@@ -327,13 +328,14 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,25), "fcavi
 		best_param = out.x
 		# Get the chi_2
 		#bin the data
+		bin_interval=0.2
 		(hist, bin_edges) = np.histogram(
 		data,
-		bins=np.arange(data[0]-1,data[-1]+1, 0.2)
+		bins=np.arange(data[0]-1,data[-1]+1, bin_interval)
 		)
-		#estimate initial parameters
-		amplitude = sum(hist)
-		bin_centers=bin_edges[:-1]+bin_interval/2;
+		
+		bin_centers=bin_edges[:-1]+bin_interval/2
+		amplitude = sum(hist)*bin_interval
 		y_model = [amplitude*rabi_splitting_transmission(x, best_param[0], best_param[1], best_param[2], best_param[3], best_param[4], best_param[5]) for x in bin_centers]
 		y = hist
 		chi_sq = chi_2(y, y_model)
