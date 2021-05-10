@@ -265,6 +265,42 @@ class BlueLaser(Laser):
 			print(f"Error creating mot beampath: {e}")
 			pass
 
+class GreenLaser(Laser):
+
+	#beampath names go here
+	probe	= None
+	pump 	= None
+	mot  	= None
+	cooling = None
+
+	#define the beampaths
+	try:
+		self.mot = LaserBeam(
+				intensity_control = LaserIntensity(
+						intensity_channel = green_mot_power,
+						rf_switch_channel = green_mot_power_switch,
+						shutter_channel = green_mot_shutter
+					),
+				frequency_control = None,
+			)
+
+		self.probe = LaserBeam(
+				intensity_control = None,
+				frequency_control = None,
+			)
+
+		self.pump = LaserBeam(
+				intensity_control = None,
+				frequency_control = None,
+			)
+
+		self.cooling = LaserBeam(
+				intensity_control = None,
+				frequency_control = None,
+			)
+	except Exception as e:
+		pass
+	pass
 
 if __name__ == '__main__':
 	pass
