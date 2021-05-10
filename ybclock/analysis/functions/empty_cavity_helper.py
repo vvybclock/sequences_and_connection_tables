@@ -37,7 +37,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		#since we have calibrated frequency vs voltage, and performed the scan across frequency
 		#there is a true linear relationship between arrival time and frequency :)
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
-
+		freq_bin_width_MHz = 0.2
 		# Decide if we should use MLE fit or not.
 		if len(photon_arrivals_in_frequency_MHz) > 250:
 			#Fit the Data using the least_square method.
@@ -46,6 +46,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 					data=photon_arrivals_in_frequency_MHz, 
 					bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.001)},
 					#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
+					bin_interval=freq_bin_width_MHz,
 					path=path
 				)
 				print("Empty Cavity Fit Params:")
@@ -81,7 +82,6 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		sequence_name                       	= extract_sequence_name(path)
 		                                    		
 		#plot histogram                     	
-		freq_bin_width_MHz = 0.1
 		n = plt.hist(
 			photon_arrivals_in_frequency_MHz,
 			bins=np.arange(0,50, freq_bin_width_MHz),
@@ -170,7 +170,14 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		pass
 
 #save chi square for each fit
-	run.save_result(
-			name='empty_cavity_fit_quality',
-			value=0
-			)
+	try:
+		chi_2_list=[]
+		for each_scan in results_to_save:
+			chi_2_list.append(best_param["chi_square"])
+
+		run.save_result(
+				name='cavity_scan_fit_chi2',
+				value=chi_2_list
+				)
+	except Exception as e:
+		print("Failed Saving Fit Results in Lyse. Error:", e)

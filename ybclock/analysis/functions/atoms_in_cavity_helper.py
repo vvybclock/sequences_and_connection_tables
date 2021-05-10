@@ -53,7 +53,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		#there is a true linear relationship between a arrival time and frequency :)
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
-
+		histogram_resolution = .2;
 		if len(photon_arrivals_in_frequency_MHz) > 200:
 			#Fit the Data using the least_square method.
 			# Remember to add fatom_guess in globals!
@@ -61,6 +61,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 				best_param = fit_functions.fit_rabi_splitting_transmission(
 					data = photon_arrivals_in_frequency_MHz,
 					bnds={"fatom_range":(23.5-1,23.5+1), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
+					bin_interval=histogram_resolution,
 					path = path
 					)
 				print("Rabi Splitting Fit Params:")
@@ -97,8 +98,6 @@ def atom_cavity_analysis(data, scan_parameters,path):
 
 		#plot histogram	
 		#plot data
-		histogram_resolution = .2;
-
 		n = plt.hist(
 			photon_arrivals_in_frequency_MHz,
 			bins=np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution),
@@ -112,7 +111,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		
 		#plot fit
 		try:
-			x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution/3)
+			x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution)
 			y = fit_functions.rabi_splitting_transmission(
 			                         		f = x,
 			                         		fatom = best_param["fatom"],
@@ -123,10 +122,20 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			                         	)
 			try:
 				plt.plot(x,best_param["amplitude"]*y)
-			except:
+			except Exception as e:
 				plt.plot(x,sum(n[0])*histogram_resolution*y)
+				print("amplitude fit parameter found:", e)
 		except Exception as e:
 			print(f"Failed plotting fit! {e}")
+
+		try:
+			#store all the results in a dictionary
+			parameters = best_param
+			#add all the scan_parameters to the dictionary
+			parameters.update(a_scan)
+			results_to_save.append(parameters)
+		except:
+			pass
 
 
 
@@ -159,4 +168,43 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		value=docstring,
 		group='empty_cavity_helper/fitted_exp_cavity_frequency_parameters'
 	)
-			
+	#save averaged sample of the cavity frequency.
+	try:
+		average_frequency = 0
+		number_of_scans = 0
+		for each_scan in results_to_save:
+			average_frequency += each_scan['fcavity']
+			number_of_scans += 1
+
+		average_frequency = average_frequency / number_of_scans
+		run.save_result(
+			name='exp_cavity_frequency',
+			value=average_frequency
+		)
+	except:
+		pass
+
+#save chi square for each fit
+	try:
+		chi_2_list=[]
+		for each_scan in results_to_save:
+			chi_2_list.append(best_param["chi_square"])
+
+		run.save_result(
+				name='cavity_scan_fit_chi2',
+				value=chi_2_list
+				)
+	except Exception as e:
+		print("Failed Saving Fit Results in Lyse. Error:", e)
+#save chi square for each fit
+	try:
+		Neta_list=[]
+		for each_scan in results_to_save:
+			Neta_list.append(best_param["Neta"])
+
+		run.save_result(
+				name='Neta_fit',
+				value=Neta_list
+				)
+	except Exception as e:
+		print("Failed Saving Fit Results in Lyse. Error:", e)
