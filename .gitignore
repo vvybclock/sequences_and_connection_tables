@@ -2,5 +2,7 @@ __pycache__
 .DS_Store
 common
 example_apparatus
-ybclock/html/
-!ybclock/html/README.md
+
+
+#ignore the documentation which is built as *.html files.
+*.html
