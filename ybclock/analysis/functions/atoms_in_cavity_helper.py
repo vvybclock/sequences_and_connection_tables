@@ -33,7 +33,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		# When we have atoms in the spin down state, the effective empty cavity
 		# frequency is "pushed" up by ~400kHz per 1000 N_downeta, hence the
 		# asymmetric bounds 
-		cavity_range = (empty_cavity_frequency_from_fit - 0.3, empty_cavity_frequency_from_fit + 2.3);
+		cavity_range = (empty_cavity_frequency_from_fit - 0.3, empty_cavity_frequency_from_fit + 4.3);
 	except Exception as e:
 		cavity_range = (0,50);
 		print(f"No empty cavity scan result found. {e}")
@@ -60,7 +60,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission(
 					data = photon_arrivals_in_frequency_MHz,
-					bnds={"fatom_range":(23.5-1,23.5+1), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
+					bnds={"fatom_range":(23.5-.5,23.5+4), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
 					bin_interval=histogram_resolution,
 					path = path
 					)
@@ -74,7 +74,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 					data=photon_arrivals_in_frequency_MHz, 
-					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
+					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,20000)},
 					path=path
 				)
 				print("Rabi Splitting Fit Params:")
@@ -124,7 +124,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 				plt.plot(x,best_param["amplitude"]*y)
 			except Exception as e:
 				plt.plot(x,sum(n[0])*histogram_resolution*y)
-				print("amplitude fit parameter found:", e)
+				print("amplitude fit parameter not found:", e)
 		except Exception as e:
 			print(f"Failed plotting fit! {e}")
 

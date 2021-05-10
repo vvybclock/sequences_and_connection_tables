@@ -44,7 +44,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission(
 					data=photon_arrivals_in_frequency_MHz, 
-					bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.001)},
+					bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.0001)},
 					#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
 					bin_interval=freq_bin_width_MHz,
 					path=path
@@ -53,8 +53,8 @@ def empty_cavity_analysis(data, scan_parameters,path):
 				for key, value in best_param.items():
 					if key not in "jacobian":
 						print(f"{key}: {value}")
-			except:
-				print("Least_square Photon Arrival Time Fit Failed.")
+			except Exception as e:
+				print("Least_square Photon Arrival Time Fit Failed.Error : ", e)
 		else:
 			#Fit the Data using the MLE method.
 			try:
@@ -100,16 +100,18 @@ def empty_cavity_analysis(data, scan_parameters,path):
 					f = x,
 					fatom = best_param["fatom"],
 					fcavity = best_param["fcavity"],
-					Neta = best_param["Neta"],
+					Neta = 0,
 					gamma = best_param["gamma"],
 					kappa = best_param["kappa"]
 				)
+			y=y#/sum(y)*sum(n[0])
 			try:
 				plt.plot(x,best_param["amplitude"]*y)
-			except:
+			except Exception as e:
 				plt.plot(x,sum(n[0])*freq_bin_width_MHz*y) # I need to scale automatically the amplitude of the signal. Just multiply by the size of largest histogram.
-		except:
-			print("Failed plotting fit!")
+				print("Fit Parameters Amplitude not found. Warning :", e)
+		except Exception as e:
+			print("Failed plotting fit! Error :",e)
 
 		try:
 			#store all the results in a dictionary
