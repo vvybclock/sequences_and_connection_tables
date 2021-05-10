@@ -3,24 +3,13 @@
 '''
 
 from labscript import start, stop,add_time_marker
-from labscriptlib.ybclock.connection_table import define_connection_table
+from labscriptlib.ybclock.connection_table import define_connection_table, define_classes
 from labscriptlib.ybclock.classes import *
 
-def define_classes():
-	global blue
-
-	print(f"Constructing green...")
-	green = Laser()
-	print(f"Constructing green.probe...")
-	green.probe = LaserBeam()
-	print(f"Constructing green.pump...")
-	green.pump = LaserBeam()
-
-	blue = BlueLaser()
 
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':	
 	define_connection_table()
 	define_classes()
 

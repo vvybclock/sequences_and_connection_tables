@@ -28,6 +28,7 @@
 	green.probe.turnoff(t)
 	```
 '''
+from labscript.labscript import AnalogQuantity
 
 class LaserFrequency(AnalogQuantity):
 	'''

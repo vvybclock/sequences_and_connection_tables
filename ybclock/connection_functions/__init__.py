@@ -17,4 +17,5 @@
 print("Importing connection functions...", end ='')
 from .define_hardware_cards import *
 from .define_channels import *
+from .define_classes import *
 print("Done!")
