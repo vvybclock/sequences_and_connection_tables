@@ -114,10 +114,25 @@ class LaserIntensity():
 			well controlled in the time domain.
 
 			#To Do
-				[] 	Set up AOM/EOM turn on/off
+				[x]	Set up AOM/EOM turn on/off
 				[x]	Set up Shutter turn on/off
 				[x]	Set up RF Switch turn on/off
 		'''
+
+		#determine shutter close time
+		if self.__shutter_closetime is None:
+			shutter_closetime =	global_shutter_closetime
+		else:
+			shutter_closetime = self.__shutter_closetime
+		#determine aom/eom turnoff voltage
+		if self.__turnoff_voltage is None:
+			turnoff_voltage = 0
+		else:
+			turnoff_voltage = self.__turnoff_voltage
+
+
+
+
 		if (not self.is_on) or overload:
 			#turn off beam
 			if self.__rf_switch_channel is not None:
@@ -125,17 +140,11 @@ class LaserIntensity():
 				self.__rf_switch_channel.disable(t)
 			else:
 				#turn off the aom/eom
-				if self.__turnoff_voltage is None:
-					self.__intensity_channel.constant(t,value=0)
-				else:
-					self.__intensity_channel.constant(t,value=self.__turnoff_voltage)
+				self.__intensity_channel.constant(t,value=turnoff_voltage)
 
 			#open shutter if we have a shutter
 			if self.__shutter_channel is not None:
-				if self.__shutter_closetime is None:
-					self.__shutter_channel.enable(t-global_shutter_closetime)
-				else:
-					self.__shutter_channel.enable(t-self.__shutter_closetime)
+				self.__shutter_channel.enable(t - shutter_closetime)
 
 			#turn on beam
 			if self.__rf_switch_channel is not None:
@@ -149,8 +158,11 @@ class LaserIntensity():
 				self.is_on = True
 
 	def constant(self, t, *args, **kwargs):
-		self.turnon(t, *args, **kwargs)
-		self.__intensity_channel.constant(t, *args, **kwargs)
+		#save args, and kwargs as they get modified after self.turnon(t) call for some reason
+		_args = args
+		_kwargs = kwargs
+		self.turnon(t)
+		self.__intensity_channel.constant(t, *_args, **_kwargs)
 
 	def ramp(self, t, *args, **kwargs):
 		#save args, and kwargs as they get modified after self.turnon(t) call for some reason
