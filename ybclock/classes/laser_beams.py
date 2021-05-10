@@ -275,34 +275,60 @@ class GreenLaser(Laser):
 	mot  	= None
 	cooling = None
 
-	#define the beampaths
-	try:
-		self.mot = LaserBeam(
-				intensity_control = LaserIntensity(
-						intensity_channel = green_mot_power,
-						rf_switch_channel = green_mot_power_switch,
-						shutter_channel = green_mot_shutter
-					),
-				frequency_control = None,
-			)
+	def __init__(self):
+		#define the beampaths
+		try:
+			self.mot = LaserBeam(
+					intensity_control = LaserIntensity(
+							intensity_channel = green_mot_power,
+							rf_switch_channel = green_mot_power_switch,
+							shutter_channel = green_mot_shutter
+						),
+					frequency_control = None,
+				)
 
-		self.probe = LaserBeam(
-				intensity_control = None,
-				frequency_control = None,
-			)
+			self.probe = LaserBeam(
+					intensity_control = None,
+					frequency_control = None,
+				)
 
-		self.pump = LaserBeam(
-				intensity_control = None,
-				frequency_control = None,
-			)
+			self.pump = LaserBeam(
+					intensity_control = None,
+					frequency_control = None,
+				)
 
-		self.cooling = LaserBeam(
-				intensity_control = None,
-				frequency_control = None,
-			)
-	except Exception as e:
+			self.cooling = LaserBeam(
+					intensity_control = None,
+					frequency_control = None,
+				)
+		except Exception as e:
+			pass
 		pass
-	pass
+
+class RedLaser(Laser):
+
+	#beampath names go here
+	cavity    	= None
+	transverse	= None
+
+	def __init__(self):
+		try:
+			self.cavity = LaserBeam(
+					intensity_control = LaserIntensity(
+							intensity_channel = rec_cavity_power,
+							rf_switch_channel = red_cavity_power_switch
+						)
+				)
+
+			self.transverse = LaserBeam(
+					intensity_control = LaserIntensity(
+							intensity_channel = red_transverse_power
+						)
+				)
+		except Exception as e:
+			pass
+
+
 
 if __name__ == '__main__':
 	pass
