@@ -19,6 +19,13 @@ def empty_cavity_analysis(data, scan_parameters,path):
 
 	We do not perform MLE analysis if we detect enough photons in the scan. "Enough photons" means that MLE and least_square provide the same uncertainty on the atom number estimation, see [MLE_vs_leastSquare](https://paper.dropbox.com/doc/Fit-and-measurement-quality--BJneIwnJqNOnEEYUYTkog5qxAg-szpYsBrXGK81Qq4BF6jEF) for details.
 
+	# To Dos
+	[x] Update Lorentzian fit and Empty cavity fit function
+	[x] Use Lorentzian fit in this function. It will save a lot of time
+	[] Implement MLE method with for "simple" Lorentzian fit
+	[] Plot if MLE method is used
+	[] Check and implement link to values defined in Globals if necessary
+
 	'''
 
 	results_to_save = []
@@ -39,19 +46,18 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 		freq_bin_width_MHz = 0.2
 		# Decide if we should use MLE fit or not.
-		if len(photon_arrivals_in_frequency_MHz) > 250:
+		if len(photon_arrivals_in_frequency_MHz) > 50:
 			#Fit the Data using the least_square method.
 			try:
-				best_param = fit_functions.fit_rabi_splitting_transmission(
-					data=photon_arrivals_in_frequency_MHz, 
-					bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.0001)},
-					#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
+				best_param = fit_functions.fit_single_cavity_peak(
+					data=photon_arrivals_in_frequency_MHz,
+					start=np.min(photon_arrivals_in_frequency_MHz),
+					end  =np.max(photon_arrivals_in_frequency_MHz), 
 					bin_interval=freq_bin_width_MHz,
-					path=path
-				)
+					)
 				print("Empty Cavity Fit Params:")
 				for key, value in best_param.items():
-					if key not in "jacobian":
+					if key not in "covariance matrix":
 						print(f"{key}: {value}")
 			except Exception as e:
 				print("Least_square Photon Arrival Time Fit Failed.Error : ", e)
@@ -73,8 +79,6 @@ def empty_cavity_analysis(data, scan_parameters,path):
 
 
 		#Plot
-		#Plot
-		#Plot
 
 		#extract metadata
 		(sequence_number, repetition_number)	= extract_sequence_repetition_numbers(path)
@@ -82,9 +86,10 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		sequence_name                       	= extract_sequence_name(path)
 		                                    		
 		#plot histogram                     	
+		x = np.arange(np.min(photon_arrivals_in_frequency_MHz),np.max(photon_arrivals_in_frequency_MHz), freq_bin_width_MHz)
 		n = plt.hist(
 			photon_arrivals_in_frequency_MHz,
-			bins=np.arange(0,50, freq_bin_width_MHz),
+			bins=x,
 			align='mid'
 		 )
 		
@@ -95,21 +100,14 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		
 		#plot fit
 		try:
-			x = np.arange(0,50, freq_bin_width_MHz)
-			y = fit_functions.rabi_splitting_transmission(
-					f = x,
-					fatom = best_param["fatom"],
-					fcavity = best_param["fcavity"],
-					Neta = 0,
-					gamma = best_param["gamma"],
-					kappa = best_param["kappa"]
+			y = fit_functions.lorentzian(
+					x = x,
+					x0 = best_param["fcavity"],
+					gamma = best_param["kappa"],
+					a = best_param["amplitude"],
+					offset = best_param["dark_counts"],
 				)
-			y=y#/sum(y)*sum(n[0])
-			try:
-				plt.plot(x,best_param["amplitude"]*y)
-			except Exception as e:
-				plt.plot(x,sum(n[0])*freq_bin_width_MHz*y) # I need to scale automatically the amplitude of the signal. Just multiply by the size of largest histogram.
-				print("Fit Parameters Amplitude not found. Warning :", e)
+			plt.plot(x,y)
 		except Exception as e:
 			print("Failed plotting fit! Error :",e)
 

@@ -21,7 +21,7 @@ def residuals_of_lorentzian(params, x_data, y_data):
 	diff = [lorentzian(x, params[0], params[1], params[2], params[3]) - y for x,y in zip(x_data,y_data)]
 	return diff
 
-def fit_single_cavity_peak(data,start,end,bin_interval):
+def fit_single_cavity_peak(data,start,end,bin_interval=0.2):
 	''' Fits a single_cavity_peak using least squares. Assumes unbinned photon
 	arrival times for data.
 
@@ -40,17 +40,22 @@ def fit_single_cavity_peak(data,start,end,bin_interval):
 	locations_greater_than_half_max = np.where(hist > amplitude/2)[0]
 	right_time = bin_edges[locations_greater_than_half_max[-1]]
 	left_time = bin_edges[locations_greater_than_half_max[0]]
-	gamma = (right_time-left_time + bin_interval)/2  #in case the peak is one bin wide.
+	kappa = (right_time-left_time + bin_interval)/2  #in case the peak is one bin wide.
 	offset = 0
 
+	bin_centers = bin_edges[:-1]+bin_interval/2
 	#format the parameters
-	init_guess = [x0, amplitude, gamma, offset]
+	init_guess = [x0, amplitude, kappa, offset]
 
 	#fit
-	(best_guess, cov_best_guess) = leastsq(residuals_of_lorentzian, init_guess, args=(bin_edges[:-1]+bin_interval/2,hist))
+	(best_guess, cov_best_guess) = leastsq(residuals_of_lorentzian, init_guess, args=(bin_centers,hist))
+	y_model = [lorentzian(x, best_guess[0], best_guess[1], best_guess[2], best_guess[3],) for x in bin_centers]
+	y = hist
+	chi_sq = chi_2(y, y_model)
 
 
-	return best_guess, cov_best_guess
+	return {"fcavity" : best_guess[0], "kappa" : best_guess[2], "dark_counts" : best_guess[3],"amplitude": best_guess[1], "covariance matrix":cov_best_guess, "chi_square": chi_sq}
+
 
 def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa, dkcounts = 0):
 	'''

@@ -35,8 +35,8 @@ if __name__ == '__main__':
 
 
 	#s - size
-	plt.scatter(runtimes, fit_quality, s=20, c = colors)
+	plt.scatter(sequence_index, fit_quality, s=20, c = colors)
 
 	plt.title("Empty Fit Quality")
 	plt.ylabel("chi squared")
-	plt.xlabel("Time")
+	plt.xlabel("sequence index")
