@@ -174,9 +174,9 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_ra
 	if Neta_guess > 50:
 		amplitude = sum(hist)/0.6*bin_interval
 		grid_scan=1e9
-		for Neta_grid in np.arange(Neta_guess*0.4, Neta_guess*1.4+1, Neta_guess/20):
+		for Neta_grid in np.arange(Neta_guess*0.4, Neta_guess*1.4+1, Neta_guess/10):
 			for fcav_grid in np.arange(fcavity_guess, fcavity_guess+4, .5):
-				for fatoms_grid in np.arange(fatoms_guess-4, fatoms_guess+4, .5):
+				for fatoms_grid in np.arange(fatoms_guess-2, fatoms_guess+2, .5):
 					try:
 						init_guess_loc = (fatoms_grid,fcav_grid, Neta_grid, gamma_loc, kappa_loc, dark_counts, amplitude)
 						residuals_tot_local=sum(square(residuals_of_rabi_splitting_transmission(init_guess_loc, bin_centers,hist)))/len(bin_centers)
