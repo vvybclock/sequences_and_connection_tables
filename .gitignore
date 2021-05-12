@@ -6,3 +6,6 @@ example_apparatus
 
 #ignore the documentation which is built as *.html files.
 *.html
+
+#ignore mloop_config file
+mloop_config.ini
