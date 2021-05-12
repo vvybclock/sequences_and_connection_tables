@@ -232,7 +232,13 @@ class LaserBeam():
 		#save the controller
 		self.intensity = intensity_control
 		self.frequency = frequency_control
-		pass
+
+	def turnoff(self, *args, **kwargs):
+		'''
+			Calls the turn off method in the intensity controller.
+		'''
+
+		return self.intensity.turnoff(*args,**kwargs)
 
 
 class Laser():
