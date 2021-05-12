@@ -44,15 +44,18 @@ if __name__ == '__main__':
 		print("Error: Could not extract photon_arrival_times.")
 
 
-
 	#check to see if we need to run any sort of cavity analysis
 	for each_key in cavity_scan_parameters.keys():
 		if each_key == 'empty_cavity':
+		#we prioritize empty cavity scans
 			empty_cavity_analysis(
 				data=photon_arrival_times,
 				scan_parameters=cavity_scan_parameters[each_key],
 				path=path
 			)
+
+	for each_key in cavity_scan_parameters.keys():
+		#we analyse all other cavity scan not empty
 		if each_key == 'atoms_in_cavity':
 			atom_cavity_analysis(
 				data=photon_arrival_times,
