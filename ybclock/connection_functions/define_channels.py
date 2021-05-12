@@ -19,7 +19,7 @@ def define_channels():
 
 def undocumented_channels():
 	DigitalOut(
-		name         	= 'blah_blah_switch_for_phase_reference',
+		name         	= 'UNDOCUMENTED_switch_for_phase_reference',
 		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line14'
 	)

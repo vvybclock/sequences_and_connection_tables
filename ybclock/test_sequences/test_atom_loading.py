@@ -1,11 +1,12 @@
 from labscript import start, stop, AnalogOut, DigitalOut
 from labscriptlib.ybclock.connection_table import define_connection_table
 from labscriptlib.ybclock.subsequences import *
-
+from labscriptlib.ybclock.classes import define_classes
 
 if __name__ == '__main__':
 
 	define_connection_table()
+	define_classes()
 	
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
@@ -14,7 +15,7 @@ if __name__ == '__main__':
 
 	ms = 1e-3
 	kHz = 1e3
-	t = 0.1*ms
+	t = 10*ms
 
 
 	#load the atoms

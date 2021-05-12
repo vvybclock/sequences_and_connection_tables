@@ -57,12 +57,8 @@ def blue_mot(t,duration,add_marker=True,take_picture=False):
 	z_bias_field.constant(t, value=2.2)
 
 	#set light power
-	blue_mot_shutter.enable(t)
-	blue_mot_power.constant(t, value=0.28)
-	
-	green_mot_power_switch.enable(t)
-	green_mot_shutter.enable(t)
-	green_mot_power.constant(t, value=0.3) #why?
+	blue.mot.intensity.constant(t, value=0.3)
+	green.mot.intensity.constant(t, value=0.28) #why?
 	#the green light serves as extra doppler cooling.
 
 
@@ -91,9 +87,9 @@ def transfer_blue_mot_to_green_mot(t,duration, samplerate,add_marker=True):
 	'''Ramp down blue light while moving atoms to green MOT position.'''
 	if add_marker: add_time_marker(t, "Transfer Blue MOT", verbose=True)
 	#ramp down blue
-	blue_mot_power.ramp(t, duration, initial=0.28, final=0.05, samplerate=samplerate)
+	blue.mot.intensity.ramp(t, duration, initial=0.28, final=0.05, samplerate=samplerate)
 	#turn off the blue light at end of ramp
-	blue_mot_shutter.disable(t+duration)
+	blue.mot.intensity.turnoff(t+duration, warmup_value=0.28)
 	
 	#move magnetic field zero
 	x_bias_field.ramp(t, duration, initial=-0.608,	final=1.3,  	samplerate=samplerate)
@@ -109,7 +105,7 @@ def cool_atoms_in_green_mot(t,duration,samplerate, add_marker=True):
 	green_frequency_fpga_trigger.enable(t)
 
 	#ramp down green power so we don't blind the camera.
-	green_mot_power.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.135, samplerate=samplerate)
+	green.mot.intensity.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.135, samplerate=samplerate)
 
 	return duration
 

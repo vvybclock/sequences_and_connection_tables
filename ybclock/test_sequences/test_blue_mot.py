@@ -1,11 +1,12 @@
 from labscript import start, stop, AnalogOut, DigitalOut
 from labscriptlib.ybclock.connection_table import define_connection_table
+from labscriptlib.ybclock.classes import *
 from labscriptlib.ybclock.subsequences import *
-
 
 if __name__ == '__main__':
 
 	define_connection_table()
+	define_classes()
 	
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
