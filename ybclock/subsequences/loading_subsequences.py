@@ -57,12 +57,8 @@ def blue_mot(t,duration,add_marker=True,take_picture=False):
 	z_bias_field.constant(t, value=2.2)
 
 	#set light power
-	blue_mot_shutter.enable(t)
-	blue_mot_power.constant(t, value=0.28)
-	
-	green_mot_power_switch.enable(t)
-	green_mot_shutter.enable(t)
-	green_mot_power.constant(t, value=0.3) #why?
+	blue.mot.intensity.constant(t, value=0.3)
+	green.mot.intensity.constant(t, value=0.28) #why?
 	#the green light serves as extra doppler cooling.
 
 
