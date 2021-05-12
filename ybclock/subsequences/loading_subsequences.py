@@ -87,9 +87,9 @@ def transfer_blue_mot_to_green_mot(t,duration, samplerate,add_marker=True):
 	'''Ramp down blue light while moving atoms to green MOT position.'''
 	if add_marker: add_time_marker(t, "Transfer Blue MOT", verbose=True)
 	#ramp down blue
-	blue_mot_power.ramp(t, duration, initial=0.28, final=0.05, samplerate=samplerate)
+	blue.mot.intensity.ramp(t, duration, initial=0.28, final=0.05, samplerate=samplerate)
 	#turn off the blue light at end of ramp
-	blue_mot_shutter.disable(t+duration)
+	blue.mot.intensity.turnoff(t+duration)
 	
 	#move magnetic field zero
 	x_bias_field.ramp(t, duration, initial=-0.608,	final=1.3,  	samplerate=samplerate)
