@@ -130,7 +130,7 @@ def load_from_oven_to_optical_lattice(t, add_marker=True, take_picture=True):
 
 	t0 = t
 	#load the atoms
-	t += blue_mot(t,                         	duration= 100*ms, take_picture=take_picture)
+	t += blue_mot(t,                         	duration= blue_mot_duration, take_picture=take_picture)
 	t += transfer_blue_mot_to_green_mot(t,   	duration= 40*ms, 	samplerate=1*kHz)
 	t += cool_atoms_in_green_mot(t,          	duration= 180*ms,	samplerate=1*kHz)
 	t += position_atoms_to_optical_lattice(t,	duration= 40*ms, 	samplerate=1*kHz)

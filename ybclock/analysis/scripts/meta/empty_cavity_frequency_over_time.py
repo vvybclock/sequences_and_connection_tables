@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
 
 	#s - size
-	plt.scatter(runtimes, frequencies, s=1, c = colors)
+	plt.scatter(runtimes, frequencies, s=4, c = colors)
 
 	plt.title("Empty Cavity Frequency")
 	plt.ylabel("Frequency (MHz)")
