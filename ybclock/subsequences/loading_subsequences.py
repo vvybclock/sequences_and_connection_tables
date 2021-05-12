@@ -105,7 +105,7 @@ def cool_atoms_in_green_mot(t,duration,samplerate, add_marker=True):
 	green_frequency_fpga_trigger.enable(t)
 
 	#ramp down green power so we don't blind the camera.
-	green_mot_power.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.135, samplerate=samplerate)
+	green.mot.intensity.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.135, samplerate=samplerate)
 
 	return duration
 
