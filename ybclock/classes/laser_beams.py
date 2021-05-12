@@ -40,7 +40,6 @@ class LaserFrequency(AnalogQuantity):
 	'''
 	pass
 
-
 class LaserIntensity():
 	'''
 		
@@ -204,7 +203,6 @@ class LaserIntensity():
 		self.turnon(t)
 		self.__intensity_channel.ramp(t, *_args, **_kwargs)
 
-
 class LaserBeam():
 	""" 
 
@@ -240,7 +238,6 @@ class LaserBeam():
 
 		return self.intensity.turnoff(*args,**kwargs)
 
-
 class Laser():
 	'''
 		This keeps track of the various laser beampaths that a single laser can be the source of. This is good for grouping our beampaths symantically.
@@ -257,6 +254,8 @@ class Laser():
 		```
 	'''
 	pass
+
+#Specific Lasers:
 
 class BlueLaser(Laser):
 
