@@ -34,12 +34,25 @@ if __name__ == '__main__':
 		crimson = (185/256, 14/256, 10/256)
 		colors = [cerulean if seq%2 == 0 else crimson for seq in sequence_index]
 
+		#Calculate and print Good Fit Ratio
+		good_chi_for_fit = [0.5,10]
+
+		is_good_fit = []
+		for set_of_fits in fit_quality:
+			for fit in set_of_fits:
+				is_good_fit.append(
+						(fit > good_chi_for_fit[0]) and (fit < good_chi_for_fit[1])
+					)
+
+		good_fit_ratio = sum(is_good_fit)/len(is_good_fit)
 
 		#s - size
 		plt.scatter(runtimes, fit_quality, s=20, c = colors)
 
-		plt.title("Rabi Splitting Fit Quality")
+		plt.title("Rabi Splitting Fit Quality\n" + f"Good Fit Ratio: {100*good_fit_ratio:.1f}%")
 		plt.ylabel("chi squared")
 		plt.xlabel("Time")
+
+
 	except Exception as e:
 		print(f"Rabi Splitting: {e}")
