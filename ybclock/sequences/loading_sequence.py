@@ -5,7 +5,7 @@
 from labscript import start, stop, AnalogOut, DigitalOut,add_time_marker
 from labscriptlib.ybclock.connection_table import define_connection_table
 from labscriptlib.ybclock.subsequences import *
-
+from labscriptlib.ybclock.classes import define_classes
 
 if __name__ == '__main__':
 
@@ -13,6 +13,7 @@ if __name__ == '__main__':
 	kHz = 1e3
 
 	define_connection_table()
+	define_classes()
 	exp_cavity = ExperimentalCavity()
 	HP8648Cfor759.constant(bridging_frequency_759)
 
@@ -43,8 +44,7 @@ if __name__ == '__main__':
 	
 
 	#perform an empty cavity scan
-	blue_mot_shutter.enable(t)
-	blue_mot_power.constant(t, value=0.28)
+	blue.mot.intensity.constant(t, value=0.28)
 	t += 20*ms
 	t += exp_cavity.scan(t, label='empty_cavity')
 
