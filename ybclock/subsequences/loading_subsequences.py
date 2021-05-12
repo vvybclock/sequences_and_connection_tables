@@ -117,6 +117,7 @@ def position_atoms_to_optical_lattice(t, duration,samplerate, add_marker=True):
 	z_bias_field.ramp(t, duration, initial=0,    	final=-0.795,	samplerate=samplerate)
 
 	return duration
+	
 def hold_atoms(t, duration,add_marker=True):
 	if add_marker: add_time_marker(t, "Hold Green MOT", verbose=True)
 	return duration
