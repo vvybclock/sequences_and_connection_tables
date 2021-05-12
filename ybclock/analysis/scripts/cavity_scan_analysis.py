@@ -21,6 +21,7 @@ import labscriptlib.ybclock.analysis.functions.fit_functions as fit_functions
 from labscriptlib.ybclock.analysis.functions.empty_cavity_helper import empty_cavity_analysis
 from labscriptlib.ybclock.analysis.functions.atoms_in_cavity_helper import atom_cavity_analysis
 import pickle
+import time
 
 
 if __name__ == '__main__':
@@ -60,6 +61,8 @@ if __name__ == '__main__':
 	for each_key in cavity_scan_parameters.keys():
 		#we analyse all other cavity scan not empty
 		if each_key == 'atoms_in_cavity':
+			#monitor the process time
+			t0 = time.time()
 			try:
 				atom_cavity_analysis(
 					data=photon_arrival_times,
@@ -68,3 +71,6 @@ if __name__ == '__main__':
 				)
 			except Exception as e:
 				print(f"Cavity Scan Type {each_key} Error: {e}")
+			t = time.time()-t0
+			print(f"Time used for atom_cavity_analysis: {t} sec")
+

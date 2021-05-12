@@ -33,7 +33,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		# When we have atoms in the spin down state, the effective empty cavity
 		# frequency is "pushed" up by ~400kHz per 1000 N_downeta, hence the
 		# asymmetric bounds 
-		cavity_range = (empty_cavity_frequency_from_fit - 0.3, empty_cavity_frequency_from_fit + 4.3);
+		cavity_range = (empty_cavity_frequency_from_fit - 1, empty_cavity_frequency_from_fit + 1);
 	except Exception as e:
 		cavity_range = (0,50);
 		print(f"No empty cavity scan result found. {e}")
@@ -60,7 +60,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission(
 					data = photon_arrivals_in_frequency_MHz,
-					bnds={"fatom_range":(23.5-.5,23.5+4), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
+					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,10000)},
 					bin_interval=histogram_resolution,
 					path = path
 					)

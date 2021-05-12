@@ -162,8 +162,8 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_ra
 			fcavity_guess = np.mean(fcavity_range)
 	except:
 		pass
-
-	fatoms_guess  =	fcavity_guess
+	print("Initial Neta_guess : ",Neta_guess)
+	fatoms_guess =	fcavity_guess
 	try:
 		if fatoms_guess < fatom_range[0] or fatoms_guess > fatom_range[1]:
 			fatoms_guess = np.mean(fatom_range)
@@ -186,6 +186,7 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_ra
 						init_guess_loc = (fatoms_grid,fcav_grid, Neta_grid, gamma_loc, kappa_loc, dark_counts, amplitude)
 						residuals_tot_local=sum(square(residuals_of_rabi_splitting_transmission(init_guess_loc, bin_centers,hist)))/len(bin_centers)
 						if grid_scan>residuals_tot_local:
+							print("Temporary Min of residuals:", residuals_tot_local)
 							grid_scan = residuals_tot_local
 							init_guess = init_guess_loc
 					except Exception as e:
@@ -214,6 +215,7 @@ def fit_rabi_splitting_transmission(data,bnds={"fatom_range":(0,50), "fcavity_ra
 		bounds =bnds_list
 		)
 	best_param=out.x
+	#best_param=init_guess
 	jac_best_guess=out.jac
 	#jac_best_guess=1
 	y_model = [best_param[6]*rabi_splitting_transmission(x, best_param[0], best_param[1], best_param[2], best_param[3], best_param[4], best_param[5]) for x in bin_centers]
