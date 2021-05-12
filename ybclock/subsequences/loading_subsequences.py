@@ -89,7 +89,7 @@ def transfer_blue_mot_to_green_mot(t,duration, samplerate,add_marker=True):
 	#ramp down blue
 	blue.mot.intensity.ramp(t, duration, initial=0.28, final=0.05, samplerate=samplerate)
 	#turn off the blue light at end of ramp
-	blue.mot.intensity.turnoff(t+duration)
+	blue.mot.intensity.turnoff(t+duration, warmup_value=0.28)
 	
 	#move magnetic field zero
 	x_bias_field.ramp(t, duration, initial=-0.608,	final=1.3,  	samplerate=samplerate)
