@@ -6,8 +6,8 @@ ii) to test the loading efficiency, the output can be used to optimize loading
 
  # To Do 
  	[x] make atoms_in_cavity_helper.py write the Neta 1 value per scan number of fit in lyse parameters
- 	[] read lyse parameters here
- 	[] drop Neta based on bad chi^2 
+ 	[x] read lyse parameters here
+ 	[x] drop Neta based on bad chi^2 
  	[] multiple scan number and different color for different scan number in the sequence
  	[] statistics (hist plot, for example) of Neta results
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 					data_sel_for_fit.append(data_set)
 		data_sel_for_fit = np.transpose(data_sel_for_fit)
 
-
+		print(True+True)
 		#s - size
 		plt.scatter(runtimes, Neta_1_list, s=20, c = red)
 
