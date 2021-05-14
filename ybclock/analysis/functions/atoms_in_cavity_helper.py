@@ -77,7 +77,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 				print("least square Photon Arrival Time Fit Failed. Because: ", e)
 		else:
 			try:
-				best_param = fit_functions.test_fit_rabi_splitting_transmission_MLE(
+				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
 					data=photon_arrivals_in_frequency_MHz, 
 					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,20000)},
 					bin_interval=histogram_resolution,

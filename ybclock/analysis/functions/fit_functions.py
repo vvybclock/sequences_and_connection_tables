@@ -251,8 +251,7 @@ def logLikelihood_rabi_splitting_transmission(params, data,):
 	return sum(LL_perpoint)/len(data)
 
 def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,20000)}, param_error = 'off', bs_repetition = 25, path=None, bin_interval=0.2):
-
-		'''
+	'''
 	Fits the Rabi Splitting in a scan experiment with Maximum Likelihood Estimator (MLE). Returns the Neta.
 	
 	output = fit_rabi_splitting_transmission_MLE(data,bnds,param_error,bs_repetition)
