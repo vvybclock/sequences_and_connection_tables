@@ -57,9 +57,9 @@ if __name__ == '__main__':
 		# 			Neta_sel.append(Neta_list[i][j])
 		# 			runtimes_sel.append(runtimes[i])
 
-		blue = (0,0,1)
+		blue = [(0,0,1)]
 		#s - size
-		plt.scatter(runtimes_sel, Neta_sel, s=20, c = blue)
+		plt.scatter(runtimes, Neta_1, s=20, c = blue)
 
 		plt.title("Fitted Neta" )
 		plt.ylabel("Neta")
