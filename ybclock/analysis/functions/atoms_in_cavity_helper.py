@@ -21,6 +21,10 @@ def atom_cavity_analysis(data, scan_parameters,path):
 
 	The save parameters are stored in "results/empty_cavity_helper/fitted_exp_cavity_frequency_parameters"
 
+	## To Dos
+
+	[] find out for which combination of histogram_resolution and photon number the least_square method becomes significantly faster than MLE without losses in parameter estimations.
+
 	'''
 
 	results_to_save = []
@@ -55,8 +59,8 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
 		histogram_resolution = .2;
-		if len(photon_arrivals_in_frequency_MHz) > 2000:
-			#Fit the Data using the least_square method.
+		if len(photon_arrivals_in_frequency_MHz) > 4000:
+			#Fit the Data using the least_square method. We should find out after which photon_number the least_suare approach is significantly faster than MLE (for n~400 MLE is extra-ordinarely faster)
 			# Remember to add fatom_guess in globals!
 			try:
 				best_param = fit_functions.fit_rabi_splitting_transmission(
@@ -76,6 +80,8 @@ def atom_cavity_analysis(data, scan_parameters,path):
 				best_param = fit_functions.test_fit_rabi_splitting_transmission_MLE(
 					data=photon_arrivals_in_frequency_MHz, 
 					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,20000)},
+					bin_interval=histogram_resolution,
+					param_error = 'off',
 					path=path
 				)
 				print("Rabi Splitting Fit Params:")
@@ -168,21 +174,6 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		value=docstring,
 		group='empty_cavity_helper/fitted_exp_cavity_frequency_parameters'
 	)
-	#save averaged sample of the cavity frequency.
-	try:
-		average_frequency = 0
-		number_of_scans = 0
-		for each_scan in results_to_save:
-			average_frequency += each_scan['fcavity']
-			number_of_scans += 1
-
-		average_frequency = average_frequency / number_of_scans
-		run.save_result(
-			name='exp_cavity_frequency',
-			value=average_frequency
-		)
-	except:
-		pass
 
 	#save Neta for each fit in a list
 	run.save_results_dict(results_to_save[0])

@@ -39,7 +39,7 @@ if __name__ == '__main__':
 		red = [(1,0,0)]
 
 		#Calculate and print Good Fit Ratio
-		good_chi_for_fit = [0.4,10]
+		good_chi_for_fit = [0.4,25]
 
 		is_good_fit = []
 		for fit in fit_1_quality:
