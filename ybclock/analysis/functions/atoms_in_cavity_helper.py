@@ -55,7 +55,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 
 		histogram_resolution = .2;
-		if len(photon_arrivals_in_frequency_MHz) > 200:
+		if len(photon_arrivals_in_frequency_MHz) > 2000:
 			#Fit the Data using the least_square method.
 			# Remember to add fatom_guess in globals!
 			try:
@@ -73,7 +73,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 				print("least square Photon Arrival Time Fit Failed. Because: ", e)
 		else:
 			try:
-				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
+				best_param = fit_functions.test_fit_rabi_splitting_transmission_MLE(
 					data=photon_arrivals_in_frequency_MHz, 
 					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,20000)},
 					path=path
@@ -124,7 +124,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 			try:
 				plt.plot(x,best_param["amplitude"]*y)
 			except Exception as e:
-				plt.plot(x,sum(n[0])*histogram_resolution*y)
+				plt.plot(x,1/0.6*sum(n[0])*histogram_resolution*y)
 				print("amplitude fit parameter not found:", e)
 		except Exception as e:
 			print(f"Failed plotting fit! {e}")
@@ -195,6 +195,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 				newname = name+"_"+str(scan_number+1)
 				results_to_save_dic[newname]=value
 		# save data from the complete dictionary.
+		print(results_to_save_dic)
 		run.save_results_dict(results_to_save_dic)
 	except Exception as e:
 		print("Failed Saving Fit Results in Lyse. Error:", e)
