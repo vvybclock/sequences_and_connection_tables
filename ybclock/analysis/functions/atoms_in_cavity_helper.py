@@ -184,18 +184,6 @@ def atom_cavity_analysis(data, scan_parameters,path):
 	except:
 		pass
 
-#save chi square for each fit
-	try:
-		chi_2_list=[]
-		for each_scan in results_to_save:
-			chi_2_list.append(best_param["chi_square"])
-
-		run.save_result(
-				name='cavity_scan_fit_chi2',
-				value=chi_2_list
-				)
-	except Exception as e:
-		print("Failed Saving Fit Results in Lyse. Error:", e)
 	#save Neta for each fit in a list
 	run.save_results_dict(results_to_save[0])
 	# save all fit results
@@ -208,15 +196,5 @@ def atom_cavity_analysis(data, scan_parameters,path):
 				results_to_save_dic[newname]=value
 		# save data from the complete dictionary.
 		run.save_results_dict(results_to_save_dic)
-	# try:
-	# 	Neta_list=[]
-	# 	for scan_number in range(len(results_to_save)):
-	# 		name = 'Neta_scan_'+str(scan_number+1)
-	# 		Neta_list.append(name)
-	# 		Neta_list.append(results_to_save[scan_number]["Neta"])
-	# 	run.save_results(
-	# 		Neta_list
-	# 		)
-	# 	print("Neta list",Neta_list)
 	except Exception as e:
 		print("Failed Saving Fit Results in Lyse. Error:", e)
