@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
 		runtimes = list(dataframe['run time'])
 		paths = list(dataframe['filepath'])
-		fit_quality = list(dataframe['atoms_in_cavity_helper','cavity_scan_fit_chi2'])
+		fit_quality = list(dataframe['atoms_in_cavity_helper','chi_square_1'])
 		#this is what we call the run number. we'll use it to change the color, so we can tell when we changed the sequence.
 		sequence_index = list(dataframe['sequence_index'])
 
@@ -38,11 +38,10 @@ if __name__ == '__main__':
 		good_chi_for_fit = [0.5,10]
 
 		is_good_fit = []
-		for set_of_fits in fit_quality:
-			for fit in set_of_fits:
-				is_good_fit.append(
-						(fit > good_chi_for_fit[0]) and (fit < good_chi_for_fit[1])
-					)
+		for fit in fit_quality:
+			is_good_fit.append(
+					(fit > good_chi_for_fit[0]) and (fit < good_chi_for_fit[1])
+				)
 
 		good_fit_ratio = sum(is_good_fit)/len(is_good_fit)
 
