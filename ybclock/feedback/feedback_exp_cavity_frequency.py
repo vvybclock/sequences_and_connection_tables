@@ -52,8 +52,8 @@ try:
 	remote.set_globals(retrieved_globals)
 
 	#engage the next shot.
-	# print("Engaging Next Shot...", end='')
-	# remote.engage()
+	print("Engaging Next Shot...", end='')
+	remote.engage()
 	print("Done!")
 
 	#repack the globals
