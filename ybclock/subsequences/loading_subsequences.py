@@ -46,6 +46,7 @@ def blue_mot(t,duration,add_marker=True,take_picture=False):
 	if add_marker: add_time_marker(t, "Turn On Blue MOT", verbose=True)
 	#turn off extra light sources that can interrupt loading
 	cooling_pi_power_switch.disable(t)
+	cooling_pi_shutter.disable(t)
 
 	#set voltage limit on mot
 	mot_coil_voltage.constant(t,value=8.5)
@@ -117,7 +118,10 @@ def position_atoms_to_optical_lattice(t, duration,samplerate, add_marker=True):
 	z_bias_field.ramp(t, duration, initial=0,    	final=-0.795,	samplerate=samplerate)
 
 	return duration
-	
+
+def optimize_position_atoms_to_optical_lattice(t, duration,samplerate, add_marker=True):
+	pass
+
 def hold_atoms(t, duration,add_marker=True):
 	if add_marker: add_time_marker(t, "Hold Green MOT", verbose=True)
 	return duration
