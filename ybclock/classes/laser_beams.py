@@ -299,12 +299,15 @@ class GreenLaser(Laser):
 				frequency_control = None,
 			)
 
-		self.probe = LaserBeam(
-				intensity_control = None,
+		self.pump = LaserBeam(
+				intensity_control = LaserIntensity(
+						intensity_channel = pump_power,
+						rf_switch_channel = pump_power_switch
+					),
 				frequency_control = None,
 			)
 
-		self.pump = LaserBeam(
+		self.probe = LaserBeam(
 				intensity_control = None,
 				frequency_control = None,
 			)
