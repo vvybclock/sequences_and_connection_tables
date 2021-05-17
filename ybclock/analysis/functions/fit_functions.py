@@ -352,9 +352,9 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavi
 
 	if Neta_guess > 50:
 		grid_scan=0
-		for Neta_grid in np.arange(Neta_guess*0.4, Neta_guess*1.4+1, Neta_guess/10):
-			for fcav_grid in np.arange(fcavity_guess, fcavity_guess+4, .5):
-				for fatoms_grid in np.arange(fatoms_guess-2, fatoms_guess+2, .5):
+		for Neta_grid in np.arange(Neta_guess*0.4, Neta_guess*1.4+1, Neta_guess/5):
+			for fcav_grid in np.arange(fcavity_guess, fcavity_guess+4.5, .75):
+				for fatoms_grid in np.arange(fatoms_guess-2.25, fatoms_guess+2.25, .75):
 					try:
 						init_guess_loc = (fatoms_grid,fcav_grid, Neta_grid, gamma_loc, kappa_loc, dark_counts)
 						LL_tot_loc=logLikelihood_rabi_splitting_transmission(init_guess_loc, data)
@@ -365,7 +365,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavi
 					except Exception as e:
 						init_guess = (fatoms_guess, fcavity_guess, Neta_guess, gamma_loc, kappa_loc, dark_counts)
 						print("----- Fucked up getting init_guess from grid. Error :",e)
-		bnds_list = ((init_guess[0]-.5, init_guess[0]+.5), (init_guess[1]-.5,init_guess[1]+.5), (init_guess[2]*(1-1/5),init_guess[2]*(1+1/5)), (gamma_loc-0.004,gamma_loc+0.004),( kappa_loc-0.1, kappa_loc+0.15), (0, 0.0001*dark_counts))
+		bnds_list = ((init_guess[0]-.75, init_guess[0]+.75), (init_guess[1]-.75,init_guess[1]+.75), (init_guess[2]*(1-1/5),init_guess[2]*(1+1/5)), (gamma_loc-0.004,gamma_loc+0.004),( kappa_loc-0.1, kappa_loc+0.15), (0, 0.0001*dark_counts))
 	else:
 		init_guess = (fatoms_guess, fcavity_guess, Neta_guess, gamma_loc, kappa_loc, dark_counts)
 		bnds_list = (fatom_range, fcavity_range, Neta_range, (gamma_loc-0.004,gamma_loc+0.004),( kappa_loc-0.1, kappa_loc+0.15), (0, 0.0001*dark_counts))
