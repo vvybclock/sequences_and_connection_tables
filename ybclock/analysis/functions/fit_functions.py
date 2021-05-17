@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from scipy.optimize import minimize, least_squares, differential_evolution, leastsq
 import random
 from lyse import Run
@@ -13,10 +14,10 @@ def lorentzian(x, x0, a, gamma, offset):
 	x    	= position,
 	x0   	= peak center,
 	a    	= amplitude of peak,
-	gamma	= Half width half max
+	gamma	= Half width half max, it should be positive!
 
 	'''
-	return a*gamma**2/(gamma**2 + (x-x0)**2) + offset
+	return a/math.pi*abs(gamma)/(gamma**2 + (x-x0)**2) + abs(offset)
 
 def residuals_of_lorentzian(params, x_data, y_data):
 	''' Calculates the residuals of the fit.'''
@@ -57,7 +58,6 @@ def fit_single_cavity_peak(data,start,end,bin_interval=0.2):
 
 
 	return {"fcavity" : best_guess[0], "kappa" : best_guess[2], "dark_counts" : best_guess[3],"amplitude": best_guess[1], "covariance matrix":cov_best_guess, "chi_square": chi_sq}
-
 
 def rabi_splitting_transmission(f, fatom, fcavity, Neta, gamma, kappa, dkcounts = 0):
 	'''
@@ -238,17 +238,84 @@ def logLikelihood_rabi_splitting_transmission(params, data,):
 	'''
 	rabi_splitting_transmission_Integral = 0.59 # for Neta>>1 the Rabi splitting integral formula converges to this value
 
-	#loglikelihood=0
-	#for i in data:
-	#	loglikelihood += np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],params[3],params[4],params[5]))
-
-	#return -loglikelihood/len(data) # loglikelihood normalized to the atom number
-
 	i = data
 
 	LL_perpoint = - np.log(rabi_splitting_transmission(i,params[0],params[1],params[2],params[3],params[4],params[5]))
 	
 	return sum(LL_perpoint)/len(data)
+
+def logLikelihood_empty_cavity_transmission(params, data,):
+	'''
+	calculates the -loglikelihood of a set of data as a function of the other parameters. 
+	Minus LL because we maximze the LL using minimize().
+
+	data  			= list of frequencies of detected photons. They are obtained from photons arrival times.
+	params		= (fcavity, kappa, dkcounts (offset))
+
+	## To Dos
+
+	[] consider correctly darkcounts
+	
+	'''
+	i = data
+	LL_perpoint = -np.log(lorentzian(i, params[0],1, params[1], 0))
+	#LL_perpoint = np.log(lorentzian(data, params[0], 1, params[1], params[2]))
+	
+	return sum(LL_perpoint)/len(data)
+
+
+def fit_single_cavity_peak_MLE(data, path=None,bin_interval=0.2):
+	''' Fits a single_cavity_peak using MLE. Assumes unbinned photon
+	arrival times for data.
+
+	## To Do
+
+	[] Implement method to extract covariance matrix / parameters error
+	'''
+
+	try:
+		run = Run(path)
+		data_globals = run.get_globals() # path should be called inside the function.
+		print("Globals imported successfully during MLE Fit") 
+	except:
+		print("Failed Importing Globals during MLE fit ")
+
+	# define some fixed value. 
+	# Try to get values from globals. If globals is missing, it will use some preset value.
+	try:
+		kappa_loc = data_globals['exp_cavity_kappa']*0.001 # 0.001 becasue in globals this is specified in kHz
+	except Exception as e:
+		kappa_loc = 0.530
+		print("Failed getting kappa from globals. kappa_loc =", kappa_loc,"\n Error : ",e)
+
+	#remove data from wings very far away. This photons are either dark counts or carry very low Fisher information.
+	data =  data[round(len(data)*0.05) : round(len(data)*0.95)]
+
+	#estimate initial parameters
+	fcavity = np.median(data)
+	offset = 0
+
+	#format the parameters
+	init_guess = [fcavity, kappa_loc/2, offset]
+
+	#fit
+	out = minimize(logLikelihood_empty_cavity_transmission, init_guess, args=data)
+	
+	best_guess = out.x
+
+	(hist, bin_edges) = np.histogram(
+				data,
+				bins=np.arange(data[0]-1,data[-1]+1, bin_interval)
+			)
+	bin_centers=bin_edges[:-1]+bin_interval/2
+
+	amp_guess = sum(hist)*bin_interval
+	y_model = [lorentzian(x, best_guess[0], amp_guess, best_guess[1], best_guess[2],) for x in bin_centers]
+	y = hist
+	chi_sq = chi_2(y, y_model)
+
+
+	return {"fcavity" : init_guess[0], "kappa" : init_guess[1], "dark_counts" : init_guess[2],"amplitude": amp_guess, "chi_square": chi_sq, "number_of_detected_photons" : len(data)}
 
 def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,20000)}, param_error = 'off', bs_repetition = 25, path=None, bin_interval=0.2):
 	'''
@@ -269,7 +336,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavi
 
 	frequency unit: MHz
 
-	We first scna a coars grid of params to get nice initial condition for maximizing the LogLikelihood function.
+	We first scan a coars grid of params to get nice initial condition for maximizing the LogLikelihood function.
 	
 	## Why we used bootstrapping method 
 	
@@ -397,7 +464,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavi
 
 		chi_sq = chi_2(y, y_model)
 
-		best_param = {"fatom" : best_param[0], "fcavity" : best_param[1], "Neta": best_param[2],  "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5], 'amplitude':amp_guess,'covariance' : cov,"chi_square" : chi_sq} # gamma and kappa are not fit parameters!
+		best_param = {"fatom" : best_param[0], "fcavity" : best_param[1], "Neta": best_param[2],  "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5], 'amplitude':amp_guess,'covariance' : cov,"chi_square" : chi_sq, "number_of_detected_photons" : len(data)} # gamma and kappa are not fit parameters!
 		return best_param
 
 	elif param_error == 'off':
@@ -406,7 +473,6 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavi
 
 		# Get the chi_2
 		#bin the data
-		#bin_interval=0.2
 		(hist, bin_edges) = np.histogram(
 			data,
 			bins=np.arange(data[0]-1,data[-1]+1, bin_interval)
@@ -420,7 +486,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavi
 
 		chi_sq = chi_2(y, y_model)
 
-		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5],"amplitude" : amp_guess, "chi_square" : chi_sq}
+		return {"fatom": best_param[0], "fcavity" : best_param[1], "Neta": best_param[2], "gamma" : best_param[3], "kappa" : best_param[4], "dark_counts" : best_param[5],"amplitude" : amp_guess, "chi_square" : chi_sq, "number_of_detected_photons" : len(data)}
 	else :
 		return('incorrect param_error specification')
 

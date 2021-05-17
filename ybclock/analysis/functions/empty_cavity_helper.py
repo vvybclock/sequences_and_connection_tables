@@ -46,7 +46,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
 		freq_bin_width_MHz = 0.2
 		# Decide if we should use MLE fit or not.
-		if len(photon_arrivals_in_frequency_MHz) > 50:
+		if len(photon_arrivals_in_frequency_MHz) > 4000:
 			#Fit the Data using the least_square method.
 			try:
 				best_param = fit_functions.fit_single_cavity_peak(
@@ -64,18 +64,18 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		else:
 			#Fit the Data using the MLE method.
 			try:
-				best_param = fit_functions.fit_rabi_splitting_transmission_MLE(
-					data=photon_arrivals_in_frequency_MHz, 
-					bnds={"fatom_range":(0,50), "fcavity_range":(0,50), "Neta_range":(0,0.001)},
+				best_param = fit_functions.fit_single_cavity_peak_MLE(
+					data=photon_arrivals_in_frequency_MHz,
 					#Each lower bound must be strictly less than each upper bound. Use fatom_range == fcavity_range to avoid any possible error.
-					path=path
+					path=path,
+					bin_interval=freq_bin_width_MHz,
 				)
 				print("Empty Cavity Fit Params:")
 				for key, value in best_param.items():
 					if key not in 'covariance':
 						print(f"{key}: {value}")
-			except:
-				print("MLE Photon Arrival Time Fit Failed.")
+			except Exception as e:
+				print("MLE Photon Arrival Time Fit Failed! Error : ",e)
 
 
 		#Plot
@@ -169,15 +169,18 @@ def empty_cavity_analysis(data, scan_parameters,path):
 	except:
 		pass
 
-#save chi square for each fit
+	#save Neta for each fit in a list
+	run.save_results_dict(results_to_save[0])
+	# save all fit results
 	try:
-		chi_2_list=[]
-		for each_scan in results_to_save:
-			chi_2_list.append(best_param["chi_square"])
-
-		run.save_result(
-				name='cavity_scan_fit_chi2',
-				value=chi_2_list
-				)
+		# create a single dictionary containing all the fitted data from all scans.
+		results_to_save_dic = {}
+		for scan_number in range(len(results_to_save)):
+			for name, value in results_to_save[scan_number].items():
+				newname = name+"_"+str(scan_number+1)
+				results_to_save_dic[newname]=value
+		# save data from the complete dictionary.
+		print(results_to_save_dic)
+		run.save_results_dict(results_to_save_dic)
 	except Exception as e:
 		print("Failed Saving Fit Results in Lyse. Error:", e)
