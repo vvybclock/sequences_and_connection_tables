@@ -39,10 +39,14 @@ if __name__ == '__main__':
 	#wait
 	t += 200*ms
 
+	#pump atoms
+	# green.pump.intensity.constant(t, value=spin_polarization_power)
+	# t+= 20*ms
+	# green.pump.turnoff(t,warmup_value=0)
+
 	#read atom number.
 	t += exp_cavity.scan(t, label='atoms_in_cavity')
 	
-
 	#perform an empty cavity scan
 	blue.mot.intensity.constant(t, value=0.28)
 	t += 20*ms
