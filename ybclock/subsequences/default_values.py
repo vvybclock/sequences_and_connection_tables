@@ -35,6 +35,7 @@ def set_default_values(t=1e-5):
 	#cooling
 	cooling_pi_power_switch.enable(t)
 	cooling_pi_shutter.disable(t)
+	cooling_pi_power.constant(t, value=10.0)
 
 	#photon counter
 	photon_counter_shutter.disable(t)
