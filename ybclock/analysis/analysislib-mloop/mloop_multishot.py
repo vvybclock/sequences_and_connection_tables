@@ -152,7 +152,10 @@ def cost_analysis(cost_key=(None,), maximize=True, x=None):
 
     # Retrieve cost from specified column
     if len(df) and cost_key in df:
+        logger.debug(f'df[cost_key] == {df[cost_key]}')
+        logger.debug(f'df[cost_key].astype(float) == {df[cost_key].astype(float)}')
         cost = (df[cost_key].astype(float).values)[ix]
+        logger.debug(f'Cost pulled is: {cost}')
         if np.isnan(cost) or np.isinf(cost):
             cost_dict['bad'] = True
             logger.info('Got bad cost: {cost}'.format(cost=cost))
@@ -196,6 +199,7 @@ if __name__ == '__main__':
         hasattr(lyse.routine_storage, 'optimisation')
         and lyse.routine_storage.optimisation.is_alive()
     ):
+        logger.debug(f'Pulling Cost Key: {config["cost_key"]}')
         cost_dict = cost_analysis(
             cost_key=config['cost_key'] if not config['mock'] else [],
             maximize=config['maximize'],
