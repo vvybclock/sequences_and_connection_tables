@@ -169,8 +169,6 @@ def empty_cavity_analysis(data, scan_parameters,path):
 	except:
 		pass
 
-	#save Neta for each fit in a list
-	run.save_results_dict(results_to_save[0])
 	# save all fit results
 	try:
 		# create a single dictionary containing all the fitted data from all scans.
