@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
 	runtimes = list(dataframe['run time'])
 	paths = list(dataframe['filepath'])
-	frequencies = list(dataframe['empty_cavity_helper','exp_cavity_frequency'])
+	frequencies = list(dataframe['empty_cavity_helper','fcavity_1'])
 	#this is what we call the run number. we'll use it to change the color, so we can tell when we changed the sequence.
 	sequence_index = list(dataframe['sequence_index'])
 
@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
 
 	#s - size
-	plt.scatter(runtimes, frequencies, s=4, c = colors)
+	plt.scatter(runtimes, frequencies, s=20, c = colors)
 
 	plt.title("Empty Cavity Frequency")
 	plt.ylabel("Frequency (MHz)")
