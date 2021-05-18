@@ -8,7 +8,7 @@ iii) basis for any Sz measurement (2, 4, 8 -measurements...)
  	[x] read lyse parameters here
  	[x] drop Neta based on bad chi^2
  	[x] Multiple Neta fit versus time
- 	[] Make the plot a scattered graph. I.e., no join between the points.
+ 	[x] Make the plot a scattered graph. I.e., no join between the points.
  	[] statistics (hist plot, for example) of Neta results
 
 '''
@@ -49,7 +49,7 @@ if __name__ == '__main__':
 				for kk in indices:
 					Neta_dic[newname].append(Neta_loc[kk])
 					runtimes_dic[newname].append(runtimes[kk])
-				dfl = pd.DataFrame(Neta_dic[newname],index = runtimes_dic[newname],columns = [newname])
+				dfl = pd.DataFrame(np.transpose([runtimes_dic[newname],Neta_dic[newname],np.full((len(Neta_dic[newname])),newname)]),columns = ["scan_time","Neta", "scan_name"])
 				df = df.append(dfl)
 				#df=pd.concat([pd.DataFrame([i], columns=[newname]) for i in Neta_dic[newname]],
 					#ignore_index=True)
@@ -60,8 +60,12 @@ if __name__ == '__main__':
 				else:
 					print(j ," Rabi splitting scan found.")
 				break
+		
+		groups = df.groupby('scan_name')
+		for name, group in groups:
+			plt.plot(group.scan_time, group.Neta, marker='o', linestyle='', markersize=9, label=name)
 
-		plt.figure(); df.plot();
+		plt.legend()
 		plt.title("Fitted Neta" )
 		plt.ylabel("Neta")
 		plt.xlabel("Time")
