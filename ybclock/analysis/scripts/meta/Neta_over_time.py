@@ -8,6 +8,7 @@ iii) basis for any Sz measurement (2, 4, 8 -measurements...)
  	[x] read lyse parameters here
  	[x] drop Neta based on bad chi^2
  	[x] Multiple Neta fit versus time
+ 	[] Make the plot a scattered graph. I.e., no join between the points.
  	[] statistics (hist plot, for example) of Neta results
 
 '''
