@@ -4,6 +4,7 @@ import mloop_config
 from mloop.interfaces import Interface
 from mloop.controllers import create_controller
 import logging
+import ybclock_config
 
 
 logger = logging.getLogger('analysislib_mloop')
@@ -65,7 +66,7 @@ class LoopInterface(Interface):
 def main():
     # Create M-LOOP optmiser interface with desired parameters
     interface = LoopInterface()
-    # interface.daemon = True
+    interface.config = ybclock_config.get()
 
     # Instantiate experiment controller
     controller = create_controller(interface, **interface.config)

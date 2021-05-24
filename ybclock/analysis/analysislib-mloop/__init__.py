@@ -33,6 +33,7 @@
 	  * The `mloop_interface.py` class defines the settings passed to the controller within the class.
 	  * The config settings are defined in `LoopInterface.__init__()` inside `mloop_interface.py`.
 	  * To change the settings just redefine `self.config = mloop_config.get()`.
+	  * I've added a script to change get the config file `ybclock_config.py`. Just change the `get()` call.
 
 	`Taken from https://github.com/rpanderson/analysislib-mloop`
 	We use `lyse.routine_storage` to store:
