@@ -33,11 +33,13 @@ if __name__ == '__main__':
 
 	set_default_values()
 
+
+
 	t = 10.1*ms
 
 
 	#load atoms
-	t += load_from_oven_to_optical_lattice(t)
+	t += load_from_oven_to_optical_lattice(t,add_marker=True)
 
 	#ramp magnetic fields (for setting atoms on resonance with cavity)
 	add_time_marker(t, "Ramp Bias Fields.")
@@ -47,19 +49,19 @@ if __name__ == '__main__':
 	x_bias_field.ramp(t, duration=ramp_duration, initial=5.105,final=-0.02,samplerate=1*kHz)
 
 	#wait
-	t += 200*ms
+	t += 240*ms
 
 	#pump atoms
 	green.pump.intensity.constant(t, value=spin_polarization_power)
-	t+= 20*ms
-	green.pump.turnoff(t,warmup_value=0)
+	t += exp_cavity.count_photons(t, label='pump_photons', duration = 20*ms, verbose=True)
+	green.pump.turnoff(t,warmup_value=10)
 
 	#read atom number.
 	t += exp_cavity.scan(t, label='atoms_in_cavity')
 	
 	#perform an empty cavity scan
-	blue.mot.intensity.constant(t, value=0.28)
-	t += 20*ms
+	blue.mot.intensity.constant(t, value=0.28) #blow away atoms
+	t += 300*ms
 	t += exp_cavity.scan(t, label='empty_cavity')
 
 	set_default_values(t)

@@ -134,10 +134,21 @@ def load_from_oven_to_optical_lattice(t, add_marker=True, take_picture=True):
 
 	t0 = t
 	#load the atoms
-	t += blue_mot(t,                         	duration= blue_mot_duration, take_picture=take_picture)
-	t += transfer_blue_mot_to_green_mot(t,   	duration= 40*ms, 	samplerate=1*kHz)
-	t += cool_atoms_in_green_mot(t,          	duration= 180*ms,	samplerate=1*kHz)
-	t += position_atoms_to_optical_lattice(t,	duration= 40*ms, 	samplerate=1*kHz)
+	t += blue_mot(t,                      	duration= blue_mot_duration,	take_picture=take_picture, add_marker=add_marker)
+	t += transfer_blue_mot_to_green_mot(t,	duration= 40*ms,            	samplerate=1*kHz, add_marker=add_marker)
+	t += cool_atoms_in_green_mot(t,       	duration= 180*ms,           	samplerate=1*kHz, add_marker=add_marker)
+
+	#record timestamps for when we shift frequencies of the green using the PTS
+	tPTS = t; #577ms in Excel Sequences
+	add_time_marker(tPTS, "PTS: Trigger 1st")
+	tPTS += 100*ms; 
+	add_time_marker(tPTS, "PTS: 1st to 2nd")
+	tPTS += 180*ms;
+	add_time_marker(tPTS, "PTS: 2nd to 3rd")
+	tPTS += 40*ms;
+	add_time_marker(tPTS, "PTS: 3rd to 4th")
+
+	t += position_atoms_to_optical_lattice(t,	duration= 40*ms,	samplerate=1*kHz, add_marker=add_marker)
 
 	#take a picture of the atoms
 	add_time_marker(t+20*ms, "Take Picture of Green MOT", verbose=True)
