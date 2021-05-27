@@ -283,8 +283,8 @@ class BlueLaser(Laser):
 class GreenLaser(Laser):
 
 	#beampath names go here
-	probe	= None
-	pump 	= None
+	probe	= None 
+	pump 	= None #needs P7888 monitor
 	mot  	= None
 	cooling = None
 

@@ -28,7 +28,7 @@ if __name__ == '__main__':
 		#plot data
 		plt.hist(
 			photon_arrival_times,
-			bins=np.arange(photon_arrival_times[0], photon_arrival_times[-1], photon_arrival_times[-1]/200),
+			bins=np.arange(photon_arrival_times[0], photon_arrival_times[-1], photon_arrival_times[-1]/2000),
 			align='mid'
 		)
 

@@ -168,7 +168,7 @@ class ExperimentalCavity:
 		probe_sideband_power.constant(t, value=0)
 
 		probe_power_switch.disable(t)
-		photon_counter_shutter.disable(t)	#open photon counter shutter
+		photon_counter_shutter.disable(t)	#close photon counter shutter
 		probe_shutter.disable(t); 
 		t += shutter_open_time
 		probe_power_switch.enable(t)
@@ -177,4 +177,49 @@ class ExperimentalCavity:
 
 		#remove the shutter turn off time (shutter_open_time) in case we want to loop.
 		#this will prevent unneccessary shutter pulses
-		return t-t0 
+		return t-t0
+
+	def count_photons(self,t,label,duration, verbose=False):
+		'''
+			Opens the Shutter to the P7888 Photon Counter but doesn't actually scan the frequency of the green. Useful for counting photons transmitted through the cavity.
+		'''
+		ms = 1e-3
+		us = 1e-6
+		t0 = t
+
+		shutter_open_time = 5*ms
+		t_buffer = 1*ms
+
+		#make room in the dictionary if this label is used for the first time.
+		self.scan_parameters.setdefault(label, [])
+
+		#record the parameters in a dictionary inside a list that holds dictionarys.
+		self.scan_parameters[label].append({
+			"t"                    	: t,
+			"duration"             	: duration,
+			"initial_start_trigger"	: self.number_of_p7888_start_triggers
+		})
+
+		#initial laser light management
+		if verbose: add_time_marker(t - shutter_open_time ,f"Cavity Photon Count Prep: {label}")
+
+		photon_counter_shutter.enable(t - shutter_open_time)	#open photon counter shutter
+
+		tloop = t
+
+		#update scan time to be right when the photons start getting counted
+		self.scan_parameters[label][-1]['t'] = t
+
+		#run the photon counter
+		while tloop < t + duration:
+			tloop += self.pulse_p7888_start_trigger(tloop)
+		t = tloop
+
+		photon_counter_shutter.disable(t)	#close photon counter shutter
+		t += shutter_open_time
+
+		self.save_parameters()
+
+		#remove the shutter turn off time (shutter_open_time) in case we want to loop.
+		#this will prevent unneccessary shutter pulses
+		return t-t0
