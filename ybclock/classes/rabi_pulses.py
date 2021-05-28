@@ -1,3 +1,4 @@
+from math import pi
 
 #Desired Usage.
 rf = RabiDrive()
@@ -23,7 +24,7 @@ def RfRabiDrive():
 		self.rabi_channel    	= rabi_channel
 		self.larmor_frequency	= larmor_frequency
 
-	def rabi_pulse(self,t,rabi_area,phase,duration,amplitude_correction):
+	def rabi_pulse(self,t,rabi_area,phase,duration,samplerate,amplitude_correction=0):
 		'''
 			rabi_area           	- the rotated angle of the spin state in radians.
 			phase               	- the phase of the Rabi Drive relative to the Local Oscillator (LO) or Oscillation Phase of the atoms.
@@ -31,7 +32,18 @@ def RfRabiDrive():
 			amplitude_correction	- fractional correction one should apply to the amplitude to accomodate for digitization errors.
 		'''
 
-		
+		sine_area_correction = 2
+		angfreq = 2*pi*self.larmor_frequency
+
+		self.rabi_channel.sine(
+			t         	= t,
+			duration  	= duration,
+			amplitude 	= (1 + amplitude_correction)* rabi_area/duration * sine_area_correction,
+			angfreq   	= angfreq,
+			phase     	= phase + angfreq*t,
+			dc_offset 	= 0,
+			samplerate	= samplerate
+		)
 
 
 		pass
