@@ -1,13 +1,39 @@
 from math import pi
-
+import numpy as np
 #Desired Usage.
-rf = RabiDrive()
-clock = RabiDrive()
+# rf = RabiDrive()
+# clock = RabiDrive()
 
-rf.rabi_pulse(rabi_area,phase,duration,amplitude_correction)
+# rf.rabi_pulse(rabi_area,phase,duration,amplitude_correction)
 
-clock.rabi_pulse(...)
+# clock.rabi_pulse(...)
 
+def Spinor():
+	'''
+
+		This class keeps track of the *net* unitary applied to the atoms at the start of the experiment after preperation.
+
+		The easiest way to keep track of the dark time is to use the
+		interaction picture: \\(\\vec{\\psi'}  = \\hat{T} \\vec
+		{\\psi} \\) where \\(\\hat{T}\\) = \\exp{\\frac{i}{\\hbar} \\hat{H_0} t}
+	'''
+	state = np.identity(2, dtype=complex)
+	t0	= None
+	def __init__(self):
+		pass
+
+	def prepare_atoms(self, t):
+
+		self.state = np.identity(2, dtype=complex)
+		#save the preparation time.
+		self.t0 = t
+
+	def to_rotating_frame(self, t):
+
+		return M
+	def to_lab_frame():
+		return M
+	pass
 def RfRabiDrive():
 	'''
 
