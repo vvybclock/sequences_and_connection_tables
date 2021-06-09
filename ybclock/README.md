@@ -293,6 +293,47 @@ If however we are installing new channels without disconnecting old channels
 , then the hardware version shall remain the same, and the git shall account
 for improvements and new connections.
 
+#Future Features
+
+## MLOOP
+
+MLOOP is a Machine Learning Based optimization suite for optimizing
+experiments.
+
+It needs to be tested.
+
+### Update MLOOP Configuration Method
+
+To facilitate testing and future usage, we need to improve the horrible
+configuration method currently in use by analysislib-mloop. It uses the .ini
+file instead of the Python API given by MLOOP.
+
+## MLOOP + Feedback Compatibility
+
+Both MLOOP and Simple Feedback loops rely on using the labscript `remote`
+module. Something is going on that prevents the `remote` module being
+accessed from multiple scripts. The error manifests as the globals file
+getting corrupted(?) and causing runmanager to hang.
+
+## Rabi Pulse Tracker
+
+To help catch unforseen errors, I am going to develop a class that keeps track
+of the location of the two-level atoms, to see if there is spurious
+rotations, uncalibrated magnetic fields, or stray light beams messing with
+our atoms.
+
+## Unit Under Tests Modules
+
+Unit Under Tests are a concept from software development to help catch bugs,
+they also help in development by clarifying what it is that you're trying to
+build. 
+
+They are error tests that work by specifying what the program is supposed to
+do, and what it's output is supposed to be, and checking that the output is
+correct.
+
+It can gather statistics to quantify the failure rate.
+
 ### What do I do when I do a major change?
 
 Change the git branch number. Change it from `master` to `v2.x`, and `v2.x`
