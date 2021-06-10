@@ -8,10 +8,10 @@ import numpy as np
 
 # clock.rabi_pulse(...)
 
-def Spinor():
+class Spinor:
 	'''
 
-		This class keeps track of the *net* unitary applied to the atoms at the start of the experiment after preperation.
+		This class keeps track of the *net* unitary applied to the atoms at the start of the experiment after preparation.
 
 		The easiest way to keep track of the dark time is to use the
 		interaction picture: \\(\\vec{\\psi'}  = \\hat{T} \\vec {\\psi} \\) 
@@ -23,73 +23,84 @@ def Spinor():
 
 
 	'''
-	state	= np.identity(2, dtype=complex)
-	t0   	= None
-	w0   	= None #atomic precession frequency
 
-	#pauli matrices
-	sx	= np.matrix(
-	  		[
-	  			[0,	1],
-	  			[1,	0]
-	  		]
-	  	)
-	sy	= np.matrix(
-	  		[
-	  			[0, 	-1j],
-	  			[1j,	0]
-	  		]
-	  	)
-	sz	= np.matrix(
-	  		[
-	  			[1,	0],
-	  			[0,	1]
-	  		]
-	  	)
-
+	unitary     	= None #our net unitary operator
+	t_last      	= None #time since last applied unitary 
+	w_larmor    	= None #atomic precession frequency
+	pauli_vector	= [
+	            	np.matrix(
+	            		[
+	            			[0,	1],
+	            			[1,	0]
+	            		] #sx
+	            	),
+	            	np.matrix(
+	            		[
+	            			[0, 	-1j],
+	            			[1j,	0]
+	            		] #sy
+	            	),
+	            	np.matrix(
+	            		[
+	            			[1,	0],
+	            			[0,	1]
+	            		] #sz
+	            	)
+	]
 
 	def __init__(self):
 		pass
 
-	def T(self, t):
+	def prepare_atom_unitary(self, t):
 		'''
-			Returns the unitary that transforms from the lab frame to the
-			rotating frame at the larmor frequency \\(\\omega_0\\).
+			Set the spin unitary to the identity matrix and record the spin preperation time for keeping track of phase evolution.
 		'''
-		w = self.w0
-		T = np.matrix(
-			[
-				[np.exp(1j*w*t),	0],
-				[0,             	1],
-			]
-		)
-
-		return T
-
-	def V(self, OmegaX, OmegaY):
-		'''
-			Caluculates the interaction hamiltonian. We have no Z control and thus we can't set z parameters.
-		'''
-
-		return OmegaX*self.sx + OmegaY*self.sy# + OmegaZ*self.sz
-
-
-
-
-
-	def prepare_atoms(self, t):
-
-		self.state = np.identity(2, dtype=complex)
+		self.unitary = np.identity(2, dtype=complex)
 		#save the preparation time.
-		self.t0 = t
+		self.t_last = t
 
-	def to_rotating_frame(self, t, M):
-		Mp = M
-		return Mp
-	def to_lab_frame():
-		return M
-	pass
-def RfRabiDrive():
+	# def T(self, t):
+	#	'''
+	#		Returns the unitary that transforms from the lab frame to the
+	#		rotating frame at the larmor frequency \\(\\omega_0\\).
+	#	'''
+	#	w = self.w_larmor
+	#	T = np.matrix(
+	#		[
+	#			[np.exp(1j*w*t),	0],
+	#			[0,             	1],
+	#		]
+	#	)
+
+	#	return T
+
+	def U_V(self, Omega):
+		'''
+			Calculates the unitary interaction in the rotating frame of the
+			magnetic field (where the Hamiltonian is time independent). Assumes `Omega` is a list of at most 3 real elements.
+			See [the formula]
+			(https://en.wikipedia.org/wiki/Pauli_matrices#Exponential_of_a_Pauli_vector)
+			for the exponential of a pauli matrix.
+
+		'''
+		if len(Omega) > 3:
+			raise Exception("Omega should be a list of at most 3 numbers.")
+
+		identity = np.identity(2,dtype=complex)
+		norm = np.linalg.norm(Omega)
+		unit_vector = Omega/norm
+		
+		return identity*np.cos(norm) + 1j*np.dot(unit_vector, self.pauli_vector)*np.sin(norm)
+
+
+
+	# def to_rotating_frame(self, t, M):
+	#	Mp = M
+	#	return Mp
+	# def to_lab_frame():
+	#	return M
+	# pass
+class RfRabiDrive:
 	'''
 
 	'''
