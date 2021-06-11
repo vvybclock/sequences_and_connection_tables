@@ -104,9 +104,15 @@ def cool_atoms_in_green_mot(t,duration,samplerate, add_marker=True):
 	if add_marker: add_time_marker(t, "Hold Green MOT", verbose=True)
 	#start ramping up green frequency to set up green mot.
 	green_frequency_fpga_trigger.enable(t)
-
+	#record timestamps for when we shift frequencies of the green using the PTS
+	tPTS = t; #577ms in Excel Sequences
+	add_time_marker(tPTS, "PTS: 1st to 2nd")
+	tPTS += 240*ms; 
+	add_time_marker(tPTS, "PTS: 2nd to 3rd")
+	tPTS += 20*ms;
+	add_time_marker(tPTS, "PTS: 3rd to 4th")
 	#ramp down green power so we don't blind the camera.
-	green.mot.intensity.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.135, samplerate=samplerate)
+	green.mot.intensity.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.12, samplerate=samplerate)
 
 	return duration
 
@@ -138,15 +144,6 @@ def load_from_oven_to_optical_lattice(t, add_marker=True, take_picture=True):
 	t += transfer_blue_mot_to_green_mot(t,	duration= 40*ms,            	samplerate=1*kHz, add_marker=add_marker)
 	t += cool_atoms_in_green_mot(t,       	duration= 180*ms,           	samplerate=1*kHz, add_marker=add_marker)
 
-	#record timestamps for when we shift frequencies of the green using the PTS
-	tPTS = t; #577ms in Excel Sequences
-	add_time_marker(tPTS, "PTS: Trigger 1st")
-	tPTS += 100*ms; 
-	add_time_marker(tPTS, "PTS: 1st to 2nd")
-	tPTS += 180*ms;
-	add_time_marker(tPTS, "PTS: 2nd to 3rd")
-	tPTS += 40*ms;
-	add_time_marker(tPTS, "PTS: 3rd to 4th")
 
 	t += position_atoms_to_optical_lattice(t,	duration= 40*ms,	samplerate=1*kHz, add_marker=add_marker)
 
@@ -155,7 +152,7 @@ def load_from_oven_to_optical_lattice(t, add_marker=True, take_picture=True):
 	if take_picture:
 		isometric_cam.expose(t + 20*ms,	name='green_mot', frametype='almost_loaded', trigger_duration=20*ms)
 
-	t += hold_atoms(t,	duration= 40*ms)
+	t += hold_atoms(t,	duration= 40*ms,add_marker=add_marker)
 
 	return t-t0
 
