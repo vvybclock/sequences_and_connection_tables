@@ -32,7 +32,7 @@ class Spinor:
 
 	unitary     	= None #our net unitary operator
 	t_last      	= None #time since last applied unitary 
-	w_larmor    	= None #atomic precession frequency
+	f_larmor    	= None #atomic precession frequency
 	pauli_vector	= (
 	            	np.matrix(
 	            		[
@@ -54,8 +54,8 @@ class Spinor:
 	            	)
 	)
 
-	def __init__(self, w_larmor):
-		self.w_larmor = w_larmor
+	def __init__(self, f_larmor):
+		self.f_larmor = f_larmor
 
 	def prepare_atom_unitary(self, t):
 		'''
@@ -65,7 +65,7 @@ class Spinor:
 		#save the preparation time.
 		self.t_last = t
 
-	def rabi_pulse(self, t, duration, Omega,w_rf):
+	def rabi_pulse(self, t, duration, Omega,f_rf):
 		'''
 			Omega -- is a `list` encoded vector whose magnitude represents the field strength \\(-\\mu \\cdot \\vec{B}\\) times the duration.
 		'''
@@ -76,7 +76,7 @@ class Spinor:
 
 
 		#calculate spin preccession since last unitary pulse.
-		w = self.w_larmor
+		w = self.f_larmor
 		U_free_space = sp.linalg.expm(
 				-1j*w/2*(t-self.t_last)*self.pauli_vector[2]
 			)
@@ -85,7 +85,7 @@ class Spinor:
 		self.unitary = U_free_space @ self.unitary 
 
 		#calculate effective unitary in rotating frame 
-		delta = w_rf - self.w_larmor
+		delta = 2*pi*(f_rf - self.f_larmor)
 
 		#calculate the interaction part of the effective hamiltonian
 		interaction = np.zeros((2,2),dtype=complex)
@@ -103,7 +103,7 @@ class Spinor:
 
 		#evolve back to lab frame.
 		self.unitary = sp.linalg.expm(
-				-1j*w_rf/2*duration*self.pauli_vector[2]
+				-1j*f_rf/2*duration*self.pauli_vector[2]
 			) @ self.unitary
 
 
@@ -154,9 +154,9 @@ class RfRabiDrive:
 		'''
 		self.rabi_channel    	= rabi_channel
 		self.larmor_frequency	= larmor_frequency
-		self.atom_unitary    	= Spinor(w_larmor=larmor_frequency)
+		self.atom_unitary    	= Spinor(f_larmor=larmor_frequency)
 
-	def rabi_pulse(self,t,rabi_area,phase,duration,samplerate,amplitude_correction=0):
+	def resonant_rabi_pulse(self,t,rabi_area,phase,duration,samplerate,amplitude_correction=0):
 		'''
 			rabi_area           	- the rotated angle of the spin state in radians.
 			phase               	- the phase of the Rabi Drive relative to the Local Oscillator (LO) or Oscillation Phase of the atoms.
@@ -164,14 +164,15 @@ class RfRabiDrive:
 			amplitude_correction	- fractional correction one should apply to the amplitude to accomodate for digitization errors.
 		'''
 
-		sine_area_correction = 2
+		sine_area_correction = 1
 		angfreq = 2*pi*self.larmor_frequency
 
 		#perform theoretical rabi pulse
 		self.atom_unitary.rabi_pulse(
 			t       	= t,
 			duration	= duration,
-			Omega   	= [rabi_area*np.cos(phase), rabi_area,np.sin(phase)]
+			Omega   	= [rabi_area*np.cos(phase), rabi_area*np.sin(phase)],
+			f_rf    	= self.larmor_frequency
 		)
 
 		#perform actual rabi pulse
