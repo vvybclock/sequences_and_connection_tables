@@ -27,33 +27,83 @@ if __name__ == '__main__':
 
 
 	#load atoms
-	t += load_from_oven_to_optical_lattice(t)
+	t += load_from_oven_to_optical_lattice(t,add_marker = False)
 
 	#ramp magnetic fields (for setting atoms on resonance with cavity)
 	add_time_marker(t, "Ramp Bias Fields.")
 	ramp_duration = 2*ms
-	z_bias_field.ramp(t, duration=ramp_duration, initial=-0.795,final=7.35,samplerate=1*kHz)
-	y_bias_field.ramp(t, duration=ramp_duration, initial=0.28,final=-1.86,samplerate=1*kHz)
-	x_bias_field.ramp(t, duration=ramp_duration, initial=5.105,final=-0.02,samplerate=1*kHz)
+	z_bias_field.ramp(t, duration=ramp_duration, initial=-0.795,final=spin_b_field_z,samplerate=10*kHz)
+	y_bias_field.ramp(t, duration=ramp_duration, initial=0.28,final=-1.86,samplerate=10*kHz)
+	x_bias_field.ramp(t, duration=ramp_duration, initial=5.105,final=-0.02,samplerate=10*kHz)
+	t += ramp_duration
+	
+	#ramp down mot
+	t+= mot_coil_current.ramp(t,
+		duration=20*ms,
+		initial=9.1,
+		final=9.1*(8/8.5),
+		samplerate= 10*kHz
+	)
+
+	t+= mot_coil_current.ramp(t,
+		duration=40*ms,
+		initial=9.1*(8/8.5),
+		final=9.1*(8/8.5)*0.8,
+		samplerate=10*kHz
+		)
+
+	t+= mot_coil_current.ramp(t,
+		duration=50*ms,
+		initial=9.1*(8/8.5)*0.8,
+		final=9.1*(8/8.5)*0.8/4,
+		samplerate=10*kHz
+	)
+
+	t+= mot_coil_current.ramp(t,
+		duration=35*ms,
+		initial=9.1*(8/8.5)*0.8/4,
+		final=0,
+		samplerate=10*kHz
+	)
+
 
 	#wait
-	t += 200*ms
+	t += 200*ms + 140*ms
 
+	#read atom number.
+	t += exp_cavity.scan(t, label='atoms_in_cavity')
+
+	t+=5*ms
 	#pump atoms
-	# green.pump.intensity.constant(t, value=spin_polarization_power)
-	# t+= 20*ms
-	# green.pump.turnoff(t,warmup_value=0)
+	pump_duration = 20*ms
+	green.pump.intensity.constant(t, value=spin_polarization_power)
+	exp_cavity.count_photons(t=t,duration=pump_duration,label='pump_photons')
+	t+= pump_duration
+	green.pump.turnoff(t,warmup_value=0)
+
+	t+= 20*ms
 
 	#read atom number.
 	t += exp_cavity.scan(t, label='atoms_in_cavity')
 	
+	# Rabi Pi pulse
+	
+
 	#perform an empty cavity scan
 	blue.mot.intensity.constant(t, value=0.28)
 	t += 20*ms
+	blue.mot.intensity.turnoff(t,warmup_value=0.28)
 	t += exp_cavity.scan(t, label='empty_cavity')
 
+
+	t += mot_coil_current.ramp(t,
+		duration=10*ms,
+		initial=0,
+		final=9.1,
+		samplerate=10*kHz
+		)
 	set_default_values(t)
 	# Stop the experiment shot with stop()
-	stop(t+1)
+	stop(t+0.1)
 
 print("Compiled loading_sequence!")
