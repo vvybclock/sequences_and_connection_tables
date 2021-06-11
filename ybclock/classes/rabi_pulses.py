@@ -13,12 +13,17 @@ class Spinor:
 
 		This class keeps track of the *net* unitary applied to the atoms at the start of the experiment after preparation.
 
-		The easiest way to keep track of the dark time is to use the
-		interaction picture: \\(\\vec{\\psi'}  = \\hat{T} \\vec {\\psi} \\) 
-		where \\(\\hat{T} = \\exp{\\frac{i}{\\hbar} \\hat{H_0} t} \\) and
-		\\(\\hat{H_0} = \\frac{\\hbar}{2} \\omega_0 (\\hat{\\sigma_z} + 1) \\) is the hamiltonian for the atoms in free space.
+		The easiest way to keep track of the dark time is to use the just
+		apply a unitary corresponding to free evolution during the dark
+		time. During the rabi pulse, we transform to the RF rotating frame
+		and then apply the stationary effective Hamiltonian. 
 
-		The rotating frame Hamiltonian is \\(\\hat{V}' = \\hat{T} \\hat{V} \\hat{T}^\\dagger\\). 
+
+		interaction picture: \\(\\vec{\\psi'}  = \\hat{T} \\vec {\\psi} \\) 
+		where \\(\\hat{T} = \\exp{\\frac{i}{\\hbar} \\omega_{RF}\\hat{\\sigma_z} (t - t')} \\) and
+		\\(\\hat{H_0} = \\frac{\\hbar}{2} \\omega_L (\\hat{\\sigma_z}) \\) is the hamiltonian for the atoms in free space.
+
+		The rotating frame interaction Hamiltonian is \\(\\hat{V}' = \\hat{T} \\hat{V} \\hat{T}^\\dagger\\). 
 		Evidently, this outlines our transformation for Hermitian operators.
 
 
@@ -48,8 +53,8 @@ class Spinor:
 	            	)
 	]
 
-	def __init__(self):
-		pass
+	def __init__(self, w_larmor):
+		self.w_larmor = w_larmor
 
 	def prepare_atom_unitary(self, t):
 		'''
@@ -59,18 +64,43 @@ class Spinor:
 		#save the preparation time.
 		self.t_last = t
 
-	# def T(self, t):
-	#	'''
-	#		Returns the unitary that transforms from the lab frame to the
-	#		rotating frame at the larmor frequency \\(\\omega_0\\).
-	#	'''
-	#	w = self.w_larmor
-	#	T = np.matrix(
-	#		[
-	#			[np.exp(1j*w*t),	0],
-	#			[0,             	1],
-	#		]
-	#	)
+	def rabi_pulse(self, t, duration, Omega):
+
+		#check to see if pulses are sequential.
+		if (t - self.t_last) < 0:
+			raise Exception("Rabi Pulses not applied in chronological order. Cannot simulate correctly.")
+
+
+		#calculate spin preccession since last unitary pulse.
+		w = self.w_larmor
+		U_free_space = np.matrix(
+			[
+				[np.exp(-1j*w*(t-self.t_last)),	0],
+				[0,                            	1],
+			]
+		)
+
+		#evolve atoms until just before we peform interaction.
+		self.unitary = U_free_space @ self.unitary 
+
+		#
+
+		self.t_last = t+duration
+		return self.unitary
+
+
+	def T(self, t):
+		'''
+			Returns the unitary that transforms from the lab frame to the
+			rotating frame at the larmor frequency \\(\\omega_0\\).
+		'''
+		w = self.w_larmor
+		T = np.matrix(
+			[
+				[np.exp(1j*w*t),	0],
+				[0,             	1],
+			]
+		)
 
 	#	return T
 
@@ -83,14 +113,22 @@ class Spinor:
 			for the exponential of a pauli matrix.
 
 		'''
+
 		if len(Omega) > 3:
 			raise Exception("Omega should be a list of at most 3 numbers.")
 
+		#calculate intermediate quantities
 		identity = np.identity(2,dtype=complex)
 		norm = np.linalg.norm(Omega)
 		unit_vector = Omega/norm
 		
-		return identity*np.cos(norm) + 1j*np.dot(unit_vector, self.pauli_vector)*np.sin(norm)
+		#calculate dot_product
+		dot_product = np.zeros((2,2),dtype=complex)
+		for i in range(len(unit_vector)):
+			dot_product += unit_vector[i]* self.pauli_vector[i]
+
+		#return unitary
+		return identity*np.cos(norm) + 1j*dot_product*np.sin(norm)
 
 
 
@@ -105,8 +143,9 @@ class RfRabiDrive:
 
 	'''
 
-	rabi_channel	= None
-	larmor_frequency = None
+	rabi_channel    	= None
+	larmor_frequency	= None
+	atom_unitary    	= None
 
 	def __init__(self, rabi_channel, larmor_frequency):
 		'''
@@ -115,6 +154,7 @@ class RfRabiDrive:
 		'''
 		self.rabi_channel    	= rabi_channel
 		self.larmor_frequency	= larmor_frequency
+		self.atom_unitary    	= Spinor(w_larmor=larmor_frequency)
 
 	def rabi_pulse(self,t,rabi_area,phase,duration,samplerate,amplitude_correction=0):
 		'''
@@ -127,6 +167,14 @@ class RfRabiDrive:
 		sine_area_correction = 2
 		angfreq = 2*pi*self.larmor_frequency
 
+		#perform theoretical rabi pulse
+		self.atom_unitary.rabi_pulse(
+			t       	= t,
+			duration	= duration,
+			Omega   	= [rabi_area*np.cos(phase), rabi_area,np.sin(phase)]
+		)
+
+		#perform actual rabi pulse
 		self.rabi_channel.sine(
 			t         	= t,
 			duration  	= duration,
