@@ -42,6 +42,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		cavity_range = (0,50);
 		print(f"No empty cavity scan result found. {e}")
 
+	labels = []
 	for a_scan in scan_parameters:
 		# a_scan is a dictionary whose properties are defined in exp_cavity.py
 		start_time	= a_scan['t']
@@ -107,9 +108,13 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		n = plt.hist(
 			photon_arrivals_in_frequency_MHz,
 			bins=np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution),
-			align='mid'
+			align='mid',
+			label=f"Time: {a_scan['t']:.3f}, Neta: {best_param['Neta']:.0f}"
 		 )
-		
+
+		plt.legend()
+
+
 		#decorate plot
 		plt.title(f"({date}) #{sequence_number}_r{repetition_number}\n{sequence_name}")
 		plt.ylabel("Photon Counts, (50 kHz Bin)")
@@ -119,13 +124,13 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		try:
 			x = np.arange(data_globals["empty_cavity_frequency_sweep_initial"],data_globals["empty_cavity_frequency_sweep_range"], histogram_resolution)
 			y = fit_functions.rabi_splitting_transmission(
-			                         		f = x,
-			                         		fatom = best_param["fatom"],
-			                         		fcavity = best_param["fcavity"],
-			                         		Neta = best_param["Neta"],
-			                         		gamma = best_param["gamma"],
-			                         		kappa = best_param["kappa"]
-			                         	)
+					f = x,
+					fatom = best_param["fatom"],
+					fcavity = best_param["fcavity"],
+					Neta = best_param["Neta"],
+					gamma = best_param["gamma"],
+					kappa = best_param["kappa"]
+				)
 			try:
 				plt.plot(x,best_param["amplitude"]*y)
 			except Exception as e:
