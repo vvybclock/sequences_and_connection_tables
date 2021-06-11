@@ -103,7 +103,7 @@ class Spinor:
 
 		#evolve back to lab frame.
 		self.unitary = sp.linalg.expm(
-				-1j*f_rf/2*duration*self.pauli_vector[2]
+				-1j*2*pi*f_rf/2*duration*self.pauli_vector[2]
 			) @ self.unitary
 
 
@@ -171,7 +171,7 @@ class RfRabiDrive:
 		self.atom_unitary.rabi_pulse(
 			t       	= t,
 			duration	= duration,
-			Omega   	= [rabi_area*np.cos(phase), rabi_area*np.sin(phase)],
+			Omega   	= [rabi_area*np.cos(phase + angfreq*t), rabi_area*np.sin(phase + angfreq*t)],
 			f_rf    	= self.larmor_frequency
 		)
 
@@ -187,4 +187,10 @@ class RfRabiDrive:
 		)
 
 
+		pass
+
+	def save_unitary(self):
+		'''
+			Saves atomic state for analysis.
+		'''
 		pass
