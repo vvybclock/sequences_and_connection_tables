@@ -1,5 +1,6 @@
 from math import pi
 import numpy as np
+import scipy as sp
 #Desired Usage.
 # rf = RabiDrive()
 # clock = RabiDrive()
@@ -32,7 +33,7 @@ class Spinor:
 	unitary     	= None #our net unitary operator
 	t_last      	= None #time since last applied unitary 
 	w_larmor    	= None #atomic precession frequency
-	pauli_vector	= [
+	pauli_vector	= (
 	            	np.matrix(
 	            		[
 	            			[0,	1],
@@ -48,10 +49,10 @@ class Spinor:
 	            	np.matrix(
 	            		[
 	            			[1,	0],
-	            			[0,	1]
+	            			[0,	-1]
 	            		] #sz
 	            	)
-	]
+	)
 
 	def __init__(self, w_larmor):
 		self.w_larmor = w_larmor
@@ -64,7 +65,10 @@ class Spinor:
 		#save the preparation time.
 		self.t_last = t
 
-	def rabi_pulse(self, t, duration, Omega):
+	def rabi_pulse(self, t, duration, Omega,w_rf):
+		'''
+			Omega -- is a `list` encoded vector whose magnitude represents the field strength \\(-\\mu \\cdot \\vec{B}\\) times the duration.
+		'''
 
 		#check to see if pulses are sequential.
 		if (t - self.t_last) < 0:
@@ -73,36 +77,39 @@ class Spinor:
 
 		#calculate spin preccession since last unitary pulse.
 		w = self.w_larmor
-		U_free_space = np.matrix(
-			[
-				[np.exp(-1j*w*(t-self.t_last)),	0],
-				[0,                            	1],
-			]
-		)
+		U_free_space = sp.linalg.expm(
+				-1j*w/2*(t-self.t_last)*self.pauli_vector[2]
+			)
 
 		#evolve atoms until just before we peform interaction.
 		self.unitary = U_free_space @ self.unitary 
 
-		#
+		#calculate effective unitary in rotating frame 
+		delta = w_rf - self.w_larmor
+
+		#calculate the interaction part of the effective hamiltonian
+		interaction = np.zeros((2,2),dtype=complex)
+		for i in range(len(Omega)):
+			interaction += Omega[i]/2*self.pauli_vector[i]
+
+		#calculate the interaction hamiltonian
+		h0_eff = -delta/2*self.pauli_vector[2]
+		u_interaction = sp.linalg.expm(
+				-1j*(h0_eff*duration + interaction)
+			)
+
+		#evolve under rabi pulse
+		self.unitary = u_interaction @ self.unitary
+
+		#evolve back to lab frame.
+		self.unitary = sp.linalg.expm(
+				-1j*w_rf/2*duration*self.pauli_vector[2]
+			) @ self.unitary
+
 
 		self.t_last = t+duration
 		return self.unitary
 
-
-	def T(self, t):
-		'''
-			Returns the unitary that transforms from the lab frame to the
-			rotating frame at the larmor frequency \\(\\omega_0\\).
-		'''
-		w = self.w_larmor
-		T = np.matrix(
-			[
-				[np.exp(1j*w*t),	0],
-				[0,             	1],
-			]
-		)
-
-	#	return T
 
 	def U_V(self, Omega):
 		'''
@@ -131,13 +138,6 @@ class Spinor:
 		return identity*np.cos(norm) + 1j*dot_product*np.sin(norm)
 
 
-
-	# def to_rotating_frame(self, t, M):
-	#	Mp = M
-	#	return Mp
-	# def to_lab_frame():
-	#	return M
-	# pass
 class RfRabiDrive:
 	'''
 
