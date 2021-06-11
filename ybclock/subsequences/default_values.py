@@ -13,7 +13,7 @@ def set_default_values(t=1e-5):
 	z_bias_field.constant(t, value=2.2)
 
 	#set up red laser
-	red_cavity_power.constant(t, 1.275)
+	red_cavity_power.constant(t, red_trap_power_default)
 	red_cavity_power_switch.enable(t)
 	
 	#set up blue laser
