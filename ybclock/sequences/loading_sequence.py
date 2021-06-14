@@ -2,6 +2,8 @@
 	Loads atoms from the Oven Up to the Optical Lattice, 
 	applies the large bias field, and measures the "Vacuum" Rabi Splitting.
 '''
+from math import pi
+
 from labscript import start, stop, AnalogOut, DigitalOut,add_time_marker
 from labscriptlib.ybclock.connection_table import define_connection_table
 from labscriptlib.ybclock.subsequences import *
@@ -81,20 +83,32 @@ if __name__ == '__main__':
 	t+= pump_duration
 	green.pump.turnoff(t,warmup_value=0)
 
+	RF.atom_unitary.prepare_atom_unitary(t)
+
 	t+= 20*ms
 
 	#read atom number.
 	t += exp_cavity.scan(t, label='atoms_in_cavity')
 	
-	# Rabi Pi pulse
-	
+
+	#perform rabi pulse then cavity scan
+	t += RF.resonant_rabi_pulse(
+		t        	= t,
+		rabi_area	= pi,
+		phase    	= 0,
+		duration 	= 2.29*ms,
+		samplerate  = 100*kHz
+		)
+
+	t+= 20*ms
+
+	t += exp_cavity.scan(t, label='atoms_in_cavity')
 
 	#perform an empty cavity scan
 	blue.mot.intensity.constant(t, value=0.28)
 	t += 20*ms
 	blue.mot.intensity.turnoff(t,warmup_value=0.28)
 	t += exp_cavity.scan(t, label='empty_cavity')
-
 
 	t += mot_coil_current.ramp(t,
 		duration=10*ms,
