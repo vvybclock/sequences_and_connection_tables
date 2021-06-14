@@ -124,8 +124,10 @@ class LaserIntensity():
 				self.__shutter_channel.disable(t - shutter_closetime)
 
 				#turn on  aom/eom iff we have a shutter
+				self.__intensity_channel.constant(t + shutter_closetime,value=warmup_value)
+				
 				if self.__rf_switch_channel is None:
-					self.__intensity_channel.constant(t + shutter_closetime,value=warmup_value)
+					pass
 				else:
 					self.__rf_switch_channel.enable(t + shutter_closetime)
 
