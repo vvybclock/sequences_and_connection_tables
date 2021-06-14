@@ -11,4 +11,7 @@ def define_classes(name_space=globals()):
 	builtins.blue 	= BlueLaser()
 	builtins.green	= GreenLaser()
 	builtins.red  	= RedLaser()
-	#builtins.RF = RfRabiDrive(rabi_channel = , larmor_frequency = )
+	builtins.RF = RfRabiDrive(
+		rabi_channel_ac 	= rabi_coil_field, 
+		rabi_channel_dc 	= rabi_coil_dc_offset, 
+		larmor_frequency	= 10179)
