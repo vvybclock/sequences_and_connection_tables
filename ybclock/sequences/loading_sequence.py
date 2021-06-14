@@ -38,7 +38,7 @@ if __name__ == '__main__':
 	t += wait(200*ms + 140*ms)
 
 	#read unpolarized atom number.
-	t += exp_cavity.scan(t, label='atoms_in_cavity')
+	t += exp_cavity.scan(t, params={'unitary': RF.get_unitary()}, label='atoms_in_cavity')
 
 	t+= wait(5*ms)
 
@@ -49,7 +49,7 @@ if __name__ == '__main__':
 	t+= wait(20*ms)
 
 	#read atom number.
-	t += exp_cavity.scan(t, label='atoms_in_cavity')
+	t += exp_cavity.scan(t, params={'unitary': RF.get_unitary()}, label='atoms_in_cavity')
 	
 
 	#perform rabi pulse then cavity scan
@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
 	t += wait(20*ms)
 
-	t += exp_cavity.scan(t, label='atoms_in_cavity')
+	t += exp_cavity.scan(t, label='atoms_in_cavity', params={'unitary': RF.get_unitary()})
 
 	t += empty_then_measure_cavity_frequency(t)
 
