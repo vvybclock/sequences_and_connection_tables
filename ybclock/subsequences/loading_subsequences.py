@@ -113,6 +113,7 @@ def cool_atoms_in_green_mot(t,duration,samplerate, add_marker=True):
 	add_time_marker(tPTS, "PTS: 3rd to 4th")
 	#ramp down green power so we don't blind the camera.
 	green.mot.intensity.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.12, samplerate=samplerate)
+	green.mot.turnoff(t=tPTS,warmup_value=0.3)
 
 	return duration
 
