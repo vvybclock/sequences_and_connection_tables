@@ -15,3 +15,9 @@ def define_classes(name_space=globals()):
 		rabi_channel_ac 	= rabi_coil_field, 
 		rabi_channel_dc 	= rabi_coil_dc_offset, 
 		larmor_frequency	= 10179)
+	
+	builtins.exp_cavity = ExperimentalCavity()
+
+	#add some globals
+	builtins.ms = 1e-3
+	builtins.kHz = 1e3

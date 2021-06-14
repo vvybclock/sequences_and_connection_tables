@@ -9,6 +9,9 @@ from labscriptlib.ybclock.connection_table import define_connection_table
 from labscriptlib.ybclock.subsequences import *
 from labscriptlib.ybclock.classes import define_classes
 
+def wait(duration):
+	return duration
+
 if __name__ == '__main__':
 
 	ms = 1e-3
@@ -16,7 +19,6 @@ if __name__ == '__main__':
 
 	define_connection_table()
 	define_classes()
-	exp_cavity = ExperimentalCavity()
 	HP8648Cfor759.constant(bridging_frequency_759)
 
 	# Begin issuing labscript primitives
