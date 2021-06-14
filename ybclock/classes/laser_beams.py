@@ -315,7 +315,11 @@ class GreenLaser(Laser):
 			)
 
 		self.cooling = LaserBeam(
-				intensity_control = None,
+				intensity_control = LaserIntensity(
+						intensity_channel = cooling_pi_power,
+						rf_switch_channel = cooling_pi_power_switch,
+						shutter_channel = cooling_pi_shutter
+					),
 				frequency_control = None,
 			)
 
