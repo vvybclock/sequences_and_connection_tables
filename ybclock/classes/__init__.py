@@ -9,6 +9,7 @@
 
 from .laser_beams import *
 from .rabi_pulses import *
+from .experimental_cavity import *
 
 #put all class libraries before this ine
 from .define_classes import *
