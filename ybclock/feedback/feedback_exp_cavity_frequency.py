@@ -45,11 +45,17 @@ try:
 	output = -G*(P*error)
 
 	#set cavity frequency 
-	retrieved_globals['bridging_frequency_759'] -= output
+	temp_bridging_frequency = retrieved_globals['bridging_frequency_759']
+	temp_bridging_frequency -= output
 
-	#update the global variables
-	print("Setting Global Variables...")
-	remote.set_globals(retrieved_globals)
+	if temp_bridging_frequency < 420 or temp_bridging_frequency > 450:
+		print("Warning: Feedback seems out of lock... Near boundarys [420,450]")
+	else:
+		retrieved_globals['bridging_frequency_759'] = temp_bridging_frequency
+
+		#update the global variables
+		print("Setting Global Variables...")
+		remote.set_globals(retrieved_globals)
 
 	#engage the next shot.
 	print("Engaging Next Shot...", end='')
