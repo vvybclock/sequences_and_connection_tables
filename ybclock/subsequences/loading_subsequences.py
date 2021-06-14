@@ -45,7 +45,7 @@ def blue_mot(t,duration,add_marker=True,take_picture=False):
 	#turn on the blue mot
 	if add_marker: add_time_marker(t, "Turn On Blue MOT", verbose=True)
 	#turn off extra light sources that can interrupt loading
-	green.cooling.turnoff(t,warmup_value=10)
+	green.cooling_pi.turnoff(t,warmup_value=10)
 
 	#set voltage limit on mot
 	mot_coil_voltage.constant(t,value=8.5)

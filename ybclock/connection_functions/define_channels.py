@@ -224,7 +224,7 @@ def green_laser_channels():
 	is open. For `go_low`, the probe sideband path is open.
 
 	## Frequency Control
-
+	
 	###`probe_sideband_frequency`
 
 	Controls the frequency of the EOM modulation, thus letting us control the
@@ -233,6 +233,9 @@ def green_laser_channels():
 	###`two_color_chirp`
 
 	Triggers the SRS to begin the frequency sweep for the phase measurement.
+
+	###`` (SRS FM input)
+	
 
 	## FPGA Trigger
 

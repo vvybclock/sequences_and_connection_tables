@@ -14,7 +14,7 @@ def define_classes(name_space=globals()):
 	builtins.RF = RfRabiDrive(
 		rabi_channel_ac 	= rabi_coil_field, 
 		rabi_channel_dc 	= rabi_coil_dc_offset, 
-		larmor_frequency	= 10179)
+		larmor_frequency	= rf_larmor_frequency)
 	
 	builtins.exp_cavity = ExperimentalCavity()
 
