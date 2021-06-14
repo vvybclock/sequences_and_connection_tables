@@ -43,7 +43,7 @@ def empty_cavity_analysis(data, scan_parameters,path):
 		#Extract photon's frequency based on arrival time
 		#since we have calibrated frequency vs voltage, and performed the scan across frequency
 		#there is a true linear relationship between arrival time and frequency :)
-		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
+		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)+initial_f
 		freq_bin_width_MHz = 0.2
 		# Decide if we should use MLE fit or not.
 		if len(photon_arrivals_in_frequency_MHz) > 4000:

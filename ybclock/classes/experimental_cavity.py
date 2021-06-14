@@ -89,11 +89,12 @@ class ExperimentalCavity:
 		self.number_of_p7888_start_triggers += 1
 		return 1*ms
 
-	def scan(self,t, label, verbose=False):
+	def scan(self,t, label, params={}, verbose=False):
 		'''
 
-		t    	- scan light across the cavity at time t.
-		label	- name of the cavity scan you are performing.
+		t     	- scan light across the cavity at time t.
+		label 	- name of the cavity scan you are performing.
+		params	- add any extra parameters you wish to save in the HDF file.
 		verbose - adds time markers and the beginning of  each scan.
 		
 		This function turns on the light for the experimental cavity `shutter_open_time`
@@ -120,16 +121,23 @@ class ExperimentalCavity:
 		final_f   	= empty_cavity_frequency_sweep_initial+empty_cavity_frequency_sweep_range
 		samplerate	= empty_cavity_samples/(empty_cavity_sweep_duration*ms)
 
-
-		#record the parameters in a dictionary inside a list that holds dictionarys.
-		self.scan_parameters[label].append({
+		parameters = {
 			"t"                    	: t,
 			"duration"             	: duration,
 			"initial_f"            	: initial_f,
 			"final_f"              	: final_f,
 			"samplerate"           	: samplerate,
 			"initial_start_trigger"	: self.number_of_p7888_start_triggers
-		})
+		}
+
+		for key,value in params.items():
+			if key in parameters:
+				raise Exception(f"Error: Do not use the key '{key}'. It exists in the parameters to be saved already.")
+			else:
+				parameters[key] = value
+
+		#record the parameters in a dictionary inside a list that holds dictionarys.
+		self.scan_parameters[label].append(parameters)
 
 		#initial laser light management
 		if verbose: add_time_marker(t - shutter_open_time ,f"Cavity Scan Prep: {label}")

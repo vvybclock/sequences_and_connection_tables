@@ -56,7 +56,7 @@ def atom_cavity_analysis(data, scan_parameters,path):
 		#Extract photon's frequency based on arrival time
 		#since we have calibrated frequency vs voltage, and performed the scan across frequency
 		#there is a true linear relationship between a arrival time and frequency :)
-		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time)
+		photon_arrivals_in_frequency_MHz = (photons_in_scan_time - start_time)*(final_f-initial_f)/(end_time-start_time) + initial_f
 
 		histogram_resolution = .2;
 		if len(photon_arrivals_in_frequency_MHz) > 4000:

@@ -197,11 +197,11 @@ class RfRabiDrive:
 
 		return duration
 
-	def save_unitary(self):
+	def get_unitary(self):
 		'''
-			Saves atomic state for analysis.
+			returns atomic state for analysis.
 		'''
-		pass
+		return self.atom_unitary.unitary
 
 
 if __name__ == '__main__':
