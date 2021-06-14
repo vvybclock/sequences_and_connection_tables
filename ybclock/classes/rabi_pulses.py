@@ -9,6 +9,8 @@ import scipy as sp
 
 # clock.rabi_pulse(...)
 
+ms = 1e-3
+
 class Spinor:
 	'''
 
@@ -143,16 +145,18 @@ class RfRabiDrive:
 
 	'''
 
-	rabi_channel    	= None
+	rabi_channel_ac 	= None
+	rabi_channel_dc 	= None
 	larmor_frequency	= None
 	atom_unitary    	= None
 
-	def __init__(self, rabi_channel, larmor_frequency):
+	def __init__(self, rabi_channel_ac, rabi_channel_dc, larmor_frequency):
 		'''
-			rabi_channel - Specify the analog channel for controlling the Rabi Field.
+			rabi_channel_ac - Specify the analog channel for controlling the Rabi Field.
 			larmor_frequency - Specify the precession frequency in Hertz.
 		'''
-		self.rabi_channel    	= rabi_channel
+		self.rabi_channel_dc 	= rabi_channel_dc
+		self.rabi_channel_ac 	= rabi_channel_ac
 		self.larmor_frequency	= larmor_frequency
 		self.atom_unitary    	= Spinor(f_larmor=larmor_frequency)
 
@@ -176,21 +180,30 @@ class RfRabiDrive:
 		)
 
 		#perform actual rabi pulse
-		self.rabi_channel.sine(
+		self.rabi_channel_dc.constant(t,value=1.013)
+
+		self.rabi_channel_ac.sine(
 			t         	= t,
 			duration  	= duration,
-			amplitude 	= (1 + amplitude_correction)* rabi_area/duration * sine_area_correction,
+			amplitude 	= (1 + amplitude_correction)* (0.625*1.013*2.29*ms)/pi * rabi_area/duration * sine_area_correction,
 			angfreq   	= angfreq,
 			phase     	= phase + angfreq*t,
 			dc_offset 	= 0,
 			samplerate	= samplerate
 		)
 
+		self.rabi_channel_ac.constant(t+duration, 0)
+		self.rabi_channel_dc.constant(t+duration,value=0)
 
-		pass
+		return duration
 
 	def save_unitary(self):
 		'''
 			Saves atomic state for analysis.
 		'''
 		pass
+
+
+if __name__ == '__main__':
+	RfRabiDrive()
+	print('It works!')
