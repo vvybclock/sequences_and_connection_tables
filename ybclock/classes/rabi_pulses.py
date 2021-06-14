@@ -160,7 +160,7 @@ class RfRabiDrive:
 		self.larmor_frequency	= larmor_frequency
 		self.atom_unitary    	= Spinor(f_larmor=larmor_frequency)
 
-	def resonant_rabi_pulse(self,t,rabi_area,phase,duration,samplerate,amplitude_correction=0):
+	def rabi_pulse(self,t,rabi_area,phase,duration,samplerate,amplitude_correction=0,detuning=0):
 		'''
 			rabi_area           	- the rotated angle of the spin state in radians.
 			phase               	- the phase of the Rabi Drive relative to the Local Oscillator (LO) or Oscillation Phase of the atoms.
@@ -169,7 +169,7 @@ class RfRabiDrive:
 		'''
 
 		sine_area_correction = 1
-		angfreq = 2*pi*self.larmor_frequency
+		angfreq = 2*pi*self.larmor_frequency + 2*pi*detuning
 
 		#perform theoretical rabi pulse
 		self.atom_unitary.rabi_pulse(
@@ -180,19 +180,24 @@ class RfRabiDrive:
 		)
 
 		#perform actual rabi pulse
-		self.rabi_channel_dc.constant(t,value=1.013)
+		self.rabi_channel_dc.constant(t,value=dc_offset)
+
+		rabi_amplitude = (1 + amplitude_correction)*pi_pulse_area/pi * rabi_area/duration * sine_area_correction
+
+		if rabi_amplitude > max_rabi_amplitude:
+			raise Exception("Error: You're trying to set the rabi_amplitude larger than the largest linear value.")
 
 		self.rabi_channel_ac.sine(
 			t         	= t,
 			duration  	= duration,
-			amplitude 	= (1 + amplitude_correction)* (0.625*1.013*2.29*ms)/pi * rabi_area/duration * sine_area_correction,
+			amplitude 	= rabi_amplitude,
 			angfreq   	= angfreq,
 			phase     	= phase + angfreq*t,
 			dc_offset 	= 0,
 			samplerate	= samplerate
 		)
 
-		self.rabi_channel_ac.constant(t+duration, 0)
+		self.rabi_channel_ac.constant(t+duration,value=0)
 		self.rabi_channel_dc.constant(t+duration,value=0)
 
 		return duration

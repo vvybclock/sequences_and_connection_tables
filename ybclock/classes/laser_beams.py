@@ -85,6 +85,9 @@ class LaserIntensity():
 		self.__turnoff_voltage  	= turnoff_voltage
 		self.__shutter_closetime	= shutter_closetime
 
+	def prepare(self,*args,**kwargs):
+		pass
+
 	def turnoff(self, t, warmup_value, overload=False):
 		'''
 			Turns off beam if and only if on unless `overload == True` then always turn off.
@@ -150,6 +153,8 @@ class LaserIntensity():
 				[x]	Set up Shutter turn on/off
 				[x]	Set up RF Switch turn on/off
 		'''
+
+		self.prepare(t)
 
 		#determine shutter close time
 		if self.__shutter_closetime is None:
@@ -314,7 +319,26 @@ class GreenLaser(Laser):
 				frequency_control = None,
 			)
 
-		self.cooling = LaserBeam(
+		#overload the prepare function
+		def open_for_probe(self,t):
+			probe_sideband_cooling_shutters.go_low(t)
+		self.probe.prepare = open_for_probe
+
+		self.cooling_sigma = LaserBeam(				
+		        intensity_control = LaserIntensity(
+						intensity_channel = cooling_sigma_plus_power,
+						rf_switch_channel = probe_power_switch,
+						shutter_channel = probe_shutter
+					),
+				frequency_control = None,#SRS FM input
+			)
+
+		#overload the prepare function
+		def open_for_sigma(self,t):
+			probe_sideband_cooling_shutters.go_high(t)
+		self.cooling_sigma.prepare = open_for_sigma
+
+		self.cooling_pi = LaserBeam(
 				intensity_control = LaserIntensity(
 						intensity_channel = cooling_pi_power,
 						rf_switch_channel = cooling_pi_power_switch,

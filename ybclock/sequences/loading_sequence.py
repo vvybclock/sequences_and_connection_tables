@@ -53,7 +53,7 @@ if __name__ == '__main__':
 	
 
 	#perform rabi pulse then cavity scan
-	t += RF.resonant_rabi_pulse(
+	t += RF.rabi_pulse(
 		t        	= t,
 		rabi_area	= pi/2,
 		phase    	= 0,
