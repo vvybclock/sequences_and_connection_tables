@@ -12,7 +12,7 @@ import labscript_utils.h5_lock
 import h5py
 
 #Add class
-from labscriptlib.ybclock.subsequences import ExperimentalCavity
+from labscriptlib.ybclock.classes import ExperimentalCavity
 
 #analysis libs
 import numpy as np

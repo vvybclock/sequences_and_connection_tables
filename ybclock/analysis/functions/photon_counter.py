@@ -6,7 +6,7 @@
 	in the P7888 device in user_devices.
 '''
 import numpy as np
-from labscriptlib.ybclock.subsequences import ExperimentalCavity
+from labscriptlib.ybclock.classes import ExperimentalCavity
 
 
 def determine_newline_type(entire_file):
