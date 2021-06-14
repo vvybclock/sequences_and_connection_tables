@@ -45,8 +45,7 @@ def blue_mot(t,duration,add_marker=True,take_picture=False):
 	#turn on the blue mot
 	if add_marker: add_time_marker(t, "Turn On Blue MOT", verbose=True)
 	#turn off extra light sources that can interrupt loading
-	cooling_pi_power_switch.disable(t)
-	cooling_pi_shutter.disable(t)
+	green.cooling.turnoff(t,warmup_value=10)
 
 	#set voltage limit on mot
 	mot_coil_voltage.constant(t,value=8.5)
@@ -59,7 +58,7 @@ def blue_mot(t,duration,add_marker=True,take_picture=False):
 
 	#set light power
 	blue.mot.intensity.constant(t, value=0.3)
-	green.mot.intensity.constant(t, value=0.28) #why?
+	green.mot.intensity.constant(t, value=0.28) #why? Two Color Mot thats why.
 	#the green light serves as extra doppler cooling.
 
 
@@ -104,6 +103,10 @@ def cool_atoms_in_green_mot(t,duration,samplerate, add_marker=True):
 	if add_marker: add_time_marker(t, "Hold Green MOT", verbose=True)
 	#start ramping up green frequency to set up green mot.
 	green_frequency_fpga_trigger.enable(t)
+	
+	#
+	# Add the PTS time markers for the green fpga trigger.
+	#
 	#record timestamps for when we shift frequencies of the green using the PTS
 	tPTS = t; #577ms in Excel Sequences
 	add_time_marker(tPTS, "PTS: 1st to 2nd")
@@ -111,6 +114,8 @@ def cool_atoms_in_green_mot(t,duration,samplerate, add_marker=True):
 	add_time_marker(tPTS, "PTS: 2nd to 3rd")
 	tPTS += 20*ms;
 	add_time_marker(tPTS, "PTS: 3rd to 4th")
+	
+
 	#ramp down green power so we don't blind the camera.
 	green.mot.intensity.ramp(t+duration-60*ms, duration=60*ms, initial=0.3, final=0.12, samplerate=samplerate)
 	green.mot.turnoff(t=tPTS,warmup_value=0.3)
@@ -127,6 +132,9 @@ def position_atoms_to_optical_lattice(t, duration,samplerate, add_marker=True):
 	return duration
 
 def optimize_position_atoms_to_optical_lattice(t, duration,samplerate, add_marker=True):
+	'''
+		The sequence to use when we're using MLOOP to optimize the atom loading. Its empty for now.
+	'''
 	pass
 
 def hold_atoms(t, duration,add_marker=True):
@@ -154,6 +162,74 @@ def load_from_oven_to_optical_lattice(t, add_marker=True, take_picture=True):
 		isometric_cam.expose(t + 20*ms,	name='green_mot', frametype='almost_loaded', trigger_duration=20*ms)
 
 	t += hold_atoms(t,	duration= 40*ms,add_marker=add_marker)
+
+	return t-t0
+
+def ramp_magnetic_fields_for_cavity_readout(t, add_marker = True):
+	#ramp magnetic fields (for setting atoms on resonance with cavity)
+	if add_marker: add_time_marker(t, "Ramp Bias Fields.")
+	ramp_duration = 2*ms
+	z_bias_field.ramp(t, duration=ramp_duration, initial=-0.795,final=spin_b_field_z,samplerate=10*kHz)
+	y_bias_field.ramp(t, duration=ramp_duration, initial=0.28,final=-1.86,samplerate=10*kHz)
+	x_bias_field.ramp(t, duration=ramp_duration, initial=5.105,final=-0.02,samplerate=10*kHz)
+	return ramp_duration
+
+def ramp_down_mot(t):
+
+	t0 = t
+	#ramp down mot
+	t+= mot_coil_current.ramp(t,
+		duration=20*ms,
+		initial=9.1,
+		final=9.1*(8/8.5),
+		samplerate= 10*kHz
+	)
+
+	t+= mot_coil_current.ramp(t,
+		duration=40*ms,
+		initial=9.1*(8/8.5),
+		final=9.1*(8/8.5)*0.8,
+		samplerate=10*kHz
+		)
+
+	t+= mot_coil_current.ramp(t,
+		duration=50*ms,
+		initial=9.1*(8/8.5)*0.8,
+		final=9.1*(8/8.5)*0.8/4,
+		samplerate=10*kHz
+	)
+
+	t+= mot_coil_current.ramp(t,
+		duration=35*ms,
+		initial=9.1*(8/8.5)*0.8/4,
+		final=0,
+		samplerate=10*kHz
+	)
+
+	return t-t0
+
+def spin_polarize_atoms(t):
+	'''
+		Polarize atoms and count the number of pump photons.
+	'''
+	t0 = t
+	#pump atoms
+	pump_duration = 20*ms
+	green.pump.intensity.constant(t, value=spin_polarization_power)
+	exp_cavity.count_photons(t=t,duration=pump_duration,label='pump_photons')
+	t+= pump_duration
+	green.pump.turnoff(t,warmup_value=0)
+
+	return t-t0
+
+
+def empty_then_measure_cavity_frequency(t):
+	t0 = t
+	#perform an empty cavity scan
+	blue.mot.intensity.constant(t, value=0.28)
+	t += 20*ms
+	blue.mot.intensity.turnoff(t,warmup_value=0.28)
+	t += exp_cavity.scan(t, label='empty_cavity')
 
 	return t-t0
 
