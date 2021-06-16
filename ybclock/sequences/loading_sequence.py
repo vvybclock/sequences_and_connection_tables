@@ -63,6 +63,11 @@ if __name__ == '__main__':
 
 	t += wait(20*ms)
 
+	#blow away atoms
+	green.cooling_pi.intensity.constant(t, value=2)
+	t += wait(100*ms) 
+	green.cooling_pi.turnoff(t, warmup_value=2)
+
 	t += exp_cavity.scan(t, label='atoms_in_cavity', params={'unitary': RF.get_unitary()})
 
 	t += empty_then_measure_cavity_frequency(t)

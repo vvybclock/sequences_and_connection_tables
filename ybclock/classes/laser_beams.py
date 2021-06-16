@@ -290,10 +290,11 @@ class BlueLaser(Laser):
 class GreenLaser(Laser):
 
 	#beampath names go here
-	probe	= None 
-	pump 	= None #needs P7888 monitor
-	mot  	= None
-	cooling = None
+	probe        	= None 
+	pump         	= None #needs P7888 monitor
+	mot          	= None
+	cooling_pi   	= None
+	cooling_sigma	= None
 
 	def __init__(self):
 		#define the beampaths
