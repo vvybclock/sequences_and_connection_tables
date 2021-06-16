@@ -321,6 +321,7 @@ class GreenLaser(Laser):
 
 		#overload the prepare function
 		def open_for_probe(self,t):
+			probe_sideband_cooling_rf_switch.go_low(t)
 			probe_sideband_cooling_shutters.go_low(t)
 		self.probe.prepare = open_for_probe
 
@@ -330,11 +331,12 @@ class GreenLaser(Laser):
 						rf_switch_channel = probe_power_switch,
 						shutter_channel = probe_shutter
 					),
-				frequency_control = None,#SRS FM input
+				frequency_control = cooling_sideband_frequency,#SRS FM input
 			)
 
 		#overload the prepare function
 		def open_for_sigma(self,t):
+			probe_sideband_cooling_rf_switch.go_high(t)
 			probe_sideband_cooling_shutters.go_high(t)
 		self.cooling_sigma.prepare = open_for_sigma
 

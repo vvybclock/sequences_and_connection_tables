@@ -204,6 +204,9 @@ def green_laser_channels():
 	Controlled via AOM.
 	###`cooling_pi_power_switch`
 	Controlled via AOM.
+	###`probe_sideband_cooling_rf_switch`
+	Is the TTL for an RF switch for changing the frequency fed into the eom
+	for the probe/cooling path.
 	##Shutter Controls
 
 	Aren't these just intensity controls? Yes, but they block the light better
@@ -234,9 +237,17 @@ def green_laser_channels():
 
 	Triggers the SRS to begin the frequency sweep for the phase measurement.
 
-	###`` (SRS FM input)
-	
+	###`cooling_sideband_frequency` (SRS FM input)
 
+	An analog input feeding into an SRS to control the Frequency Modulation.
+	Thus, it's effectively a VCO.
+
+	This VCO is driving the same EOM as the `probe_sideband_frequency` channel
+	controls. We need a TTL to switch between the probe and cooling
+	settings. One for the shutter, and one for the RF switch.
+
+	
+	
 	## FPGA Trigger
 
 	There is an FPGA (Opal Kelly) that controls the frequencies of a Double Pass
@@ -331,6 +342,11 @@ def green_laser_channels():
 		connection   	= 'port0/line2'
 	)
 
+	DigitalOut(
+		name         	= 'probe_sideband_cooling_rf_switch', #Old name: ProbeEOMPowerSelect (0=VCO 1=SRS)
+		parent_device	= ni_pci_6713_dev5,
+		connection   	= 'port0/line29'
+	)
 
 	# 
 	# Shutters
@@ -373,6 +389,12 @@ def green_laser_channels():
 		    'raw_voltage'   : vco_raw_voltage_data,
 		    'raw_frequency' : vco_raw_frequency_data
 		}
+	)
+
+	AnalogOut(
+		name         	= 'cooling_sideband_frequency',
+		parent_device	= ni_pci_6723_dev3,
+		connection   	= 'ao2'
 	)
 
 	DigitalOut(
