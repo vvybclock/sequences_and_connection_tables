@@ -28,7 +28,10 @@
 	green.probe.turnoff(t)
 	```
 '''
+import builtins
 from labscript.labscript import AnalogQuantity
+
+DEBUG = False
 
 class LaserFrequency(AnalogQuantity):
 	'''
@@ -67,7 +70,7 @@ class LaserIntensity():
 
 	__turnoff_voltage  	= None #For the AOM/EOM
 	__shutter_closetime	= None #Close time from after the TTL is sent
-
+	__prepare_function 	= None
 	#state variable for keeping track of turning the laser on or off
 	is_on = False 
 
@@ -76,17 +79,29 @@ class LaserIntensity():
 		shutter_channel=None, 
 		turnoff_voltage=None,
 		shutter_closetime=None,
-		rf_switch_channel=None):
+		rf_switch_channel=None,
+		prepare_function=None
+		):
 
 		self.__intensity_channel	= intensity_channel
 		self.__shutter_channel  	= shutter_channel
 		self.__rf_switch_channel	= rf_switch_channel
 
+		self.__prepare_string   	= prepare_function
 		self.__turnoff_voltage  	= turnoff_voltage
 		self.__shutter_closetime	= shutter_closetime
 
-	def prepare(self,*args,**kwargs):
-		pass
+
+	def prepare(self, t):
+		# print(f'rf_switch_channel: {self.__rf_switch_channel}')
+		if self.__prepare_string == 'cooling_sigma':
+			probe_sideband_cooling_rf_switch.go_high(t)
+			probe_sideband_cooling_shutters.go_high(t)
+		elif self.__prepare_string == 'probe_sideband':
+			probe_sideband_cooling_rf_switch.go_low(t)
+			probe_sideband_cooling_shutters.go_low(t)
+
+
 
 	def turnoff(self, t, warmup_value, overload=False):
 		'''
@@ -287,6 +302,17 @@ class BlueLaser(Laser):
 				frequency_control	= None
 			)
 
+class CombinedProbePowerSwitch():
+	'''
+		A custom class just to combine rf power switches for the probe beampath.
+	'''
+	def enable(self,t):
+		probe_sideband_power_switch.enable(t)
+		probe_power_switch.enable(t)
+	def disable(self,t):
+		probe_sideband_power_switch.disable(t)
+		probe_power_switch.disable(t)
+
 class GreenLaser(Laser):
 
 	#beampath names go here
@@ -297,6 +323,8 @@ class GreenLaser(Laser):
 	cooling_sigma	= None
 
 	def __init__(self):
+		# a custom definition to combine two rf switches
+		builtins.combined_probe_sideband_power_switch = CombinedProbePowerSwitch()
 		#define the beampaths
 		self.mot = LaserBeam(
 				intensity_control = LaserIntensity(
@@ -310,36 +338,32 @@ class GreenLaser(Laser):
 		self.pump = LaserBeam(
 				intensity_control = LaserIntensity(
 						intensity_channel = pump_power,
-						rf_switch_channel = pump_power_switch
+						rf_switch_channel = pump_power_switch,
+						prepare_function = 'pump_testing'
 					),
 				frequency_control = None,
 			)
 
 		self.probe = LaserBeam(
-				intensity_control = None,
-				frequency_control = None,
+				intensity_control = LaserIntensity(
+						intensity_channel	= probe_sideband_power,
+						rf_switch_channel	= combined_probe_sideband_power_switch,
+						shutter_channel  	= probe_shutter,
+						prepare_function 	= 'probe_sideband'
+					),
+				frequency_control = probe_sideband_frequency,
 			)
-
-		#overload the prepare function
-		def open_for_probe(self,t):
-			probe_sideband_cooling_rf_switch.go_low(t)
-			probe_sideband_cooling_shutters.go_low(t)
-		self.probe.prepare = open_for_probe
 
 		self.cooling_sigma = LaserBeam(				
 		        intensity_control = LaserIntensity(
-						intensity_channel = cooling_sigma_plus_power,
-						rf_switch_channel = probe_power_switch,
-						shutter_channel = probe_shutter
+						intensity_channel	= cooling_sigma_plus_power,
+						rf_switch_channel	= probe_power_switch,
+						shutter_channel  	= probe_shutter,
+						prepare_function 	= 'cooling_sigma'
 					),
 				frequency_control = cooling_sideband_frequency,#SRS FM input
 			)
 
-		#overload the prepare function
-		def open_for_sigma(self,t):
-			probe_sideband_cooling_rf_switch.go_high(t)
-			probe_sideband_cooling_shutters.go_high(t)
-		self.cooling_sigma.prepare = open_for_sigma
 
 		self.cooling_pi = LaserBeam(
 				intensity_control = LaserIntensity(
