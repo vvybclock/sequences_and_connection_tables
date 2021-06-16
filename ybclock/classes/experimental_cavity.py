@@ -89,13 +89,13 @@ class ExperimentalCavity:
 		self.number_of_p7888_start_triggers += 1
 		return 1*ms
 
-	def scan(self,t, label, params={}, verbose=False):
+	def scan(self,t, label, params={}, add_markers=False):
 		'''
 
 		t     	- scan light across the cavity at time t.
 		label 	- name of the cavity scan you are performing.
 		params	- add any extra parameters you wish to save in the HDF file.
-		verbose - adds time markers and the beginning of  each scan.
+		add_markers - adds time markers and the beginning of  each scan.
 		
 		This function turns on the light for the experimental cavity `shutter_open_time`
 		before the scan time `t`.
@@ -110,7 +110,6 @@ class ExperimentalCavity:
 		t0 = t
 
 		shutter_open_time = 5*ms
-		t_buffer = 1*ms
 
 		#make room in the dictionary if this label is used for the first time.
 		self.scan_parameters.setdefault(label, [])
@@ -140,25 +139,20 @@ class ExperimentalCavity:
 		self.scan_parameters[label].append(parameters)
 
 		#initial laser light management
-		if verbose: add_time_marker(t - shutter_open_time ,f"Cavity Scan Prep: {label}")
+		if add_markers: add_time_marker(t - shutter_open_time ,f"Cavity Scan Prep: {label}")
+
 		#set sideband frequency before turning on power
-		probe_sideband_frequency.constant(t - shutter_open_time, value=initial_f, units='MHz')
-		#turn on light power
-		probe_sideband_power_switch.enable(t - shutter_open_time)
-		probe_sideband_power.constant(t - shutter_open_time, value=empty_cavity_scan_power)
+		green.probe.frequency.constant(t - shutter_open_time, value=initial_f, units='MHz')
+		green.probe.intensity.constant(t,value=empty_cavity_scan_power)
 
-		probe_power_switch.disable(t - shutter_open_time)
 		photon_counter_shutter.enable(t - shutter_open_time)	#open photon counter shutter
-		probe_shutter.enable(t - shutter_open_time); 
-
-		probe_power_switch.enable(t)
 
 		tloop = t
 
 		#update scan time to be right when the frequency scans
 		self.scan_parameters[label][-1]['t'] = t
 		#tell labscript to perform the scan with the given parameters.
-		t += probe_sideband_frequency.ramp(
+		t += green.probe.frequency.ramp(
 			t, 
 			duration=duration,
 			initial=initial_f,
@@ -172,14 +166,8 @@ class ExperimentalCavity:
 			
 
 		#turn off lights
-		probe_sideband_power_switch.disable(t)
-		probe_sideband_power.constant(t, value=0)
-
-		probe_power_switch.disable(t)
+		green.probe.turnoff(t, warmup_value=empty_cavity_scan_power)
 		photon_counter_shutter.disable(t)	#close photon counter shutter
-		probe_shutter.disable(t); 
-		t += shutter_open_time
-		probe_power_switch.enable(t)
 
 		self.save_parameters()
 
@@ -187,7 +175,7 @@ class ExperimentalCavity:
 		#this will prevent unneccessary shutter pulses
 		return t-t0
 
-	def count_photons(self,t,label,duration, verbose=False):
+	def count_photons(self,t,label,duration, add_markers=False):
 		'''
 			Opens the Shutter to the P7888 Photon Counter but doesn't actually scan the frequency of the green. Useful for counting photons transmitted through the cavity.
 		'''
@@ -196,7 +184,6 @@ class ExperimentalCavity:
 		t0 = t
 
 		shutter_open_time = 5*ms
-		t_buffer = 1*ms
 
 		#make room in the dictionary if this label is used for the first time.
 		self.scan_parameters.setdefault(label, [])
@@ -209,7 +196,7 @@ class ExperimentalCavity:
 		})
 
 		#initial laser light management
-		if verbose: add_time_marker(t - shutter_open_time ,f"Cavity Photon Count Prep: {label}")
+		if add_markers: add_time_marker(t - shutter_open_time ,f"Cavity Photon Count Prep: {label}")
 
 		photon_counter_shutter.enable(t - shutter_open_time)	#open photon counter shutter
 

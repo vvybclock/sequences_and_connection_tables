@@ -38,10 +38,12 @@ if __name__ == '__main__':
 	t += wait(200*ms + 140*ms)
 
 	#read unpolarized atom number.
+	add_time_marker(t, "Read Unpolarized Atom Number")
 	t += exp_cavity.scan(t, params={'unitary': RF.get_unitary()}, label='atoms_in_cavity')
 
-	t+= wait(5*ms)
+	t+= wait(10*ms)
 
+	add_time_marker(t, "Polarize Atoms")
 	t += spin_polarize_atoms(t)
 
 	RF.atom_unitary.prepare_atom_unitary(t)
@@ -53,23 +55,35 @@ if __name__ == '__main__':
 	
 
 	#perform rabi pulse then cavity scan
-	t += RF.rabi_pulse(
-		t        	= t,
-		rabi_area	= pi/2,
-		phase    	= 0,
-		duration 	= 2.29*ms,
-		samplerate  = 100*kHz
-		)
+	# t += RF.rabi_pulse(
+	#	t        	= t,
+	#	rabi_area	= pi/2,
+	#	phase    	= 0,
+	#	duration 	= 2.29*ms,
+	#	samplerate  = 100*kHz
+	#	)
 
 	t += wait(20*ms)
 
-	#blow away atoms
-	green.cooling_pi.intensity.constant(t, value=2)
-	t += wait(100*ms) 
-	green.cooling_pi.turnoff(t, warmup_value=2)
+	add_time_marker(t, "Begin Cooling")
+	COOLING = True
+	#cool atoms
+	if COOLING:
+		green.cooling_pi.intensity.constant(t, value=10)
+		green.cooling_sigma.intensity.constant(t,value=1.5)
+		green.cooling_sigma.frequency.constant(t,value=0.65)
+		t += wait(500*ms) 
+		green.cooling_pi.turnoff(t, warmup_value=10)
+		green.cooling_sigma.turnoff(t, warmup_value=2.5)
+		t += wait(11*ms)
+	else:
+		t += wait(500*ms)
 
+	add_time_marker(t, "Scan Neta")
 	t += exp_cavity.scan(t, label='atoms_in_cavity', params={'unitary': RF.get_unitary()})
 
+	t += wait(10*ms)
+	add_time_marker(t, "Empty then Scan")
 	t += empty_then_measure_cavity_frequency(t)
 
 

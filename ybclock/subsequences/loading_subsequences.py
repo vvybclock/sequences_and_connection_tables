@@ -220,6 +220,9 @@ def spin_polarize_atoms(t):
 	t+= pump_duration
 	green.pump.turnoff(t,warmup_value=0)
 
+	#wait for the shutter to close
+	t+= 5*ms
+
 	return t-t0
 
 
