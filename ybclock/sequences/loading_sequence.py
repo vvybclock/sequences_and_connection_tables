@@ -25,7 +25,7 @@ if __name__ == '__main__':
 	# start() elicits the commencement of the shot
 	start()
 
-	set_default_values()
+	set_start_values()
 
 	t = 10.1*ms
 
