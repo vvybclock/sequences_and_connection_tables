@@ -18,12 +18,17 @@ def define_channels():
 	undocumented_channels()
 
 def undocumented_channels():
-	DigitalOut(
-		name         	= 'UNDOCUMENTED_switch_for_phase_reference',
-		parent_device	= ni_pci_6284_dev6,
-		connection   	= 'port0/line14'
-	)
+	# DigitalOut(
+	#	name         	= 'UNDOCUMENTED_switch_for_phase_reference',
+	#	parent_device	= ni_pci_6284_dev6,
+	#	connection   	= 'port0/line14'
+	# )
 
+	AnalogOut(
+		name         	= 'UNDOCUMENTED_unused_1',
+		parent_device	= ni_pci_6723_dev3,
+		connection   	= 'ao6'
+	)
 def blue_laser_channels():
 	'''
 	###`blue_mot_power`
@@ -344,7 +349,7 @@ def green_laser_channels():
 
 	DigitalOut(
 		name         	= 'probe_sideband_cooling_rf_switch', #Old name: ProbeEOMPowerSelect (0=VCO 1=SRS)
-		parent_device	= ni_pci_6713_dev5,
+		parent_device	= ni_pci_6284_dev6,
 		connection   	= 'port0/line29'
 	)
 
