@@ -16,6 +16,7 @@ def define_channels():
 	camera_channels()
 	photon_counter_channels()
 	undocumented_channels()
+	analog_inputs()
 
 def undocumented_channels():
 	# DigitalOut(
@@ -544,3 +545,17 @@ def photon_counter_channels():
 		connection   	= 'port0/line13',
 		inverted     	= True
 	)
+
+def analog_inputs():
+	print("\tDefining Analog Channels...")
+	AnalogIn(
+			name         	= 'green_cooling_pi_monitor', 
+			parent_device	= ni_pci_6284_dev6,
+			connection   	= 'ai6'
+		)
+
+	AnalogIn(
+			name         	= 'green_probe_monitor',
+			parent_device	= ni_pci_6284_dev6,
+			connection   	= 'ai5'
+		)
