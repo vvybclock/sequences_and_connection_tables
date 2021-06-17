@@ -93,13 +93,24 @@ class LaserIntensity():
 
 
 	def prepare(self, t):
-		# print(f'rf_switch_channel: {self.__rf_switch_channel}')
+		'''
+			This is a special function added to account for the edge cases
+			that the Laser Intensity controller would not be able to
+			accomodate otherwise.
+
+			This is code for switching between the `cooling_sigma` laser and
+			the `probe_sideband` which share a considerable portion of the beampath.
+		'''
+
+		shutter_closetime = 5*ms
+		if self.__shutter_closetime is not None:
+			shutter_closetime = self.__shutter_closetime
 		if self.__prepare_string == 'cooling_sigma':
 			probe_sideband_cooling_rf_switch.go_high(t)
-			probe_sideband_cooling_shutters.go_high(t)
+			probe_sideband_cooling_shutters.go_high(t-shutter_closetime)
 		elif self.__prepare_string == 'probe_sideband':
 			probe_sideband_cooling_rf_switch.go_low(t)
-			probe_sideband_cooling_shutters.go_low(t)
+			probe_sideband_cooling_shutters.go_low(t-shutter_closetime)
 
 
 
