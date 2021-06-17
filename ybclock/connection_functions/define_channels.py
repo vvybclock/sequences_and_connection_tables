@@ -547,7 +547,6 @@ def photon_counter_channels():
 	)
 
 def analog_inputs():
-	print("\tDefining Analog Channels...")
 	AnalogIn(
 			name         	= 'green_cooling_pi_monitor', 
 			parent_device	= ni_pci_6284_dev6,
