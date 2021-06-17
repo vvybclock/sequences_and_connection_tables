@@ -2,13 +2,13 @@ from labscript import start, stop, AnalogOut, DigitalOut
 from labscriptlib.ybclock.connection_table import define_connection_table
 from labscriptlib.ybclock.subsequences import *
 from labscript_utils.unitconversions import *
-
+from labscriptlib.ybclock.classes import *
 
 if __name__ == '__main__':
 	define_connection_table()
-
-	exp_cavity = ExperimentalCavity()
+	define_classes()
 	HP8648Cfor759.constant(bridging_frequency_759)
+
 	# Begin issuing labscript primitives
 	# start() elicits the commencement of the shot
 	start()
