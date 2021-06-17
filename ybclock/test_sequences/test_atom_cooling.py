@@ -51,18 +51,8 @@ if __name__ == '__main__':
 	t+= wait(20*ms)
 
 	#read atom number.
-	t += exp_cavity.scan(t, params={'unitary': RF.get_unitary()}, label='atoms_in_cavity')
+	t += exp_cavity.scan(t, params={'unitary': RF.get_unitary(), 'usage': 'measure_before_cooling'}, label='atoms_in_cavity')
 	
-
-	#perform rabi pulse then cavity scan
-	# t += RF.rabi_pulse(
-	#	t        	= t,
-	#	rabi_area	= pi/2,
-	#	phase    	= 0,
-	#	duration 	= 2.29*ms,
-	#	samplerate  = 100*kHz
-	#	)
-
 	t += wait(20*ms)
 
 	add_time_marker(t, "Begin Cooling")
@@ -82,7 +72,7 @@ if __name__ == '__main__':
 		t += wait(500*ms)
 
 	add_time_marker(t, "Scan Neta")
-	t += exp_cavity.scan(t, label='atoms_in_cavity', params={'unitary': RF.get_unitary()})
+	t += exp_cavity.scan(t, label='atoms_in_cavity', params={'unitary': RF.get_unitary(), 'usage': 'measure_after_cooling'})
 
 	t += wait(10*ms)
 	add_time_marker(t, "Empty then Scan")
