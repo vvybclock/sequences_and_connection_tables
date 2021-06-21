@@ -3,8 +3,8 @@ from labscript_devices.PineBlaster import PineBlaster
 from user_devices.P7888.labscript_devices import P7888
 from user_devices.AnalogIMAQdxCamera.labscript_devices import AnalogIMAQdxCamera
 from user_devices.HP8648.labscript_devices import HP8648
+from user_devices.AnalogInputReader.labscript_devices import AnalogInputReader
 from labscriptlib.ybclock.connection_functions  import camera_settings
-
 '''
 Here we define the hardware cards and cameras.
 '''
@@ -109,5 +109,14 @@ def define_hardware_cards():
 	HP8648(
 		name        	= 'HP8648B',
 		gpib_address	= 'GPIB0::7::INSTR'
+	)
+
+	### Analog Input Reader
+	print("\tAdding AnalogInputReader...",end='')
+	AnalogInputReader(
+		name    	= 'Light_Monitor', 
+		channels	= {
+		        	'green_probe_monitor' : 'Dev6/ai5'
+		}
 	)
 	print("Done!")
