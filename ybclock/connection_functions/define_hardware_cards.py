@@ -116,7 +116,13 @@ def define_hardware_cards():
 	AnalogInputReader(
 		name    	= 'Light_Monitor', 
 		channels	= {
-		        	'green_probe_monitor' : 'Dev6/ai5'
+		        	'Green Probe Monitor'      		: 'Dev6/ai5',
+		        	'556_nm_ultrastable_cavity'		: 'Dev6/ai0',
+		        	'759nm_reference_cavity'   		: 'Dev6/ai2',
+		        	'759nm_exp_cavity'         		: 'Dev6/ai3',
+		        	'759nm_Lattice_Input'      		: 'Dev6/ai4',
+		        	'bz bias coil current'     		: 'Dev6/ai6',
+		        	'1157nm_ultrastable_cavity'		: 'Dev6/ai7'
 		}
 	)
 	print("Done!")
