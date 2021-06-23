@@ -398,9 +398,13 @@ def green_laser_channels():
 	)
 
 	AnalogOut(
-		name         	= 'cooling_sideband_frequency',
-		parent_device	= ni_pci_6723_dev3,
-		connection   	= 'ao2'
+		name                         	= 'cooling_sideband_frequency',
+		parent_device                	= ni_pci_6723_dev3,
+		connection                   	= 'ao2',
+		unit_conversion_class        	= TwoPhotonDetuning_Cooling,
+		unit_conversion_parameters   	= {
+		    'magnitudes' : ['k', 'M']			    
+		}
 	)
 
 	DigitalOut(
