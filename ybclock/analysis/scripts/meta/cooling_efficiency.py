@@ -8,7 +8,7 @@ if __name__ == '__main__':
 		df = data()
 
 		vars = {}
-		parameter_str = 'cooling_duration'
+		parameter_str = 'cooling_pi_intensity'
 		vars['Neta_2'] = array(df['atoms_in_cavity_helper','Neta_2'])
 		vars['Neta_3'] = array(df['atoms_in_cavity_helper','Neta_3'])
 		vars[parameter_str] = array(df[parameter_str])
