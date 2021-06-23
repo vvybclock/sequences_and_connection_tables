@@ -1,6 +1,8 @@
 from lyse import *
 import numpy as np
-from np import array
+from numpy import array
+import matplotlib.pyplot as plt
+
 if __name__ == '__main__':
 	try:
 		df = data()
@@ -20,6 +22,6 @@ if __name__ == '__main__':
 		plt.xlabel(parameter_str)
 
 
-		pass
-	except:
+	except Exception as e:
+		print(e)
 		pass
