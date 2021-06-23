@@ -4,7 +4,7 @@
 	For different optimization sequences change `get()`.
 
 '''
-from opt_loading import *
+from .opt_loading import *
 
 
 def get():
