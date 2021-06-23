@@ -73,6 +73,7 @@ if __name__ == '__main__':
 		green.cooling_sigma.intensity.constant(t,value=cooling_sigma_intensity)
 		green.cooling_sigma.frequency.constant(t,value=cooling_sigma_frequency)
 		green.pump.intensity.constant(t,value=cooling_pump_intensity)
+		exp_cavity.count_photons(t, label='cooling_pump_photons', duration=cooling_duration)
 		t += wait(cooling_duration) 
 		green.cooling_pi.turnoff(t, warmup_value=10)
 		green.cooling_sigma.turnoff(t, warmup_value=2.5)

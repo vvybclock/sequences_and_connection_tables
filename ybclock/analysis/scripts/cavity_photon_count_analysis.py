@@ -33,7 +33,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def integrate_pump_photons(data, scan_parameters, path):
+def integrate_pump_photons(data, scan_parameters, path, label):
 
 	run = Run(path)
 	iteration = 0
@@ -48,7 +48,7 @@ def integrate_pump_photons(data, scan_parameters, path):
 			name 	= f'pump_photons_{iteration}',
 			value	= sum(photons_in_scan_time > 0),
 		)
-		print(f'Pump Photons : Iter {iteration} : {sum(photons_in_scan_time > 0)}')
+		print(f'{label} Photons : Iter {iteration} : {sum(photons_in_scan_time > 0)}')
 		iteration += 1
 
 
@@ -83,7 +83,19 @@ if __name__ == '__main__':
 					integrate_pump_photons(
 						data=photon_arrival_times,
 						scan_parameters=cavity_scan_parameters[each_key],
-						path=path
+						path=path,
+						label=each_key
+					)
+				except Exception as e:
+					print(f"Cavity Scan Type {each_key} Error: {e}")
+			if each_key == 'cooling_pump_photons':
+			#we prioritize empty cavity scans
+				try:
+					integrate_pump_photons(
+						data=photon_arrival_times,
+						scan_parameters=cavity_scan_parameters[each_key],
+						path=path,
+						label=each_key
 					)
 				except Exception as e:
 					print(f"Cavity Scan Type {each_key} Error: {e}")
