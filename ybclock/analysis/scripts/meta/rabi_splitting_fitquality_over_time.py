@@ -35,7 +35,7 @@ if __name__ == '__main__':
 		colors = [cerulean if seq%2 == 0 else crimson for seq in sequence_index]
 
 		#Calculate and print Good Fit Ratio
-		good_chi_for_fit = [0.5,50]
+		good_chi_for_fit = [0.5,10]
 
 		is_good_fit = []
 		for fit in fit_quality:
