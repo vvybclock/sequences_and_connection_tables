@@ -37,5 +37,6 @@ if __name__ == '__main__':
 		plt.title("Empty Cavity Frequency")
 		plt.ylabel("Frequency (MHz)")
 		plt.xlabel("Time")
+
 	except Exception as e:
 		print(e)

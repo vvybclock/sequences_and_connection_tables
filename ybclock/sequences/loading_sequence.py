@@ -69,10 +69,14 @@ if __name__ == '__main__':
 	COOLING = True
 	#cool atoms
 	if COOLING:
-		green.cooling_pi.intensity.constant(t, value=cooling_pi_intensity)
-		green.cooling_sigma.intensity.constant(t,value=cooling_sigma_intensity)
-		green.cooling_sigma.frequency.constant(t,value=cooling_sigma_frequency, units='kHz')
-		green.pump.intensity.constant(t,value=cooling_pump_intensity)
+
+		if use_cooling_pi: 
+			green.cooling_pi.intensity.constant(t, value=cooling_pi_intensity)
+		if use_cooling_sigma:
+			green.cooling_sigma.intensity.constant(t,value=cooling_sigma_intensity)
+			green.cooling_sigma.frequency.constant(t,value=cooling_sigma_frequency, units='kHz')
+		if use_cooling_pump:
+			green.pump.intensity.constant(t,value=cooling_pump_intensity)
 		exp_cavity.count_photons(t, label='cooling_pump_photons', duration=cooling_duration)
 		t += wait(cooling_duration) 
 		green.cooling_pi.turnoff(t, warmup_value=10)
