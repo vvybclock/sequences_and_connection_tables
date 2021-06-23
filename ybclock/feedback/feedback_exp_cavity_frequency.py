@@ -73,5 +73,10 @@ try:
 	print("Succesfully Performed Feedback.")
 except Exception as e:
 	print(f"Failed Feedback: {e}")
+	#engage the next shot.
+	print("Engaging Next Shot...", end='')
+	remote.engage()
+	print("Done!")
+
 	pass
 
