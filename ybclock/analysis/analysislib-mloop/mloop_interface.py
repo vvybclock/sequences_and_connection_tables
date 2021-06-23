@@ -1,10 +1,10 @@
 import lyse
 from runmanager.remote import set_globals, engage
-import mloop_config
+from . import mloop_config
 from mloop.interfaces import Interface
 from mloop.controllers import create_controller
 import logging
-import ybclock_config
+from . import ybclock_config
 
 
 logger = logging.getLogger('analysislib_mloop')

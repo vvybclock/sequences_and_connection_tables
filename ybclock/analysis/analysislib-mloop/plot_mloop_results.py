@@ -1,8 +1,8 @@
 import lyse
 import numpy as np
 import matplotlib.pyplot as plt
-import mloop_config
-from fake_result import fake_result
+from . import mloop_config
+from .fake_result import fake_result
 
 try:
     df = lyse.data()
