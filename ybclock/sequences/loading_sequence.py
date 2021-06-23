@@ -71,7 +71,7 @@ if __name__ == '__main__':
 	if COOLING:
 		green.cooling_pi.intensity.constant(t, value=cooling_pi_intensity)
 		green.cooling_sigma.intensity.constant(t,value=cooling_sigma_intensity)
-		green.cooling_sigma.frequency.constant(t,value=cooling_sigma_frequency)
+		green.cooling_sigma.frequency.constant(t,value=cooling_sigma_frequency, units='kHz')
 		green.pump.intensity.constant(t,value=cooling_pump_intensity)
 		exp_cavity.count_photons(t, label='cooling_pump_photons', duration=cooling_duration)
 		t += wait(cooling_duration) 
