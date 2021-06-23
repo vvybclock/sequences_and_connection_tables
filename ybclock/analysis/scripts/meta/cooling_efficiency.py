@@ -8,8 +8,8 @@ if __name__ == '__main__':
 		df = data()
 
 		vars         	= {}
-		parameter_str	= 'cooling_pump_intensity'
-		mask_str     	= 'use_cooling_pump'
+		parameter_str	= 'cooling_sigma_frequency'
+		mask_str     	= 'use_cooling_sigma'
 
 
 		vars['Neta_2'] = array(df['atoms_in_cavity_helper','Neta_2'])

@@ -72,6 +72,7 @@ if __name__ == '__main__':
 
 		if use_cooling_pi: 
 			green.cooling_pi.intensity.constant(t, value=cooling_pi_intensity)
+			green_cooling_pi_monitor.acquire(label='green_cooling_pi_monitor', start_time=t,end_time=t+cooling_duration)
 		if use_cooling_sigma:
 			green.cooling_sigma.intensity.constant(t,value=cooling_sigma_intensity)
 			green.cooling_sigma.frequency.constant(t,value=cooling_sigma_frequency, units='kHz')
