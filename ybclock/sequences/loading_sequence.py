@@ -69,21 +69,21 @@ if __name__ == '__main__':
 	COOLING = True
 	#cool atoms
 	if COOLING:
-
-		if use_cooling_pi: 
-			green.cooling_pi.intensity.constant(t, value=cooling_pi_intensity)
-			green_cooling_pi_monitor.acquire(label='green_cooling_pi_monitor', start_time=t,end_time=t+cooling_duration)
-		if use_cooling_sigma:
-			green.cooling_sigma.intensity.constant(t,value=cooling_sigma_intensity)
-			green.cooling_sigma.frequency.constant(t,value=cooling_sigma_frequency, units='kHz')
-		if use_cooling_pump:
-			green.pump.intensity.constant(t,value=cooling_pump_intensity)
-		exp_cavity.count_photons(t, label='cooling_pump_photons', duration=cooling_duration)
-		t += wait(cooling_duration) 
-		green.cooling_pi.turnoff(t, warmup_value=10)
-		green.cooling_sigma.turnoff(t, warmup_value=2.5)
-		green.pump.turnoff(t,warmup_value=10)
-		t += wait(11*ms)
+		for cooling_duration in cooling_duration_loop:
+			if use_cooling_pi: 
+				green.cooling_pi.intensity.constant(t, value=cooling_pi_intensity)
+				green_cooling_pi_monitor.acquire(label='green_cooling_pi_monitor', start_time=t,end_time=t+cooling_duration)
+			if use_cooling_sigma:
+				green.cooling_sigma.intensity.constant(t,value=cooling_sigma_intensity)
+				green.cooling_sigma.frequency.constant(t,value=cooling_sigma_frequency, units='kHz')
+			if use_cooling_pump:
+				green.pump.intensity.constant(t,value=cooling_pump_intensity)
+			exp_cavity.count_photons(t, label='cooling_pump_photons', duration=cooling_duration)
+			t += wait(cooling_duration) 
+			green.cooling_pi.turnoff(t, warmup_value=10)
+			green.cooling_sigma.turnoff(t, warmup_value=2.5)
+			green.pump.turnoff(t,warmup_value=10)
+			t += wait(101*ms)
 	else:
 		t += wait(500*ms)
 
