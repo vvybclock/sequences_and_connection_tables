@@ -46,11 +46,17 @@ if __name__ == '__main__':
 		good_fit_ratio = sum(is_good_fit)/len(is_good_fit)
 
 		#s - size
-		plt.scatter(runtimes, fit_quality, s=20, c = colors)
+		fig, ax = plt.subplots()
+		o = runtimes[-1]
+		past_times = [(o - x ).total_seconds() + 10 for x in runtimes]
 
-		plt.title("Rabi Splitting Fit Quality\n" + f"Good Fit Ratio: {100*good_fit_ratio:.1f}%")
-		plt.ylabel("chi squared")
-		plt.xlabel("Time")
+		ax.scatter(1/np.array(past_times), fit_quality, s=20, c = colors)
+		ax.grid()
+		ax.set_yscale('log')
+		ax.set_xscale('log')
+		ax.set_title("Rabi Splitting Fit Quality\n" + f"Good Fit Ratio: {100*good_fit_ratio:.1f}%")
+		ax.set_ylabel("chi squared")
+		ax.set_xlabel("1/(Time Since Most Recent Run + 10s)")
 
 
 	except Exception as e:
