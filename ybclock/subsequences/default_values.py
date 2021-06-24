@@ -1,6 +1,6 @@
 from labscript import add_time_marker
 
-def set_start_values(t=1e-5):
+def set_start_values(t=5e-6):
 	add_time_marker(t, "Set Start Values")
 
 	#set up mot fields
@@ -39,7 +39,7 @@ def set_start_values(t=1e-5):
 	#photon counter
 	photon_counter_shutter.disable(t)
 
-def set_default_values(t=1e-5):
+def set_default_values(t=5e-6):
 	add_time_marker(t, "Set Default Values")
 
 	#set up mot fields
