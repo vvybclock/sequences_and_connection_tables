@@ -98,6 +98,7 @@ def red_laser_channels():
 		name         	= 'red_cavity_power',
 		parent_device	= ni_pci_6723_dev3,
 		connection   	= 'ao0',
+		default_value	= 1,
 		limits       	= None
 	)
 	AnalogOut(
