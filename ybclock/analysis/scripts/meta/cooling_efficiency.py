@@ -3,13 +3,15 @@ import numpy as np
 from numpy import array
 import matplotlib.pyplot as plt
 
+ANALYSISMODE = 1
 if __name__ == '__main__':
 	try:
 		df = data()
 
-		vars         	= {}
-		parameter_str	= 'cooling_sigma_frequency'
-		mask_str     	= 'use_cooling_sigma'
+		vars	= {}
+		if ANALYSISMODE == 1:
+			parameter_str	= 'cooling_duration'
+			mask_str     	= 'use_cooling_pi'
 
 
 		vars['Neta_2'] = array(df['atoms_in_cavity_helper','Neta_2'])
