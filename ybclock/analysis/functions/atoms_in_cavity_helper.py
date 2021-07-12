@@ -80,7 +80,6 @@ def atom_cavity_analysis(data, scan_parameters,path):
 					data=photon_arrivals_in_frequency_MHz, 
 					bnds={"fatom_range":(0,50), "fcavity_range":cavity_range, "Neta_range":(0,20000)},
 					bin_interval=histogram_resolution,
-					param_error = 'off',
 					path=path
 				)
 				print("Rabi Splitting Fit Params:")

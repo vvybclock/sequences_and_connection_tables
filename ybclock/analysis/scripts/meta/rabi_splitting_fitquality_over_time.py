@@ -6,6 +6,7 @@ as a function of experimental parameters
  	[x] make atoms_in_cavity_helper.py write the chi^2 value (and/or LogLikelihood) of fit in lyse parameters
  	[x] read lyse parameters here
  	[x] plot chi^2 over the time
+ 	[x] plot dNeta
  	[] statistics (hist plot, for example) of chi^2 results
  	[] statistics versus some interesting parameter, like photons detected for example
 
@@ -24,7 +25,9 @@ if __name__ == '__main__':
 
 		runtimes = list(dataframe['run time'])
 		paths = list(dataframe['filepath'])
-		fit_quality = list(dataframe['atoms_in_cavity_helper','chi_square_1'])
+		fit_quality = list(dataframe['atoms_in_cavity_helper','chi_square_1'])		
+		fit_quality_2 = list(dataframe['atoms_in_cavity_helper','Neta_uncertainty_1'])
+		Neta_tot = list(dataframe['atoms_in_cavity_helper','Neta_1'])
 		#this is what we call the run number. we'll use it to change the color, so we can tell when we changed the sequence.
 		sequence_index = list(dataframe['sequence_index'])
 
@@ -37,6 +40,10 @@ if __name__ == '__main__':
 		#Calculate and print Good Fit Ratio
 		good_chi_for_fit = [0.5,50]
 
+		res = [i**2/(j+1) for i, j in zip(fit_quality_2, Neta_tot)]
+
+		print(res)
+
 		is_good_fit = []
 		for fit in fit_quality:
 			is_good_fit.append(
@@ -48,8 +55,11 @@ if __name__ == '__main__':
 		#s - size
 		plt.scatter(runtimes, fit_quality, s=20, c = colors)
 
+
+		plt.scatter(runtimes, res, s=20)
+
 		plt.title("Rabi Splitting Fit Quality\n" + f"Good Fit Ratio: {100*good_fit_ratio:.1f}%")
-		plt.ylabel("chi squared")
+		plt.ylabel("chi squared, Neta uncertainty normalized to SQL")
 		plt.xlabel("Time")
 
 
