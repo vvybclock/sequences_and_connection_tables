@@ -345,6 +345,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavi
 	## To dos
 
 	[x] evaluate Neta fitting error
+	[] correct normalization of Neta fititng error
 	[] estimate full covariance matrix
 	[] include/consider correctly dark counts in MLE analysis
 	[] test performances for small Neta (and adapt amplitude for Neta~0)
@@ -438,7 +439,7 @@ def fit_rabi_splitting_transmission_MLE(data, bnds={"fatom_range":(0,50), "fcavi
 	firsDer1 = (testp-testref)/dN
 	firsDer2 = (testm-testref)/dN
 	Hessian = (firsDer1-firsDer2)/dN
-	cov = np.abs(1/Hessian/dN)# convert in right units by multiplying cov matrix by 1/dN
+	cov = np.abs(1/Hessian/len(data))# convert in right units by multiplying cov matrix by 1/nphtons
 	# Get the chi_2
 	#bin the data
 	(hist, bin_edges) = np.histogram(
